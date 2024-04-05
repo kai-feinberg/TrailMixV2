@@ -82,7 +82,6 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 			_trailAmount,
 			_granularity
 		);
-        
 
 		// Store the contract address in the userContracts mapping
 		userContracts[msg.sender].push(address(newTrailMix));
