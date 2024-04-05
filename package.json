@@ -43,5 +43,10 @@
     "next": "~14.0.4",
     "vercel": "~32.4.1"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "dependencies": {
+    "@chainlink/contracts": "^1.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@uniswap/v3-periphery": "^1.4.4"
+  }
 }
