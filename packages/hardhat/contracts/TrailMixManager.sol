@@ -106,7 +106,18 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 		if (ITrailMix(_strategy).getCreator() != msg.sender) {
 			revert NotContractOwner();
 		}
-		// Deposit the specified amount into the TrailMix contract
+
+		// Get the ERC20 token address from the TrailMix contract
+		address erc20TokenAddress = ITrailMix(_strategy).getERC20TokenAddress();
+		//transfer funds from user to the manager contract
+		IERC20(erc20TokenAddress).transferFrom(
+			msg.sender,
+			address(this),
+			_amount
+		);
+
+		// approve strategy to spend the funds and call deposit
+		IERC20(erc20TokenAddress).approve(_strategy, _amount);
 		ITrailMix(_strategy).deposit(_amount, _tslThreshold);
 
 		// Emit an event for the deposit

@@ -80,7 +80,7 @@ contract TrailMix is ReentrancyGuard {
         }
 
         bool transferSuccess = IERC20(s_erc20Token).transferFrom(
-            i_creator,
+            i_manager,
             address(this),
             amount
         );
