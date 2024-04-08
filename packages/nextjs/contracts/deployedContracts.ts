@@ -392,10 +392,8 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        checkUpkeep:
-          "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
-        performUpkeep:
-          "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
+        checkUpkeep: "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
+        performUpkeep: "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
       },
     },
   },
