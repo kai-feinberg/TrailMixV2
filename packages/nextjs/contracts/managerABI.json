@@ -66,6 +66,11 @@
                     "internalType": "uint256",
                     "name": "_granularity",
                     "type": "uint256"
+                },
+                {
+                    "internalType": "uint24",
+                    "name": "_poolFee",
+                    "type": "uint24"
                 }
             ],
             "name": "deployTrailMix",

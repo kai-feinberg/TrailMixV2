@@ -68,7 +68,8 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 		address _uniswapPool,
 		address _uniswapOracle,
 		uint256 _trailAmount,
-		uint256 _granularity
+		uint256 _granularity,
+		uint24 _poolFee
 	) public {
 		// Deploy the TrailMix contract
 		TrailMix newTrailMix = new TrailMix(
@@ -80,7 +81,8 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 			_uniswapPool,
 			_uniswapOracle,
 			_trailAmount,
-			_granularity
+			_granularity,
+			_poolFee
 		);
 
 		// Store the contract address in the userContracts mapping

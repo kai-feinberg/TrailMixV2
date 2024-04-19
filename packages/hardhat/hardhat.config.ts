@@ -36,7 +36,7 @@ const config: HardhatUserConfig = {
         version: "0.7.6",
         settings: {
           optimizer: {
-            enabled: true,
+            enabled: false,
             // https://docs.soliditylang.org/en/latest/using-the-compiler.html#optimizer-options
             runs: 200,
           },

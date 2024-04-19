@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10: {
     TrailMixManager: {
-      address: "0xA03EE3F830BAF93270F77959D9B3aD6F84eB57Fb",
+      address: "0xcF572dCCF82dF712D18a6bbFBdCbc54a34BB0a92",
       abi: [
         {
           inputs: [],
@@ -273,6 +273,11 @@ const deployedContracts = {
               name: "_granularity",
               type: "uint256",
             },
+            {
+              internalType: "uint24",
+              name: "_poolFee",
+              type: "uint24",
+            },
           ],
           name: "deployTrailMix",
           outputs: [],
@@ -392,8 +397,10 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        checkUpkeep: "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
-        performUpkeep: "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
+        checkUpkeep:
+          "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
+        performUpkeep:
+          "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol",
       },
     },
   },

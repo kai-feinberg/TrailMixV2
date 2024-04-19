@@ -46,6 +46,11 @@
                     "internalType": "uint256",
                     "name": "granularity",
                     "type": "uint256"
+                },
+                {
+                    "internalType": "uint24",
+                    "name": "_poolFee",
+                    "type": "uint24"
                 }
             ],
             "stateMutability": "nonpayable",
@@ -150,7 +155,7 @@
         },
         {
             "inputs": [],
-            "name": "getGranularity",
+            "name": "getExactPrice",
             "outputs": [
                 {
                     "internalType": "uint256",
@@ -163,7 +168,7 @@
         },
         {
             "inputs": [],
-            "name": "getLatestPrice",
+            "name": "getGranularity",
             "outputs": [
                 {
                     "internalType": "uint256",
@@ -229,6 +234,19 @@
         {
             "inputs": [],
             "name": "getTrailAmount",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getTwapPrice",
             "outputs": [
                 {
                     "internalType": "uint256",

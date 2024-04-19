@@ -14,8 +14,7 @@ const managerABI = manager.abi;
 
 const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; userAddress: string }) => {
   const [depositAmount, setDepositAmount] = useState<string | bigint>(""); // State to store deposit amount
-  const [readyToDeposit, setReadyToDeposit] = useState(false); // State to store if user is ready to deposit
-
+  const [assetPrice, setAssetPrice] = useState<string | bigint>("0"); // State to store latest price
   const {
     data: erc20Address,
     isLoading: isLoadingErc20Address,
@@ -25,6 +24,17 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     abi: strategyABI,
     functionName: "getERC20TokenAddress",
   });
+
+  const {
+    data: erc20Balance,
+    isLoading: isLoadingErc20Balance,
+    error: errorErc20Balance,
+  } = useContractRead({
+    address: contractAddress,
+    abi: strategyABI,
+    functionName: "getERC20Balance",
+  });
+
 
   const {
     data: stablecoinAddress,
@@ -38,13 +48,17 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
 
   const {
     data: latestPrice,
-    isLoading: isLoadingLatestPRice,
+    isLoading: isLoadingLatestPrice,
     error: errorLatestPrice,
   } = useContractRead({
     address: contractAddress,
     abi: strategyABI,
-    functionName: "getLatestPrice",
+    functionName: "getTwapPrice",
+    onSuccess: (data) => {
+      console.log("Latest Price: ", data);
+    }
   });
+
 
   const {
     data: tslThreshold,
@@ -148,8 +162,12 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     address: String(erc20Address),
     abi: erc20ABI,
     functionName: "approve",
-    args: [manager, scaledDepositAmount], //make dynamic state vars
+    args: [manager, scaledDepositAmount], //make dynamic state vars,
+    onSuccess: () => {
+      deposit();
+    },
   });
+
   const {
     data: approveResult,
     isLoading: approveLoading,
@@ -157,54 +175,52 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     write: approve,
   } = useContractWrite(approveConfig);
 
-  // const { writeAsync: deposit, isLoading: isDepositing } = useScaffoldContractWrite({
-  //     contractName: "TrailMixManager",
-  //     functionName: 'deposit',
-  //     args: [
-  //         contractAddress,
-  //         BigInt(scaledDepositAmount != null ? scaledDepositAmount : 0),
-  //         BigInt(latestPrice as number != null ? latestPrice as number: 0)
-  //       ]    })
-  const { config: depositConfig } = usePrepareContractWrite({
-    address: manager as string,
-    abi: managerABI,
+  const {writeAsync: deposit, isMining: isPending} = useScaffoldContractWrite({
+    contractName: "TrailMixManager",
     functionName: "deposit",
-    args: [contractAddress, scaledDepositAmount, latestPrice], //make dynamic state vars
+    args: [contractAddress, BigInt(scaledDepositAmount), BigInt(assetPrice as string)],
+    onBlockConfirmation: (txnReceipt: any) => {
+        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
+    onSuccess: () => {
+        console.log("🚀 Strategy Deployed");
+    },
+
   });
-  const { data: depositResult, isLoading, isSuccess, write: deposit } = useContractWrite(depositConfig);
 
   useEffect(() => {
-    // Check if enough allowance to deposit
-    async function checkAllowance() {
-      if (BigInt(allowance as string) >= BigInt(scaledDepositAmount)) {
-        setReadyToDeposit(true);
-      } else {
-        setReadyToDeposit(false);
-      }
+      setAssetPrice(latestPrice as string);
+  }, []);
+
+  const { config: withdrawConfig } = usePrepareContractWrite({
+    address: manager as string,
+    abi: managerABI,
+    functionName: "withdraw",
+    args: [contractAddress], //make dynamic state vars
+    onSuccess: () => {
+      console.log("🚀 Withdrawn");
     }
-  }, [allowance, scaledDepositAmount]);
+  });
+
+  const { data: withdrawResult, write: withdraw } = useContractWrite(withdrawConfig);
 
   const handleDeposit = async () => {
-    if (!readyToDeposit) {
-      // Not enough allowance, need to approve first
-      if (approve) {
-        // Add null check for approve function
+    
+    if (BigInt(allowance as string) >= BigInt(scaledDepositAmount) && deposit) {
+      await deposit();
+    } else {
+      if (approve) { 
         await approve();
       }
-      setReadyToDeposit(true);
-    }
-
-    if (readyToDeposit && deposit) {
-      // Add null check for deposit function
-      // Now proceed with deposit
-      await deposit();
     }
   };
 
   return (
     <div>
       <h2>Strategy Information: {contractAddress}</h2>
-      <p>TSL Threshold: {tslThreshold ? tslThreshold.toString() : "loading"}</p>
+      <p> Erc20Balance: {erc20Balance ? erc20Balance.toString(): "0"}</p>
+      <p>latest Price: {latestPrice ? latestPrice.toString(): "0"}</p>
+      <p>TSL Threshold: {tslThreshold ? tslThreshold.toString() : "0"}</p>
       <p>Is TSL Active: {isTSLActive ? "Yes" : "No"}</p>
       <p>Uniswap Router Address: {uniswapRouterAddress ? uniswapRouterAddress.toString() : "loading"}</p>
       <p>Trail Amount: {trailAmount ? String(trailAmount) : "Loading"}</p>
@@ -213,8 +229,13 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
       <p>Granularity: {granularity ? granularity.toString() : "Loading..."}</p>
       <p>Uniswap Pool: {uniswapPool ? uniswapPool.toString() : "Loading..."}</p>
       <p>Allowance: {allowance ? allowance.toString() : "loading..."}</p>
+      {isLoadingLatestPrice && <div>Loading latest price</div>}
       <IntegerInput value={depositAmount} onChange={setDepositAmount} />
-      <button onClick={handleDeposit}>Deposit</button>
+      <div><button onClick={handleDeposit}>Deposit</button></div>
+
+      <button onClick={withdraw}>Withdraw</button>
+
+
     </div>
   );
 };
