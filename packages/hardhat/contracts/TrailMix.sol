@@ -31,7 +31,7 @@ contract TrailMix is ReentrancyGuard {
 	uint256 private s_granularity; //  % price increase to trigger an update
 	bool private s_isTSLActive; // Indicates if the TSL is currently active
 	bool private slippageProtection; // Indicates if slippage protection is enabled
-	uint24 private s_poolFee; 
+	uint24 private s_poolFee;
 
 	//events are emitted in the manager contract
 
@@ -202,7 +202,7 @@ contract TrailMix is ReentrancyGuard {
 			s_uniswapPool,
 			s_erc20Token,
 			1e18, // number of decimals for erc20 token
-			0 
+			1
 		);
 		return amountOut;
 	}
