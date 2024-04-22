@@ -33,7 +33,7 @@ const Home: NextPage = () => {
           <DeployNew />
 
           {userContracts &&
-            userContracts.map((contractAddress: string) => (
+            [...userContracts].reverse().map((contractAddress: string) => (
               <Strategy key={contractAddress} contractAddress={contractAddress} userAddress={connectedAddress || ""} />
             ))}
         </div>

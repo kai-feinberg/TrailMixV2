@@ -6,15 +6,16 @@ import manager from "../contracts/managerABI.json";
 import stratABI from "../contracts/strategyABI.json";
 import { IntegerInput } from "./scaffold-eth";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
 
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
 const managerABI = manager.abi;
 
 const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; userAddress: string }) => {
-  const [depositAmount, setDepositAmount] = useState<string | bigint>(""); // State to store deposit amount
+  const [depositAmount, setDepositAmount] = useState<string | bigint>("0"); // State to store deposit amount
   const [assetPrice, setAssetPrice] = useState<string | bigint>("0"); // State to store latest price
+  const [scaledDepositAmount, setScaledDepositAmount] = useState<bigint>(BigInt(0)); // State to store scaled deposit amount
   const {
     data: erc20Address,
     isLoading: isLoadingErc20Address,
@@ -156,16 +157,13 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
 
   const dec = Math.pow(10, tokenDecimals as number);
   // // Ensure that contractAddr is not undefined or empty
-  const scaledDepositAmount = Number(depositAmount) * dec;
 
   const { config: approveConfig } = usePrepareContractWrite({
     address: String(erc20Address),
     abi: erc20ABI,
     functionName: "approve",
     args: [manager, scaledDepositAmount], //make dynamic state vars,
-    onSuccess: () => {
-      deposit();
-    },
+
   });
 
   const {
@@ -175,51 +173,85 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     write: approve,
   } = useContractWrite(approveConfig);
 
-  const {writeAsync: deposit, isMining: isPending} = useScaffoldContractWrite({
+  const { writeAsync: deposit, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "deposit",
     args: [contractAddress, BigInt(scaledDepositAmount), BigInt(assetPrice as string)],
     onBlockConfirmation: (txnReceipt: any) => {
-        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
     onSuccess: () => {
-        console.log("🚀 Strategy Deployed");
+      console.log("🚀 Strategy Deployed");
     },
 
   });
 
   useEffect(() => {
-      setAssetPrice(latestPrice as string);
-  }, []);
+    setAssetPrice(latestPrice as string);
+    setScaledDepositAmount(BigInt(Number(depositAmount) * dec || 0));
+  }, [depositAmount]);
 
-  const { config: withdrawConfig } = usePrepareContractWrite({
-    address: manager as string,
-    abi: managerABI,
+
+  const { writeAsync: withdraw, isMining: withdrawPending } = useScaffoldContractWrite({
+    contractName: "TrailMixManager",
     functionName: "withdraw",
-    args: [contractAddress], //make dynamic state vars
+    args: [contractAddress],
+    onBlockConfirmation: (txnReceipt: any) => {
+      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+    },
     onSuccess: () => {
-      console.log("🚀 Withdrawn");
-    }
+      console.log("🚀 funds withdrawn");
+    },
+
   });
 
-  const { data: withdrawResult, write: withdraw } = useContractWrite(withdrawConfig);
 
   const handleDeposit = async () => {
-    
+
     if (BigInt(allowance as string) >= BigInt(scaledDepositAmount) && deposit) {
       await deposit();
     } else {
-      if (approve) { 
-        await approve();
+      if (approve) {
+        await Promise.resolve(approve()).then(() => {
+          deposit();
+          console.log("Approval successful, deposit triggered");
+        }).catch(error  => {
+          console.error("Approval failed", error);
+        });
       }
     }
   };
 
+  const {
+    data: events,
+    isLoading: isLoadingEvents,
+    error: errorReadingEvents,
+  } = useScaffoldEventHistory({
+    contractName: "TrailMixManager",
+    eventName: "ContractDeployed",
+    fromBlock: 119000002n,
+    watch: false,
+    filters: { creator: userAddress },
+    blockData: true,
+    transactionData: true,
+    receiptData: true,
+  });
+
+  useEffect(() => {
+    if (!isLoadingEvents && events) {
+      console.log("Events:", events);
+      events.forEach((e) => {
+        console.log("timestamp", e.block.timestamp);
+        console.log("contract address", e.log.args.contractAddress);
+      });
+    }
+  }, [events]);
+
   return (
     <div>
       <h2>Strategy Information: {contractAddress}</h2>
-      <p> Erc20Balance: {erc20Balance ? erc20Balance.toString(): "0"}</p>
-      <p>latest Price: {latestPrice ? latestPrice.toString(): "0"}</p>
+      <p> Erc20Balance: {erc20Balance ? erc20Balance.toString() : "0"}</p>
+      <p>latest Price: {latestPrice ? latestPrice.toString() : "0"}</p>
       <p>TSL Threshold: {tslThreshold ? tslThreshold.toString() : "0"}</p>
       <p>Is TSL Active: {isTSLActive ? "Yes" : "No"}</p>
       <p>Uniswap Router Address: {uniswapRouterAddress ? uniswapRouterAddress.toString() : "loading"}</p>
