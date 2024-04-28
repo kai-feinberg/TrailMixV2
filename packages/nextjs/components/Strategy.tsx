@@ -222,30 +222,31 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     }
   };
 
-  const {
-    data: events,
-    isLoading: isLoadingEvents,
-    error: errorReadingEvents,
-  } = useScaffoldEventHistory({
-    contractName: "TrailMixManager",
-    eventName: "ContractDeployed",
-    fromBlock: 119000002n,
-    watch: false,
-    filters: { creator: userAddress },
-    blockData: true,
-    transactionData: true,
-    receiptData: true,
-  });
+  // const {
+  //   data: events,
+  //   isLoading: isLoadingEvents,
+  //   error: errorReadingEvents,
+  // } = useScaffoldEventHistory({
+  //   contractName: "TrailMixManager",
+  //   eventName: "ContractDeployed",
+  //   fromBlock: 119000002n,
+  //   watch: false,
+  //   filters: { creator: userAddress },
+  //   blockData: true,
+  //   transactionData: true,
+  //   receiptData: true,
+  // });
 
-  useEffect(() => {
-    if (!isLoadingEvents && events) {
-      console.log("Events:", events);
-      events.forEach((e) => {
-        console.log("timestamp", e.block.timestamp);
-        console.log("contract address", e.log.args.contractAddress);
-      });
-    }
-  }, [events]);
+  // //only render events when events change
+  // useEffect(() => {
+  //   if (!isLoadingEvents && events) {
+  //     console.log("Events:", events);
+  //     events.forEach((e) => {
+  //       console.log("timestamp", e.block.timestamp);
+  //       console.log("contract address", e.log.args.contractAddress);
+  //     });
+  //   }
+  // }, [events]);
 
   return (
     <div>

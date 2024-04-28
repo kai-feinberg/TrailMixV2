@@ -220,7 +220,7 @@ contract TrailMix is ReentrancyGuard {
 		uint256 currentPrice = getExactPrice();
 		uint256 minAmountOut;
 		if (slippageProtection) {
-			minAmountOut = (amount * currentPrice * 995) / 1000; //99.5% of the current price
+			minAmountOut = (amount * currentPrice * 995) / (1000 * 1e18); //99.5% of the current price
 		} else {
 			minAmountOut = 0;
 		}
@@ -249,8 +249,8 @@ contract TrailMix is ReentrancyGuard {
 	 * @notice Activates slippage protection for token swaps.
 	 * @dev Can only be called by the contract owner.
 	 */
-	function activateSlippageProtection() public onlyManager {
-		slippageProtection = false;
+	function toggleSlippageProtection() public onlyManager {
+		slippageProtection = !slippageProtection;
 	}
 
 	// View functions for contract interaction and frontend integration

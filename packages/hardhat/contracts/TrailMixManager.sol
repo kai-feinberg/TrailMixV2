@@ -141,6 +141,13 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 		removeStrategy(_strategy);
 	}
 
+	function toggleSlippageProtection(address _strategy) public {
+		if (ITrailMix(_strategy).getCreator() != msg.sender) {
+			revert NotContractOwner();
+		}
+		ITrailMix(_strategy).toggleSlippageProtection();
+	}
+
 	// Remove a strategy
 	function removeStrategy(address strategy) private {
 		require(strategy != address(0), "Invalid address");

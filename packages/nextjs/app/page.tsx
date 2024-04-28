@@ -8,6 +8,7 @@ import Strategy from "~~/components/Strategy";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import DeployNew from "~~/components/DeployNew";
+import Events from "~~/components/Events";
 
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
@@ -31,6 +32,8 @@ const Home: NextPage = () => {
             <Address address={connectedAddress} />
           </div>
           <DeployNew />
+
+          <Events userAddress={connectedAddress || ""}/>
 
           {userContracts &&
             [...userContracts].reverse().map((contractAddress: string) => (

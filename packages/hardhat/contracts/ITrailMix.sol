@@ -17,7 +17,7 @@ interface ITrailMix {
 
 	function getExactPrice() external view returns (uint256);
 
-	function activateSlippageProtection() external;
+	function toggleSlippageProtection() external;
 
 	function getERC20Balance() external view returns (uint256);
 
