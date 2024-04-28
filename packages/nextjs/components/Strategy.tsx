@@ -215,7 +215,7 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
         await Promise.resolve(approve()).then(() => {
           deposit();
           console.log("Approval successful, deposit triggered");
-        }).catch(error  => {
+        }).catch(error => {
           console.error("Approval failed", error);
         });
       }
