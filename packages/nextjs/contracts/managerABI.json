@@ -1,5 +1,5 @@
 {
-    "abi": [
+    "abi" : [
         {
             "inputs": [],
             "name": "NotContractOwner",
@@ -29,77 +29,6 @@
             ],
             "name": "ContractDeployed",
             "type": "event"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_erc20Token",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_stablecoin",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_uniswapRouter",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_uniswapPool",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "_uniswapOracle",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_trailAmount",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_granularity",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint24",
-                    "name": "_poolFee",
-                    "type": "uint24"
-                }
-            ],
-            "name": "deployTrailMix",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "_strategy",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_amount",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_tslThreshold",
-                    "type": "uint256"
-                }
-            ],
-            "name": "deposit",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
         },
         {
             "anonymous": false,
@@ -174,19 +103,6 @@
             ],
             "name": "FundsWithdrawn",
             "type": "event"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "bytes",
-                    "name": "performData",
-                    "type": "bytes"
-                }
-            ],
-            "name": "performUpkeep",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
         },
         {
             "anonymous": false,
@@ -271,19 +187,6 @@
         {
             "inputs": [
                 {
-                    "internalType": "address",
-                    "name": "_strategy",
-                    "type": "address"
-                }
-            ],
-            "name": "withdraw",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
                     "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
@@ -328,6 +231,77 @@
             "inputs": [
                 {
                     "internalType": "address",
+                    "name": "_erc20Token",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_stablecoin",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_uniswapRouter",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_uniswapPool",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_uniswapOracle",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_trailAmount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_granularity",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint24",
+                    "name": "_poolFee",
+                    "type": "uint24"
+                }
+            ],
+            "name": "deployTrailMix",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_strategy",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_tslThreshold",
+                    "type": "uint256"
+                }
+            ],
+            "name": "deposit",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
                     "name": "user",
                     "type": "address"
                 }
@@ -365,6 +339,32 @@
         {
             "inputs": [
                 {
+                    "internalType": "bytes",
+                    "name": "performData",
+                    "type": "bytes"
+                }
+            ],
+            "name": "performUpkeep",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_strategy",
+                    "type": "address"
+                }
+            ],
+            "name": "toggleSlippageProtection",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
                     "internalType": "address",
                     "name": "",
                     "type": "address"
@@ -384,6 +384,19 @@
                 }
             ],
             "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_strategy",
+                    "type": "address"
+                }
+            ],
+            "name": "withdraw",
+            "outputs": [],
+            "stateMutability": "nonpayable",
             "type": "function"
         }
     ]

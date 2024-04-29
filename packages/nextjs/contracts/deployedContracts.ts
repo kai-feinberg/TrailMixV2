@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10: {
     TrailMixManager: {
-      address: "0xE69ECC9eF4779E90F739f5048e09858CFCD46deA",
+      address: "0x7C72166ED2bd4d5b2ABe63ad5C1D41928E03DD48",
       abi: [
         {
           inputs: [],
@@ -354,6 +354,19 @@ const deployedContracts = {
             },
           ],
           name: "performUpkeep",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_strategy",
+              type: "address",
+            },
+          ],
+          name: "toggleSlippageProtection",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",

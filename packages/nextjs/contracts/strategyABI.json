@@ -68,13 +68,6 @@
         },
         {
             "inputs": [],
-            "name": "activateSlippageProtection",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
             "name": "checkUpkeepNeeded",
             "outputs": [
                 {
@@ -318,6 +311,13 @@
                 }
             ],
             "name": "swapOnUniswap",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "toggleSlippageProtection",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

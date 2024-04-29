@@ -48,6 +48,16 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
   });
 
   const {
+    data: stablecoinBalance,
+    isLoading: isLoadingStablecoinBalance,
+    error: errorStablecoinBalance,
+  } = useContractRead({
+    address: contractAddress,
+    abi: strategyABI,
+    functionName: "getStablecoinBalance",
+  });
+
+  const {
     data: latestPrice,
     isLoading: isLoadingLatestPrice,
     error: errorLatestPrice,
@@ -173,10 +183,19 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     write: approve,
   } = useContractWrite(approveConfig);
 
+  const { config: swapConfig } = usePrepareContractWrite({
+    address: contractAddress,
+    abi: strategyABI,
+    functionName: "swapOnUniswap",
+    args: [erc20Balance],
+  });
+  const { data: swapResult, isLoading: swapLoading, isSuccess: swapSuccess, write: swap } = useContractWrite(swapConfig);
+
+
   const { writeAsync: deposit, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "deposit",
-    args: [contractAddress, BigInt(scaledDepositAmount), BigInt(assetPrice as string)],
+    args: [contractAddress, BigInt(scaledDepositAmount), BigInt(assetPrice || "0")],
     onBlockConfirmation: (txnReceipt: any) => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -222,32 +241,6 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
     }
   };
 
-  // const {
-  //   data: events,
-  //   isLoading: isLoadingEvents,
-  //   error: errorReadingEvents,
-  // } = useScaffoldEventHistory({
-  //   contractName: "TrailMixManager",
-  //   eventName: "ContractDeployed",
-  //   fromBlock: 119000002n,
-  //   watch: false,
-  //   filters: { creator: userAddress },
-  //   blockData: true,
-  //   transactionData: true,
-  //   receiptData: true,
-  // });
-
-  // //only render events when events change
-  // useEffect(() => {
-  //   if (!isLoadingEvents && events) {
-  //     console.log("Events:", events);
-  //     events.forEach((e) => {
-  //       console.log("timestamp", e.block.timestamp);
-  //       console.log("contract address", e.log.args.contractAddress);
-  //     });
-  //   }
-  // }, [events]);
-
   return (
     <div>
       <h2>Strategy Information: {contractAddress}</h2>
@@ -261,12 +254,17 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
       <p>Creator: {creator ? creator.toString() : "loading"}</p>
       <p>Granularity: {granularity ? granularity.toString() : "Loading..."}</p>
       <p>Uniswap Pool: {uniswapPool ? uniswapPool.toString() : "Loading..."}</p>
-      <p>Allowance: {allowance ? allowance.toString() : "loading..."}</p>
+      <p>Allowance: {allowance ? allowance.toString() : "0"}</p>
       {isLoadingLatestPrice && <div>Loading latest price</div>}
+      <p>Stablecoin balance: {stablecoinBalance ? stablecoinBalance.toString() : "loading"}</p>
+
       <IntegerInput value={depositAmount} onChange={setDepositAmount} />
       <div><button onClick={handleDeposit}>Deposit</button></div>
 
       <button onClick={withdraw}>Withdraw</button>
+
+      <br />
+      <button onClick={swap}>Swap</button>
 
 
     </div>
