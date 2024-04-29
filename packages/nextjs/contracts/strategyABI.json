@@ -63,6 +63,11 @@
         },
         {
             "inputs": [],
+            "name": "InvalidToken",
+            "type": "error"
+        },
+        {
+            "inputs": [],
             "name": "TransferFailed",
             "type": "error"
         },
@@ -336,7 +341,13 @@
             "type": "function"
         },
         {
-            "inputs": [],
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "token",
+                    "type": "address"
+                }
+            ],
             "name": "withdraw",
             "outputs": [],
             "stateMutability": "nonpayable",

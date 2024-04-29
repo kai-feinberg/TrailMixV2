@@ -21,8 +21,8 @@ const DeployNew = () =>{
         "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         "0xB533c12fB4e7b53b5524EAb9b47d93fF6C7A456F",
         "0xed53e3E056C34a342ec0293e6Bc84E40Fd547799",
-        BigInt(10 as number),
         BigInt(5 as number),
+        BigInt(1 as number),
         3000 ],
         onBlockConfirmation: (txnReceipt) => {
             console.log("📦 Transaction blockHash", txnReceipt.blockHash);

@@ -12,6 +12,7 @@ import { IUniswapOracle } from "./IUniswapOracle.sol";
 
 error InvalidAmount(); // Error for when the deposit amount is not positive
 error TransferFailed(); // Error for when the token transfer fails
+error InvalidToken(); // Error for when the token address is invalid
 
 contract TrailMix is ReentrancyGuard {
 	address private immutable i_manager; //address of the manager contract
@@ -104,10 +105,10 @@ contract TrailMix is ReentrancyGuard {
 	 * @notice Withdraws the user's funds from the contract.
 	 * @dev Allows withdrawal of either ERC20 tokens or stablecoins, based on TSL status.
 	 */
-	function withdraw() external onlyManager {
+	function withdraw(address token) external onlyManager {
 		uint256 withdrawalAmount;
 
-		if (!s_isTSLActive) {
+		if (token == s_stablecoin) {
 			// If TSL is not active, assume user wants to withdraw stablecoins
 			// Logic to handle stablecoin withdrawal
 			withdrawalAmount = s_stablecoinBalance;
@@ -120,7 +121,8 @@ contract TrailMix is ReentrancyGuard {
 				i_creator, // sends funds to the contract creator
 				withdrawalAmount
 			);
-		} else {
+			s_isTSLActive = false; // Deactivate TSL when withdrawal is made
+		} else if (token == s_erc20Token) {
 			// If TSL is active, user withdraws their ERC20 tokens
 			withdrawalAmount = s_erc20Balance;
 			if (withdrawalAmount <= 0) {
@@ -133,6 +135,8 @@ contract TrailMix is ReentrancyGuard {
 				withdrawalAmount
 			);
 			s_isTSLActive = false; // Deactivate TSL when withdrawal is made
+		} else {
+			revert InvalidToken();
 		}
 	}
 

@@ -214,7 +214,7 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
   const { writeAsync: withdraw, isMining: withdrawPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "withdraw",
-    args: [contractAddress],
+    args: [contractAddress, "0x4200000000000000000000000000000000000042"],
     onBlockConfirmation: (txnReceipt: any) => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
     },
@@ -256,7 +256,7 @@ const Strategy = ({ contractAddress, userAddress }: { contractAddress: string; u
       <p>Uniswap Pool: {uniswapPool ? uniswapPool.toString() : "Loading..."}</p>
       <p>Allowance: {allowance ? allowance.toString() : "0"}</p>
       {isLoadingLatestPrice && <div>Loading latest price</div>}
-      <p>Stablecoin balance: {stablecoinBalance ? stablecoinBalance.toString() : "loading"}</p>
+      <p>Stablecoin balance: {stablecoinBalance ? stablecoinBalance.toString() : "0"}</p>
 
       <IntegerInput value={depositAmount} onChange={setDepositAmount} />
       <div><button onClick={handleDeposit}>Deposit</button></div>

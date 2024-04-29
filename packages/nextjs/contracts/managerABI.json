@@ -1,5 +1,5 @@
 {
-    "abi" : [
+    "abi": [
         {
             "inputs": [],
             "name": "NotContractOwner",
@@ -391,6 +391,11 @@
                 {
                     "internalType": "address",
                     "name": "_strategy",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "_token",
                     "type": "address"
                 }
             ],

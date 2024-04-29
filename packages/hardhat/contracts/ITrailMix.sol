@@ -5,7 +5,7 @@ interface ITrailMix {
 	// Function signatures
 	function deposit(uint256 amount, uint256 tslThreshold) external;
 
-	function withdraw() external;
+	function withdraw(address token) external;
 
 	function checkUpkeepNeeded() external view returns (bool, bool, uint256);
 

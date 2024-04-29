@@ -132,12 +132,12 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 		);
 	}
 
-	function withdraw(address _strategy) public nonReentrant {
+	function withdraw(address _strategy, address _token) public nonReentrant {
 		// Withdraw the user's funds from the TrailMix contract
 		if (ITrailMix(_strategy).getCreator() != msg.sender) {
 			revert NotContractOwner();
 		}
-		ITrailMix(_strategy).withdraw();
+		ITrailMix(_strategy).withdraw(_token);
 		removeStrategy(_strategy);
 	}
 
