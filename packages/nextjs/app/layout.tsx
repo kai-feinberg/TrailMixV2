@@ -3,7 +3,9 @@ import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
-import {cn} from "@/lib/utils"
+import { cn } from "@/lib/utils";
+import SideNavbar from "~~/components/SideNavbar";
+
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : `http://localhost:${process.env.PORT || 3000}`;
@@ -12,10 +14,10 @@ const imageUrl = `${baseUrl}/thumbnail.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Scaffold-ETH 2 App",
+    default: "TrailMix",
     template: "%s | Scaffold-ETH 2",
   },
-  description: "Built with 🏗 Scaffold-ETH 2",
+  description: "Automated risk management for crypto",
   openGraph: {
     title: {
       default: "Scaffold-ETH 2 App",
@@ -44,17 +46,21 @@ export const metadata: Metadata = {
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning lang="en">
       <body className={cn(
-          "min-h-screen w-full flex bg-white text-black",
-          
-          {
-            "debug-screens": process.env.NODE_ENV === "development"
-          }
-        )}>
-        <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        </ThemeProvider>
+        "min-h-screen w-full flex bg-white text-black",
+      )}>
+        <SideNavbar />
+
+        <div className={cn(
+        "min-h-screen w-full flex flex-col",
+      )}>
+          <ThemeProvider enableSystem>
+            <ScaffoldEthAppWithProviders>
+              <div className="p-8 w-full" >{children}</div>
+            </ScaffoldEthAppWithProviders>
+          </ThemeProvider>
+        </div>
       </body>
     </html>
   );
