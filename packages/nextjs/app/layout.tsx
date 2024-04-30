@@ -5,6 +5,7 @@ import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { cn } from "@/lib/utils";
 import SideNavbar from "~~/components/SideNavbar";
+import { WagmiConfig } from "wagmi";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -47,21 +48,23 @@ export const metadata: Metadata = {
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning lang="en">
-      <body className={cn(
-        "min-h-screen w-full flex bg-white text-black",
-      )}>
-        <SideNavbar />
+      <ThemeProvider enableSystem>
+        <ScaffoldEthAppWithProviders>
+          <body className={cn(
+            "min-h-screen w-full flex bg-white text-black",
+          )}>
+            <SideNavbar />
 
-        <div className={cn(
-        "min-h-screen w-full flex flex-col",
-      )}>
-          <ThemeProvider enableSystem>
-            <ScaffoldEthAppWithProviders>
+            <div className={cn(
+              "min-h-screen w-full flex flex-col",
+            )}>
+
               <div className="p-8 w-full" >{children}</div>
-            </ScaffoldEthAppWithProviders>
-          </ThemeProvider>
-        </div>
-      </body>
+
+            </div>
+          </body>
+        </ScaffoldEthAppWithProviders>
+      </ThemeProvider>
     </html>
   );
 };

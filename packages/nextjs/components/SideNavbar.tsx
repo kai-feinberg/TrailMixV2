@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { Nav } from "./ui/nav";
-
+import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 type Props = {};
 
 import {
@@ -75,6 +75,8 @@ export default function SideNavbar({}: Props) {
           }
         ]}
       />
+      <RainbowKitCustomConnectButton />
+
     </div>
   );
 }
