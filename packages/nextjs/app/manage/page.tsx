@@ -23,6 +23,7 @@ type Payment = {
   entryPrice: string;
 };
 
+
 const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "asset",
@@ -32,7 +33,8 @@ const columns: ColumnDef<Payment>[] = [
         <div className="flex gap-2 items-center">
           <img
             className="h-8 w-8"
-            src={`/${row.getValue("asset")}-logo.svg`}
+            // src={`/${row.getValue("asset")}-logo.svg`}
+            src = {`https://ethereum-optimism.github.io/data/0xBTC/logo.png`} // change to render url from token data
             alt="user-image"
           />
           <p>{row.getValue("asset")} </p>

@@ -1,5 +1,17 @@
 {
     "10" : { 
+        "0x4200000000000000000000000000000000000042": {
+            "name": "Optimism",
+            "symbol": "OP",
+            "decimals": 18,
+            "logoURI": "https://ethereum-optimism.github.io/data/OP/logo.png",
+            "extensions": {
+              "opListId": "extended",
+              "opTokenId": "OP"
+            },
+            "pool":"0xB533c12fB4e7b53b5524EAb9b47d93fF6C7A456F"
+
+          },
         "0xb6ed7644c69416d67b522e20bc294a9a9b405b31": {  
             "name": "0xBitcoin",
             "symbol": "0xBTC",
@@ -9,10 +21,10 @@
             "optimismBridgeAddress": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
             "opListId": "extended",
             "opTokenId": "0xBTC"
-            }
-        }
-    },
-    "0x111111111117dc0aa78b770fa6a738034120c302": { 
+            },
+            "pool": "0x111111111117dc0aa78b770fa6a738034120c302"
+        },
+        "0x111111111117dc0aa78b770fa6a738034120c302": { 
             "name": "1INCH Token",
             "symbol": "1INCH",
             "decimals": 18,
@@ -22,7 +34,10 @@
                 "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35",
                 "opListId": "extended",
                 "opTokenId": "1INCH"
-            }
-    }
+            },
+            "pool": "0x111111111117dc0aa78b770fa6a738034120c302"
+        }
+
+    } 
 }
 

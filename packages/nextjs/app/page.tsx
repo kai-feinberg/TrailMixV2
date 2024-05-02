@@ -83,8 +83,8 @@ export default function Home() {
   const { targetNetwork } = useTargetNetwork();
   // console.log(targetNetwork);
 
-  const test = getTokenData("0xb6ed7644c69416d67b522e20bc294a9a9b405b31");
-  console.log(test);
+  // const test = getTokenData("0xb6ed7644c69416d67b522e20bc294a9a9b405b31");
+  // console.log(test);
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -100,7 +100,6 @@ export default function Home() {
           />
         ))}
       </section>
-      <p>Network id: {targetNetwork.id}</p>
       <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
         <CardContent>
           <div className="flex justify-between items-center">
