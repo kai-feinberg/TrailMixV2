@@ -51,12 +51,12 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider enableSystem>
         <ScaffoldEthAppWithProviders>
           <body className={cn(
-            "min-h-screen w-full flex bg-white text-black",
+            "w-full flex bg-slate-200 text-black",
           )}>
             <SideNavbar />
 
             <div className={cn(
-              "min-h-screen w-full flex flex-col",
+              " w-full flex flex-col",
             )}>
 
               <div className="p-8 w-full" >{children}</div>
