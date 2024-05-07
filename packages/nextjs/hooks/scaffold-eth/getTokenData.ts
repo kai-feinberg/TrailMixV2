@@ -1,16 +1,20 @@
 import tokenList from '../../lib/tokenList.json';
 import { useTargetNetwork } from '~~/hooks/scaffold-eth/useTargetNetwork';
 
-// Assuming the structure of tokenList is as follows:
-// {
-//   [chainId: number]: {
-//     [contractAddress: string]: { // Token data structure }
-//   }
-// }
 
 interface TokenData {
-    [key: string]: any;  // Replace 'any' with a more specific type based on your token data structure
-}
+    name: string;
+    symbol: string;
+    decimals: number;
+    logoURI: string;
+    extensions: {
+      opListId: string;
+      opTokenId: string;
+      optimismBridgeAddress?: string;
+      baseBridgeAddress?: string;
+    };
+    pool: string;
+  }
 
 interface TokenList {
     [chainId: number]: {

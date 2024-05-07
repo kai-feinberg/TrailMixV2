@@ -12,9 +12,7 @@ import SalesCard, { SalesProps } from "@/components/SalesCard";
 import {CreateNew} from "@/components/CreateNew";
 import { use } from "react";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import { useGlobalState } from "~~/services/store/store";
 import {useState, useEffect} from "react";
-import getTokenData from "~~/hooks/scaffold-eth/getTokenData"; 
 
 const cardData: CardProps[] = [
   {

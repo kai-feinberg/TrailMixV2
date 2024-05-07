@@ -13,31 +13,25 @@ import { Button } from "@/components/ui/button";
 import {XSquare,Pencil } from "lucide-react";
 import React from "react";
 import PageTitle from "@/components/PageTitle";
+import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
+import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
 
 type Props = {};
-type Payment = {
-  asset: string;
-  balance: string;
-  actions: string;
-  strategy: string;
-  entryPrice: string;
-};
 
 
-const columns: ColumnDef<Payment>[] = [
+const columns: ColumnDef<Strategy>[] = [
   {
     accessorKey: "asset",
     header: "Asset",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
       return (
         <div className="flex gap-2 items-center">
           <img
             className="h-8 w-8"
-            // src={`/${row.getValue("asset")}-logo.svg`}
-            src = {`https://ethereum-optimism.github.io/data/0xBTC/logo.png`} // change to render url from token data
-            alt="user-image"
+            src={row.original.asset.logoURI}
+            alt="token-image"
           />
-          <p>{row.getValue("asset")} </p>
+          <p>{(row.getValue("asset") as TokenData).name} </p>
         </div>
       );
     },
@@ -47,11 +41,11 @@ const columns: ColumnDef<Payment>[] = [
     header: "Balance",
     cell: ({ row }) => {
       return (
-        <div>
-          <div className="flex gap-2 items-center font-semibold">
+        <div className="flex flex-col h-full">
+          <div className="flex items-center font-semibold leading-snug text-lg flex-grow-3">
             <p>{row.getValue("balance")}</p>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col flex-grow-1">
             <p className="text-xs text-gray-500">$32.31</p>
           </div>
         </div>
@@ -85,56 +79,21 @@ const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-const data: Payment[] = [
-  {
-    asset: "Arbitrum",
-    balance: "436.23",
-    actions: "2023-01-01",
-    strategy: "Tight ",
-    entryPrice: "$1000",
-  },
-  {
-    asset: "Optimism",
-    balance: "12.34",
-    actions: "2023-02-15",
-    strategy: "Loose ",
-    entryPrice: "$2000",
-  },
-  {
-    asset: "Ethereum",
-    balance: "0.124",
-    actions: "2023-03-20",
-    strategy: "Loose ",
-    entryPrice: "$3000",
-  },
-  {
-    asset: "Bitcoin",
-    balance: "0.00023",
-    actions: "2023-04-10",
-    strategy: "Custom ",
-    entryPrice: "$4000",
-  },
-  {
-    asset: "Ethereum",
-    balance: "0.00456",
-    actions: "2023-05-05",
-    strategy: "Tight ",
-    entryPrice: "$5000",
-  },
-  {
-    asset: "Optimism",
-    balance: "48.91",
-    actions: "2023-06-18",
-    strategy: "Loose ",
-    entryPrice: "$6000",
-  },
-  
+const data: Strategy[] = [
+  // {
+  //   asset: "Arbitrum",
+  //   balance: "436.23",
+  //   actions: "2023-01-01",
+  //   strategy: "Tight ",
+  //   entryPrice: "$1000",
+  //   image: "https://ethereum-optimism.github.io/data/0xBTC/logo.png",
+  // }
 ];
 
 export default function UsersPage({}: Props) {
   return (
     <div className="flex flex-col gap-5  w-full">
-      <PageTitle title="Users" />
+      <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={data} />
     </div>
   );
