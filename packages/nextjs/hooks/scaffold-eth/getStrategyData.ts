@@ -9,14 +9,17 @@ import ercABI from "~~/contracts/erc20ABI.json";
 import manager from "~~/contracts/managerABI.json";
 import stratABI from "~~/contracts/strategyABI.json";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { useScaffoldContractRead, useScaffoldContractWrite} from "~~/hooks/scaffold-eth";
+import { useScaffoldEventHistory, useScaffoldContractWrite} from "~~/hooks/scaffold-eth";
 
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
 const managerABI = manager.abi;
 
-const getStrategyData = ({ contractAddress, userAddress }: { contractAddress: string; userAddress: string }) => {
+
+
+const getStrategyData = ({ contractAddress }: { contractAddress: string; }) => {
   const [strategy, setStrategy] = useState<Strategy>();
+  const [entryPrice, setEntryPrice] = useState<string>("0");
   const {
     data: erc20Address,
   } = useContractRead({
@@ -25,6 +28,47 @@ const getStrategyData = ({ contractAddress, userAddress }: { contractAddress: st
     functionName: "getERC20TokenAddress",
   });
 
+  const deposits = useScaffoldEventHistory({
+    contractName: "TrailMixManager",
+    eventName: "FundsDeposited",
+    fromBlock: 119000002n,
+    watch: false,
+    filters: { strategy :contractAddress },
+    blockData: true,
+    transactionData: true,
+    receiptData: true,
+});
+
+  useEffect(() => {
+    if (deposits && deposits.data && deposits.data.length > 0) {
+      const sortedDeposits = (deposits.data).sort((a, b) => Number(b.block.timestamp) - Number(a.block.timestamp));
+      const entryPrice = sortedDeposits[0].log.args.depositPrice?.toString() ?? "0"; // Add nullish coalescing operator
+      setEntryPrice(entryPrice);
+    }
+  }, [deposits]);
+
+  function calculateProfit( latestPrice: number): bigint {
+    let totalCost: bigint = BigInt(0);
+    let totalAmount: bigint = BigInt(0);
+
+    if (!deposits.data) {
+      return BigInt(0);
+    }
+
+    deposits.data.forEach((deposit) => {
+      const amount: bigint = BigInt(deposit.log.args.amount ?? 0);
+      const depositPrice: bigint = BigInt(deposit.log.args.depositPrice ?? 0);
+      totalCost += amount * depositPrice;
+      totalAmount += amount;
+    });   
+    
+    const currentValue = totalAmount * BigInt(latestPrice);
+    const profit = currentValue - totalCost;
+  
+    return profit;
+  }
+
+  const profit = calculateProfit(Number(entryPrice));
 
   const {
     data: erc20Balance,
@@ -123,6 +167,7 @@ const dec = Math.pow(10, tokenDecimals as number);
 // // Ensure that contractAddr is not undefined or empty
 const tokenData = getTokenData(erc20Address as string);
 
+
 useEffect(() => {
     if (latestPrice && erc20Balance && tokenData && trailAmount) {
         const updatedStrategy: Strategy = {
@@ -135,7 +180,7 @@ useEffect(() => {
             manager: manager as string,
             tslThreshold: tslThreshold as string,
             stablecoinAddress: stablecoinAddress as string,
-            profit: "100",
+            profit: profit.toString(),
         };
         setStrategy(updatedStrategy);
     }

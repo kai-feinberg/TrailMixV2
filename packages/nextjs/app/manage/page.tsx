@@ -15,7 +15,7 @@ import React from "react";
 import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
-
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 type Props = {};
 
 
@@ -89,6 +89,13 @@ const data: Strategy[] = [
   //   image: "https://ethereum-optimism.github.io/data/0xBTC/logo.png",
   // }
 ];
+
+const userStrategies = useScaffoldContractRead({
+  contractName: "TrailMixManager",
+  functionName: "getUserContracts",
+  args: [],
+});
+
 
 export default function UsersPage({}: Props) {
   return (

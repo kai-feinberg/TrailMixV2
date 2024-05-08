@@ -33,6 +33,7 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 	event FundsDeposited(
 		address indexed creator,
 		address indexed strategy,
+		uint256 depositPrice,
 		uint256 amount,
 		address token,
 		uint256 timestamp
@@ -126,6 +127,7 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 		emit FundsDeposited(
 			msg.sender,
 			_strategy,
+			ITrailMix(_strategy).getExactPrice(),
 			_amount,
 			ITrailMix(_strategy).getERC20TokenAddress(),
 			block.timestamp
