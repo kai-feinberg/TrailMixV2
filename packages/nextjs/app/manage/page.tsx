@@ -12,11 +12,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { XSquare, Pencil } from "lucide-react";
 import React from "react";
+import { useEffect, useState } from "react";
 import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import  getStrategyData from "~~/hooks/scaffold-eth/getStrategyData";
+import useStrategyData from "~~/hooks/scaffold-eth/useStrategyData";
+import { useContractRead } from "wagmi";
+
 type Props = {};
 import { useAccount } from "wagmi";
 
@@ -81,30 +84,63 @@ const columns: ColumnDef<Strategy>[] = [
   },
 ];
 
-const connectedAccount = useAccount().address || "";
-const { data: userContracts } = useScaffoldContractRead({
-  contractName: "TrailMixManager",
-  functionName: "getUserContracts",
-  args: [connectedAccount],
-});
-
-const data: Strategy[] = [];
-
-{
-  userContracts &&
-  [...userContracts].reverse().forEach((contractAddress: string) => {
-    const strategyData = getStrategyData({ contractAddress });
-    if (strategyData) {
-      data.push(strategyData);
-    }
-  })
+// Define the props for the StrategyComponent
+interface StrategyComponentProps {
+  contractAddress: string;
+  onStrategyLoaded: (strategy: Strategy) => void;
 }
 
+const StrategyComponent: React.FC<StrategyComponentProps> = ({ contractAddress, onStrategyLoaded }) => {
+  const strategy = useStrategyData({ contractAddress });
+
+  useEffect(() => {
+    if (strategy) {
+      onStrategyLoaded(strategy);
+    }
+  }, [strategy, onStrategyLoaded]);
+
+  return null; // No direct rendering
+};
+
+
 export default function UsersPage({ }: Props) {
+  
+  const { address: connectedAccount } = useAccount();
+
+  const { data: userContracts } = useScaffoldContractRead({
+    contractName: "TrailMixManager",
+    functionName: "getUserContracts",
+    args: [connectedAccount],
+  });
+
+  // const strategies: Strategy[] = useStrategyData(userContracts?.map(contract => contract.toString()) || []);
+
+  const [strategies, setStrategies] = useState<Strategy[]>([]);
+
+  const handleStrategyLoaded = (newStrategy: Strategy) => {
+    setStrategies(prevStrategies => [...prevStrategies, newStrategy]);
+  };
+
+  // useEffect(() => {
+  //   if (userContracts) {
+  //     const strategyPromises = userContracts.map(contract => 
+  //       useStrategyData({ contractAddress: contract.toString() })
+  //     );
+  //     Promise.all(strategyPromises).then((values: (Strategy | undefined)[]) => {
+  //       const validStrategies = values.filter(value => value !== undefined) as Strategy[];
+  //       setStrategies(validStrategies);
+  //     });
+  //   }
+  // }, [userContracts]);
   return (
+    
     <div className="flex flex-col gap-5  w-full">
+      {userContracts?.map((address, index) => (
+        console.log("uasdfasdf" , address),
+        <StrategyComponent key={index} contractAddress={address} onStrategyLoaded={handleStrategyLoaded} />
+      ))}
       <PageTitle title="Your Strategies" />
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={strategies} />
     </div>
   );
 }

@@ -13,6 +13,18 @@ import {CreateNew} from "@/components/CreateNew";
 import { use } from "react";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import {useState, useEffect} from "react";
+import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
+import Deposit from "@/components/Deposit";
+import { useAccount } from "wagmi";
+import { useScaffoldContractRead} from "~~/hooks/scaffold-eth";
+
+
+import ercABI from "~~/contracts/erc20ABI.json";
+const erc20ABI = ercABI.abi;
+
+import stratABI from "~~/contracts/strategyABI.json";
+const strategyABI = stratABI.abi;
+
 
 const cardData: CardProps[] = [
   {
@@ -76,13 +88,20 @@ const uesrSalesData: SalesProps[] = [
 ];
 
 
+
+
 export default function Home() {
 
   const { targetNetwork } = useTargetNetwork();
-  // console.log(targetNetwork);
+  const { address: connectedAddress } = useAccount();
+  
+  
+  const { data: userContracts } = useScaffoldContractRead({
+    contractName: "TrailMixManager",
+    functionName: "getUserContracts",
+    args: [connectedAddress],
+  });
 
-  // const test = getTokenData("0xb6ed7644c69416d67b522e20bc294a9a9b405b31");
-  // console.log(test);
 
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -104,6 +123,10 @@ export default function Home() {
             <p className="p-4 text-2xl">Overview</p>
             <CreateNew />
           </div>
+          {userContracts &&
+            [...userContracts].reverse().map((contractAddress: string) => (
+              <Deposit key={contractAddress} contractAddress={contractAddress} userAddress={connectedAddress || ""} />
+            ))}
           <BarChart />
         </CardContent>
         <CardContent className="flex justify-between gap-4">
