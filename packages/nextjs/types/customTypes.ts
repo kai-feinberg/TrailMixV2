@@ -15,6 +15,7 @@ export interface TokenData {
   
 export type Strategy = {
     asset: TokenData;
+    contractAddress: string;
     erc20Balance: string;
     twapPrice: string;
     trailAmount: string;

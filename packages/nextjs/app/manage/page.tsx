@@ -12,7 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { XSquare, Pencil } from "lucide-react";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
@@ -31,12 +31,12 @@ const columns: ColumnDef<Strategy>[] = [
     cell: ({ row }: { row: any }) => {
       return (
         <div className="flex gap-2 items-center">
-          <img
+          {/* <img
             className="h-8 w-8"
             src={row.original.asset.logoURI}
             alt="token-image"
-          />
-          <p>{(row.getValue("asset") as TokenData).name} </p>
+          /> */}
+          {/* <p>{(row.getValue("asset") as TokenData).name} </p> */}
         </div>
       );
     },
@@ -117,9 +117,16 @@ export default function UsersPage({ }: Props) {
 
   const [strategies, setStrategies] = useState<Strategy[]>([]);
 
-  const handleStrategyLoaded = (newStrategy: Strategy) => {
-    setStrategies(prevStrategies => [...prevStrategies, newStrategy]);
-  };
+  // const handleStrategyLoaded = (newStrategy: Strategy) => {
+  //   setStrategies(prevStrategies => [...prevStrategies, newStrategy]);
+  // };
+  const handleStrategyLoaded = useCallback((newStrategy: Strategy) => {
+    setStrategies(prevStrategies => {
+      // Check if the strategy is already included to prevent duplicates
+      const exists = prevStrategies.some(s => s.contractAddress === newStrategy.contractAddress);
+      return exists ? prevStrategies : [...prevStrategies, newStrategy];
+    });
+  }, []);
 
   // useEffect(() => {
   //   if (userContracts) {
@@ -136,7 +143,6 @@ export default function UsersPage({ }: Props) {
     
     <div className="flex flex-col gap-5  w-full">
       {userContracts?.map((address, index) => (
-        console.log("uasdfasdf" , address),
         <StrategyComponent key={index} contractAddress={address} onStrategyLoaded={handleStrategyLoaded} />
       ))}
       <PageTitle title="Your Strategies" />
