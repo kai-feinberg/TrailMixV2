@@ -14,7 +14,7 @@ import { use } from "react";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import {useState, useEffect} from "react";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
-import Deposit from "@/components/Deposit";
+import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
 import { useScaffoldContractRead} from "~~/hooks/scaffold-eth";
 
@@ -123,10 +123,10 @@ export default function Home() {
             <p className="p-4 text-2xl">Overview</p>
             <CreateNew />
           </div>
-          {userContracts &&
+          {/* {userContracts &&
             [...userContracts].reverse().map((contractAddress: string) => (
-              <Deposit key={contractAddress} contractAddress={contractAddress} userAddress={connectedAddress || ""} />
-            ))}
+              <Deposit key={contractAddress} contractAddress={contractAddress} />
+            ))} */}
           <BarChart />
         </CardContent>
         <CardContent className="flex justify-between gap-4">

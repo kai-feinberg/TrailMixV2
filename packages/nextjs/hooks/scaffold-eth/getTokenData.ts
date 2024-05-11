@@ -28,7 +28,7 @@ interface TokenList {
  * @param {string} contractAddress - The contract address of the token.
  * @returns {TokenData|undefined} The token data if found, otherwise undefined.
  */
-export default function getTokenData(contractAddress: string): TokenData | undefined {
+export default function useTokenData(contractAddress: string): TokenData | undefined {
     const { targetNetwork } = useTargetNetwork();
     const chainId = targetNetwork?.id;
 

@@ -7,6 +7,8 @@
 /** @format */
 "use client";
 
+
+
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -19,6 +21,10 @@ import { Strategy } from "~~/types/customTypes"; // strategy type defined in cus
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import useStrategyData from "~~/hooks/scaffold-eth/useStrategyData";
 import { useContractRead } from "wagmi";
+import fetchStrategyData from "~~/hooks/scaffold-eth/getStrategyData";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import DepositPopup from "~~/components/DepositPopup";
+import WithdrawButton from "~~/components/WithdrawButton";
 
 type Props = {};
 import { useAccount } from "wagmi";
@@ -30,41 +36,63 @@ const columns: ColumnDef<Strategy>[] = [
     header: "Asset",
     cell: ({ row }: { row: any }) => {
       return (
-        <div className="flex gap-2 items-center">
-          {/* <img
-            className="h-8 w-8"
-            src={row.original.asset.logoURI}
-            alt="token-image"
-          /> */}
-          {/* <p>{(row.getValue("asset") as TokenData).name} </p> */}
+        <div>
+          <div className="flex gap-2 items-center">
+            <img
+              className="h-8 w-8"
+              src={row.original.asset.logoURI}
+              alt="token-image"
+            />
+            <p>{(row.getValue("asset") as TokenData).name} </p>
+          </div>
+          <p>${row.original.twapPrice as number / ((10 ** (6)))}</p>
+          {/* divide by decimals of USDC on the network */}
         </div>
       );
     },
   },
   {
-    accessorKey: "balance",
+    accessorKey: "erc20Balance",
     header: "Balance",
     cell: ({ row }) => {
       return (
         <div className="flex flex-col h-full">
           <div className="flex items-center font-semibold leading-snug text-lg flex-grow-3">
-            <p>{row.getValue("balance")}</p>
+            <p>{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
           </div>
           <div className="flex flex-col flex-grow-1">
-            <p className="text-xs text-gray-500">$32.31</p>
+            <p className="text-xs text-gray-500">
+              {((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : ((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)}
+            </p>
           </div>
         </div>
       );
     },
   },
   {
-    accessorKey: "strategy",
+    accessorKey: "trailAmount",
     header: "Strategy",
+    cell: ({ row }) => {
+      return (
+        <div>
+          <p>{row.original.trailAmount}% trail</p>
+        </div>
+      );
+    },
   },
 
   {
-    accessorKey: "entryPrice",
-    header: "Entry Price",
+    accessorKey: "profit",
+    header: "Profit",
+    cell: ({ row }) => {
+      return (
+        <div className="text-md">
+          <p style={{ color: Number(row.original.profit) >= 0 ? 'green' : 'red' }}>
+            {Number(row.original.profit) >= 0 ? `+$${row.original.profit}` : `-$${Math.abs(Number(row.original.profit))}`}
+          </p>
+        </div>
+      );
+    }
   },
   {
     accessorKey: "actions",
@@ -72,81 +100,44 @@ const columns: ColumnDef<Strategy>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-2">
-          <Button variant="outline" size="icon">
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon">
-            <XSquare className="h-4 w-4" />
-          </Button>
+          <DepositPopup contractAddress={row.original.contractAddress} />
+          <WithdrawButton contractAddress={row.original.contractAddress} />
         </div>
       );
     },
   },
 ];
 
-// Define the props for the StrategyComponent
-interface StrategyComponentProps {
-  contractAddress: string;
-  onStrategyLoaded: (strategy: Strategy) => void;
-}
-
-const StrategyComponent: React.FC<StrategyComponentProps> = ({ contractAddress, onStrategyLoaded }) => {
-  const strategy = useStrategyData({ contractAddress });
-
-  useEffect(() => {
-    if (strategy) {
-      onStrategyLoaded(strategy);
-    }
-  }, [strategy, onStrategyLoaded]);
-
-  return null; // No direct rendering
-};
 
 
 export default function UsersPage({ }: Props) {
-  
-  const { address: connectedAccount } = useAccount();
+  const [strategies, setStrategies] = useState<Strategy[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  const { address: connectedAccount } = useAccount();
   const { data: userContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
     functionName: "getUserContracts",
     args: [connectedAccount],
   });
+  const { targetNetwork } = useTargetNetwork();
 
-  // const strategies: Strategy[] = useStrategyData(userContracts?.map(contract => contract.toString()) || []);
+  useEffect(() => {
+    const fetchStrategies = async () => {
+      const fetchedStrategies = await fetchStrategyData(userContracts as string[], targetNetwork);
+      setStrategies(fetchedStrategies);
+      setLoading(false);
+    };
 
-  const [strategies, setStrategies] = useState<Strategy[]>([]);
+    fetchStrategies();
+  }, [userContracts]); // Depend on userContracts to refetch when it changes
 
-  // const handleStrategyLoaded = (newStrategy: Strategy) => {
-  //   setStrategies(prevStrategies => [...prevStrategies, newStrategy]);
-  // };
-  const handleStrategyLoaded = useCallback((newStrategy: Strategy) => {
-    setStrategies(prevStrategies => {
-      // Check if the strategy is already included to prevent duplicates
-      const exists = prevStrategies.some(s => s.contractAddress === newStrategy.contractAddress);
-      return exists ? prevStrategies : [...prevStrategies, newStrategy];
-    });
-  }, []);
-
-  // useEffect(() => {
-  //   if (userContracts) {
-  //     const strategyPromises = userContracts.map(contract => 
-  //       useStrategyData({ contractAddress: contract.toString() })
-  //     );
-  //     Promise.all(strategyPromises).then((values: (Strategy | undefined)[]) => {
-  //       const validStrategies = values.filter(value => value !== undefined) as Strategy[];
-  //       setStrategies(validStrategies);
-  //     });
-  //   }
-  // }, [userContracts]);
   return (
-    
-    <div className="flex flex-col gap-5  w-full">
-      {userContracts?.map((address, index) => (
-        <StrategyComponent key={index} contractAddress={address} onStrategyLoaded={handleStrategyLoaded} />
-      ))}
+    <div className="flex flex-col gap-5 w-full">
+
       <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={strategies} />
     </div>
   );
 }
+

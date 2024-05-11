@@ -7,12 +7,28 @@ import stratABI from "../contracts/strategyABI.json";
 import { IntegerInput } from "./scaffold-eth";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
+import { useAccount } from "wagmi";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog";
+  import { ArrowDownFromLineIcon} from "lucide-react";
 
+  
+import { Button } from "@/components/ui/button";
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
 const managerABI = manager.abi;
 
-const Deposit = ({ contractAddress, userAddress }: { contractAddress: string; userAddress: string }) => {
+
+const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
+    const {address :userAddress} = useAccount(); // Get the user's address
+
     const [depositAmount, setDepositAmount] = useState<string | bigint>("0"); // State to store deposit amount
     const [assetPrice, setAssetPrice] = useState<string | bigint>("0"); // State to store latest price
     const [scaledDepositAmount, setScaledDepositAmount] = useState<bigint>(BigInt(0)); // State to store scaled deposit amount
@@ -242,30 +258,24 @@ const Deposit = ({ contractAddress, userAddress }: { contractAddress: string; us
     };
 
     return (
-        <div>
-            {/* <h2>Strategy Information: {contractAddress}</h2>
-      <p> Erc20Balance: {erc20Balance ? erc20Balance.toString() : "0"}</p>
-      <p>latest Price: {latestPrice ? latestPrice.toString() : "0"}</p>
-      <p>TSL Threshold: {tslThreshold ? tslThreshold.toString() : "0"}</p>
-      <p>Is TSL Active: {isTSLActive ? "Yes" : "No"}</p>
-      <p>Uniswap Router Address: {uniswapRouterAddress ? uniswapRouterAddress.toString() : "loading"}</p>
-      <p>Trail Amount: {trailAmount ? String(trailAmount) : "Loading"}</p>
-      <p>Manager: {manager ? manager.toString() : "loading"}</p>
-      <p>Creator: {creator ? creator.toString() : "loading"}</p>
-      <p>Granularity: {granularity ? granularity.toString() : "Loading..."}</p>
-      <p>Uniswap Pool: {uniswapPool ? uniswapPool.toString() : "Loading..."}</p>
-      <p>Allowance: {allowance ? allowance.toString() : "0"}</p>
-      {isLoadingLatestPrice && <div>Loading latest price</div>}
-      <p>Stablecoin balance: {stablecoinBalance ? stablecoinBalance.toString() : "0"}</p> */}
 
-            <IntegerInput value={depositAmount} onChange={setDepositAmount} />
-            <div><button onClick={handleDeposit}>Deposit</button></div>
-            <br />
-            <button onClick={swap}>Swap</button>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="icon"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px] bg-white">
+        <DialogHeader>
+          <DialogTitle>Deposit funds</DialogTitle>
+          <DialogDescription>
+            Add funds to existing strategy
+          </DialogDescription>
+        </DialogHeader>
 
-
-        </div>
+        <IntegerInput value={depositAmount} onChange={setDepositAmount} />
+        <Button variant="outline" onClick={handleDeposit}>Deposit </Button>
+      </DialogContent>
+    </Dialog>        
     );
 };
 
-export default Deposit;
+export default DepositPopup;
