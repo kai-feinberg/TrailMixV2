@@ -20,7 +20,7 @@ import {
 
 
 
-export function ComboBox({value, setValue, frameworks}: {value: string, setValue: Function, frameworks: Array<{value: string, label: string}>})  {
+export function ComboBox({ value, setValue, frameworks }: { value: string, setValue: Function, frameworks: Array<{ value: string, label: string }> }) {
   const [open, setOpen] = React.useState(false)
 
   return (
@@ -38,7 +38,7 @@ export function ComboBox({value, setValue, frameworks}: {value: string, setValue
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[200px] p-0 bg-white">
         <Command>
           <CommandInput placeholder="Select..." />
           <CommandEmpty>No token found.</CommandEmpty>

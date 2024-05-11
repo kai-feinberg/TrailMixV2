@@ -43,9 +43,12 @@ const columns: ColumnDef<Strategy>[] = [
               src={row.original.asset.logoURI}
               alt="token-image"
             />
-            <p>{(row.getValue("asset") as TokenData).name} </p>
+
+            <div className="space-y-1">
+              <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
+              <p className="">${row.original.twapPrice as number / ((10 ** (6)))}</p>
+            </div>
           </div>
-          <p>${row.original.twapPrice as number / ((10 ** (6)))}</p>
           {/* divide by decimals of USDC on the network */}
         </div>
       );
@@ -55,16 +58,13 @@ const columns: ColumnDef<Strategy>[] = [
     accessorKey: "erc20Balance",
     header: "Balance",
     cell: ({ row }) => {
+
       return (
-        <div className="flex flex-col h-full">
-          <div className="flex items-center font-semibold leading-snug text-lg flex-grow-3">
-            <p>{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
-          </div>
-          <div className="flex flex-col flex-grow-1">
-            <p className="text-xs text-gray-500">
-              {((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : ((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)}
-            </p>
-          </div>
+        <div className="space-y-1" >
+          <p className="text-lg leading-none">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
+          <p className="text-base text-gray-500">
+            {((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : ((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)}
+          </p>
         </div>
       );
     },

@@ -140,21 +140,7 @@ export function CreateNew() {
           </div>
         </div>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Deposit Amount
-            </Label>
-            <Input
-              id="depositAmount"
-              defaultValue="0.00"
-              className="col-span-3"
-              onChange={(e) => setDepositAmount(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <Button type="submit" className="w-full bg-black" onClick={handleDeploy}>Create</Button>
+        <Button type="submit" variant="outline" className="w-full" onClick={handleDeploy}>Create</Button>
       </DialogContent>
     </Dialog>
   );
