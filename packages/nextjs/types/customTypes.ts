@@ -27,3 +27,9 @@ export type Strategy = {
     // entryPrice: string; don't need if we have profit
     profit: string;
   };  
+
+  export type TokenList {
+    [chainId: number]: {
+        [contractAddress: string]: TokenData;
+    };
+}

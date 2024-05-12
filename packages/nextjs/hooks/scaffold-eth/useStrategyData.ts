@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useContractRead } from 'wagmi';
 import { Strategy, TokenData } from '~~/types/customTypes';
-import getTokenData from '~~/hooks/scaffold-eth/getTokenData';
+import getTokenData from '~~/hooks/scaffold-eth/useTokenData';
 import ercABI from '~~/contracts/erc20ABI.json';
 import stratABI from '~~/contracts/strategyABI.json';
 import { useScaffoldEventHistory } from '~~/hooks/scaffold-eth';

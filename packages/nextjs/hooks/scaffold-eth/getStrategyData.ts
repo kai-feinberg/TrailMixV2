@@ -1,8 +1,8 @@
 //NOT A REACT HOOK
 
 import { ethers } from 'ethers';
-import { Strategy, TokenData } from '~~/types/customTypes';
-import getTokenData from '~~/hooks/scaffold-eth/getTokenData';
+import { Strategy, TokenData, TokenList } from '~~/types/customTypes';
+import getTokenData from '~~/hooks/scaffold-eth/useTokenData';
 import ercABI from '~~/contracts/erc20ABI.json';
 import stratABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
@@ -13,11 +13,6 @@ const provider = new ethers.providers.InfuraProvider("optimism", process.env.INF
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
 
-interface TokenList {
-    [chainId: number]: {
-        [contractAddress: string]: TokenData;
-    };
-}
 
 // Utility function to fetch strategy data for a list of contract addresses
 async function fetchStrategyData(contractAddresses: string[], targetNetwork: any): Promise<Strategy[]> {

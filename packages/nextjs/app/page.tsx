@@ -8,16 +8,15 @@ import { DollarSign, Users, CreditCard, Activity, ArrowUp, ArrowLeftRight, Arrow
 import Card, { CardContent, CardProps } from "@/components/Card";
 import BarChart from "@/components/LineChart";
 import {Button} from "@/components/ui/button";
-import SalesCard, { SalesProps } from "@/components/SalesCard";
+import EventCard, { EventProps } from "~~/components/EventCard";
 import {CreateNew} from "@/components/CreateNew";
-import { use } from "react";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import {useState, useEffect} from "react";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
 import { useScaffoldContractRead} from "~~/hooks/scaffold-eth";
-
+import Events from "~~/components/Events";
 
 import ercABI from "~~/contracts/erc20ABI.json";
 const erc20ABI = ercABI.abi;
@@ -53,12 +52,13 @@ const cardData: CardProps[] = [
   }
 ];
 
-const uesrSalesData: SalesProps[] = [
+const uesrSalesData: any[] = [
   {
     name: "Deposited 15 $OP",
     email: "strategy: basic (15%)",
     saleAmount: "+$1,999.00",
-    icon: ArrowDown
+    icon: ArrowDown,
+
   },
   {
     name: "Sold 12.4 $ARB at price $2.41",
@@ -86,8 +86,6 @@ const uesrSalesData: SalesProps[] = [
   },
   
 ];
-
-
 
 
 export default function Home() {
@@ -136,7 +134,7 @@ export default function Home() {
               You made 5 transactions this month.
             </p>
           </section>
-          {uesrSalesData.map((d, i) => (
+          {/* {uesrSalesData.map((d, i) => (
             <SalesCard
               key={i}
               email={d.email}
@@ -144,7 +142,8 @@ export default function Home() {
               saleAmount={d.saleAmount}
               icon={d.icon}
             />
-          ))}
+          ))} */}
+            <Events/>
         </CardContent>
 
       </section>
