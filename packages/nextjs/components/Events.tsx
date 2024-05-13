@@ -5,8 +5,10 @@ import { useAccount } from "wagmi";
 import EventCard from "./EventCard";
 import { ArrowDown, ArrowLeftRight, ArrowUp } from "lucide-react";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import {TokenList} from "~~/types/customTypes";
+import { TokenList } from "~~/types/customTypes";
 import tokenList from "~~/lib/tokenList.json";
+import { Skeleton } from "~~/components/ui/skeleton";
+
 
 //load events from the contract
 //aggregate into one array and reverse sort by timestamp
@@ -14,7 +16,7 @@ import tokenList from "~~/lib/tokenList.json";
 const Events = () => {
     const { address: userAddress } = useAccount();
     const [events, setEvents] = useState<any[]>([]);
-    const {targetNetwork} = useTargetNetwork();
+    const { targetNetwork } = useTargetNetwork();
     const tokenData = (tokenList as TokenList)[targetNetwork.id];
 
     const {
@@ -86,6 +88,24 @@ const Events = () => {
 
     return (
         <div>
+            {events && events.length === 0 && Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex flex-wrap justify-between items-center gap-3 p-2">
+                    <section className="flex gap-3 items-center">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-full bg-slate-300">
+                            <Skeleton className="h-10 w-10 rounded-full bg-slate-300" />
+                        </div>
+                        <div className="space-y-1">
+                            <Skeleton className="h-6 w-56 bg-slate-300 rounded-xl" />
+                            <Skeleton className="h-4 w-40 bg-slate-300 rounded-xl" />
+                        </div>
+                    </section>
+                    <div className="text-right space-y-1">
+                        <Skeleton className="h-6 w-24 bg-slate-300 rounded-xl" />
+                        <Skeleton className="h-4 w-20 bg-slate-300 rounded-xl" />
+                    </div>
+                </div>
+            ))}
+
             {events && events.slice(0, 5).map((event, index) => (
                 <div key={index} className="mb-2">
                     {event.log.eventName === "FundsWithdrawn" && (
@@ -95,7 +115,7 @@ const Events = () => {
                             amount={`${event.log.args.amount} ETH`}
                             icon={ArrowUp}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
-                            color= "red"
+                            color="red"
                         />
                     )}
 
@@ -106,25 +126,36 @@ const Events = () => {
                             amount={`${event.log.args.amountIn} for ${event.log.args.amountOut}`}
                             icon={ArrowLeftRight}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
-                            color = "blue"
+                            color="blue"
                         />
                     )}
                     {event.log.eventName === "FundsDeposited" && (
                         <EventCard
                             title="Deposit Made"
                             detail={`Deposited to ${event.log.args.strategy.slice(0, 6)}...${event.log.args.strategy.slice(-4)}`}
-                            amount={`${(Number(event.log.args.amount)/ (10**Number(tokenData[event.log.args.token].decimals)))} ${tokenData[event.log.args.token].symbol}`}
+                            amount={`${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token].decimals)))} ${tokenData[event.log.args.token].symbol}`}
                             icon={ArrowDown}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
-                            color = "green"
+                            color="green"
                         />
                     )}
-
+                    {event.log.eventName === "ContractDeployed" && (
+                        <EventCard
+                            title="Contract Deployed"
+                            detail={`Deployed by ${event.log.args.creator}`}
+                            amount=" "
+                            icon={ArrowUp}
+                            date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
+                            color="slate"
+                        />
+                    )}
                 </div>
 
             ))}
+            {/* {Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
+                <div key={index} style={{width: '660px', height: '77px'}}></div>
+            ))} */}
 
-            <br />
         </div>
     );
 }

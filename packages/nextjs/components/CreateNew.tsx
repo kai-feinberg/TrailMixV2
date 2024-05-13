@@ -17,6 +17,7 @@ import { ComboBox } from "@/components/ComboBox";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import tokenList from '~~/lib/tokenList.json';
 import { useTargetNetwork } from '~~/hooks/scaffold-eth/useTargetNetwork';
+import { ShieldIcon, ScaleIcon, SwordIcon } from "lucide-react";
 
 
 interface TokenData {
@@ -33,7 +34,7 @@ interface TokenList {
 export function CreateNew() {
 
   const [tokenAddress, setTokenAddress] = React.useState('');
-  const [strategy, setStrategy] = React.useState("5");
+  const [strategy, setStrategy] = React.useState("20");
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
 
@@ -47,21 +48,6 @@ export function CreateNew() {
     label: `${details.name} ($${details.symbol})`, //label is displayed on front end in dropdown
   })) : [];
 
-
-  const strategyOptions = [
-    {
-      value: "15",
-      label: "Basic (15% trail)",
-    },
-    {
-      value: "5",
-      label: "Tight (5% trail)",
-    },
-    {
-      value: "30",
-      label: "Loose (30% trail)",
-    },
-  ];
 
   React.useEffect(() => {
     if (tokenAddress && tokens[tokenAddress]?.pool) {
@@ -108,7 +94,7 @@ export function CreateNew() {
       <DialogTrigger asChild>
         <Button variant="outline">Create New</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white">
+      <DialogContent className="sm:max-w-[500px] bg-white">
         <DialogHeader>
           <DialogTitle>Create New</DialogTitle>
           <DialogDescription>
@@ -122,21 +108,39 @@ export function CreateNew() {
             <Label htmlFor="name" className="text-right">
               Token
             </Label>
-              <ComboBox 
+            <ComboBox
               value={tokenAddress || ''}
-              setValue={setTokenAddress }
+              setValue={setTokenAddress}
               frameworks={tokenOptions || []}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Strategy
-            </Label>
-            <ComboBox
-              value={strategy}
-              setValue={setStrategy}
-              frameworks={strategyOptions}
-            />
+          <div className="bg-blue-600 text-white p-4 rounded-lg">
+            <h3 className="text-xl font-semibold mb-4">Select Strategy</h3>
+            <ul className="mb-4">
+              <li>Conservative (30%): Holds through large volatility</li>
+              <li>Balanced (20%): Balanced approach</li>
+              <li>Aggressive (10%): Reacts to smaller dips</li>
+            </ul>
+            <div className="grid grid-cols-3 gap-4 p-6">
+              <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("30")}>
+                <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "30"? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <ShieldIcon className="h-6 w-6 mb-2" />
+                  <div>Conservative</div>
+                </div>
+              </Button>
+              <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
+                <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20"? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <ScaleIcon className="h-6 w-6 mb-2" />
+                  <div>Balanced</div>
+                </div>
+              </Button>
+              <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("10")}>
+                <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "10"? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <SwordIcon className="h-6 w-6 mb-2" />
+                  <div>Aggressive</div>
+                </div>
+              </Button>
+            </div>
           </div>
         </div>
 

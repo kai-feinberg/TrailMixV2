@@ -134,15 +134,6 @@ export default function Home() {
               You made 5 transactions this month.
             </p>
           </section>
-          {/* {uesrSalesData.map((d, i) => (
-            <SalesCard
-              key={i}
-              email={d.email}
-              name={d.name}
-              saleAmount={d.saleAmount}
-              icon={d.icon}
-            />
-          ))} */}
             <Events/>
         </CardContent>
 

@@ -60,9 +60,9 @@ const columns: ColumnDef<Strategy>[] = [
     cell: ({ row }) => {
 
       return (
-        <div className="space-y-1" >
-          <p className="text-lg leading-none">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
-          <p className="text-base text-gray-500">
+        <div className="space-y-2" >
+          <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
+          <p className="text-sm text-gray-500">
             {((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : ((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)}
           </p>
         </div>
@@ -74,7 +74,7 @@ const columns: ColumnDef<Strategy>[] = [
     header: "Strategy",
     cell: ({ row }) => {
       return (
-        <div>
+        <div className="text-base">
           <p>{row.original.trailAmount}% trail</p>
         </div>
       );
@@ -86,7 +86,7 @@ const columns: ColumnDef<Strategy>[] = [
     header: "Profit",
     cell: ({ row }) => {
       return (
-        <div className="text-md">
+        <div className="text-base">
           <p style={{ color: Number(row.original.profit) >= 0 ? 'green' : 'red' }}>
             {Number(row.original.profit) >= 0 ? `+$${row.original.profit}` : `-$${Math.abs(Number(row.original.profit))}`}
           </p>
@@ -133,7 +133,7 @@ export default function UsersPage({ }: Props) {
   }, [userContracts]); // Depend on userContracts to refetch when it changes
 
   return (
-    <div className="flex flex-col gap-5 w-full">
+    <div className="flex flex-col gap-4 w-full px-4 ">
 
       <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={strategies} />
