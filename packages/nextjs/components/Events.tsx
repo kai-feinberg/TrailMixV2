@@ -18,6 +18,7 @@ const Events = () => {
     const [events, setEvents] = useState<any[]>([]);
     const { targetNetwork } = useTargetNetwork();
     const tokenData = (tokenList as TokenList)[targetNetwork.id];
+    const [loading, setLoading] = useState(true);
 
     const {
         data: deployments,
@@ -81,14 +82,18 @@ const Events = () => {
         if (!isLoadingDeployments && deployments && !isLoadingDeposits && deposits && !isLoadingWithdrawals && withdrawals && !isLoadingSwaps && swaps) {
             const sorted_events = [...deployments, ...deposits, ...withdrawals, ...swaps].sort((a, b) => Number(b.block.timestamp) - Number(a.block.timestamp));
             setEvents(sorted_events);
+            if (sorted_events.length > 0) {
+                setLoading(false);
+            }
         }
+        
     }, [deployments, deposits, swaps, withdrawals]);
 
     console.log(events);
 
     return (
         <div>
-            {events && events.length === 0 && Array.from({ length: 5 }).map((_, index) => (
+            {loading && Array.from({ length: 5 }).map((_, index) => (
                 <div key={index} className="flex flex-wrap justify-between items-center gap-3 p-2">
                     <section className="flex gap-3 items-center">
                         <div className="flex items-center justify-center h-12 w-12 rounded-full bg-slate-300">
@@ -152,9 +157,9 @@ const Events = () => {
                 </div>
 
             ))}
-            {/* {Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
-                <div key={index} style={{width: '660px', height: '77px'}}></div>
-            ))} */}
+            {!loading && Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
+                <div key={index} style={{width: '600px', height: '80px'}} className="bg-black"></div>
+            ))}
 
         </div>
     );
