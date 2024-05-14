@@ -134,16 +134,25 @@ export default function UsersPage({ }: Props) {
     fetchStrategies();
   }, [userContracts]); // Depend on userContracts to refetch when it changes
 
+  // // Function to update profit for a given index
+  // const updateProfit = (index: any, profit: any) => {
+  //   setProfits((currentProfits) => {
+  //     const newProfits = [...currentProfits];
+  //     newProfits[index] = profit;
+  //     return newProfits;
+  //   });
+  // };
+
   // Function to update profit for a given index
-  const updateProfit = (index: any, profit: any) => {
-    setProfits((currentProfits) => {
-      const newProfits = [...currentProfits];
-      newProfits[index] = profit;
-      return newProfits;
+  const updateProfit = (index: number, profit: string) => {
+    console.log("updating profit", index, profit);
+    setStrategies(currentStrategies => {
+      return currentStrategies.map((strategy, i) => 
+        i === index ? { ...strategy, profit } : strategy
+      );
     });
   };
 
-  console.log("Profits", profits);
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
