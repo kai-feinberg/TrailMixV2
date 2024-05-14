@@ -92,9 +92,9 @@ export function CreateNew() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Create New</Button>
+        <Button variant="outline" className="rounded-xl">Create New</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogContent className="sm:max-w-[500px] bg-white rounded-xl">
         <DialogHeader>
           <DialogTitle>Create New</DialogTitle>
           <DialogDescription>
@@ -103,7 +103,7 @@ export function CreateNew() {
         </DialogHeader>
 
 
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 rounded-xl">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Token

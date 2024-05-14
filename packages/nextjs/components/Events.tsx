@@ -158,7 +158,7 @@ const Events = () => {
 
             ))}
             {!loading && Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
-                <div key={index} style={{width: '600px', height: '80px'}} className="bg-black"></div>
+                <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"></div>
             ))}
 
         </div>

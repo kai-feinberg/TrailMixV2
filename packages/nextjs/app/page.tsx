@@ -121,10 +121,7 @@ export default function Home() {
             <p className="p-4 text-2xl">Overview</p>
             <CreateNew />
           </div>
-          {/* {userContracts &&
-            [...userContracts].reverse().map((contractAddress: string) => (
-              <Deposit key={contractAddress} contractAddress={contractAddress} />
-            ))} */}
+          
           <BarChart />
         </CardContent>
         <CardContent className="flex justify-between gap-4">

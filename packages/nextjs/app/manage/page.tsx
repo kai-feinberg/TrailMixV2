@@ -21,10 +21,12 @@ import { Strategy } from "~~/types/customTypes"; // strategy type defined in cus
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import useStrategyData from "~~/hooks/scaffold-eth/useStrategyData";
 import { useContractRead } from "wagmi";
-import fetchStrategyData from "~~/hooks/scaffold-eth/getStrategyData";
+import fetchStrategyData from "~~/hooks/scaffold-eth/fetchStrategyData";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import DepositPopup from "~~/components/DepositPopup";
 import WithdrawButton from "~~/components/WithdrawButton";
+import useStrategyProfit from "~~/hooks/scaffold-eth/useStrategyProfit";
+import StrategyProfitUpdater from "~~/components/StrategyProfitUpdater";
 
 type Props = {};
 import { useAccount } from "wagmi";
@@ -109,10 +111,10 @@ const columns: ColumnDef<Strategy>[] = [
 ];
 
 
-
 export default function UsersPage({ }: Props) {
   const [strategies, setStrategies] = useState<Strategy[]>([]);
   const [loading, setLoading] = useState(true);
+  const [profits, setProfits] = useState<string[]>([]);
 
   const { address: connectedAccount } = useAccount();
   const { data: userContracts } = useScaffoldContractRead({
@@ -132,8 +134,27 @@ export default function UsersPage({ }: Props) {
     fetchStrategies();
   }, [userContracts]); // Depend on userContracts to refetch when it changes
 
+  // Function to update profit for a given index
+  const updateProfit = (index: any, profit: any) => {
+    setProfits((currentProfits) => {
+      const newProfits = [...currentProfits];
+      newProfits[index] = profit;
+      return newProfits;
+    });
+  };
+
+  console.log("Profits", profits);
+
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
+      {userContracts?.map((address, index) => (
+        <StrategyProfitUpdater
+          key={address}
+          contractAddress={address}
+          index={index}
+          onProfitFetched={updateProfit}
+        />
+      ))}
 
       <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={strategies} />
