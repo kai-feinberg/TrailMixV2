@@ -38,6 +38,8 @@ export function CreateNew() {
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
 
+  const [phase, setPhase] = React.useState("deploy");
+
   const { targetNetwork } = useTargetNetwork();
   const chainId = targetNetwork?.id;
 
@@ -83,6 +85,7 @@ export function CreateNew() {
     try {
       const deploymentResult = await deploy();
       console.log(deploymentResult);
+      setPhase("deposit");
     }
     catch (error) {
       console.log(error);
@@ -103,48 +106,58 @@ export function CreateNew() {
         </DialogHeader>
 
 
-        <div className="grid gap-4 py-4 rounded-xl">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Token
-            </Label>
-            <ComboBox
-              value={tokenAddress || ''}
-              setValue={setTokenAddress}
-              frameworks={tokenOptions || []}
-            />
-          </div>
-          <div className="bg-blue-600 text-white p-4 rounded-lg">
-            <h3 className="text-xl font-semibold mb-4">Select Strategy</h3>
-            <ul className="mb-4">
-              <li>Conservative (30%): Holds through large volatility</li>
-              <li>Balanced (20%): Balanced approach</li>
-              <li>Aggressive (10%): Reacts to smaller dips</li>
-            </ul>
-            <div className="grid grid-cols-3 gap-4 p-6">
-              <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("30")}>
-                <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "30"? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
-                  <ShieldIcon className="h-6 w-6 mb-2" />
-                  <div>Conservative</div>
+        {phase === "deploy" && (
+          <div>
+            <div className="grid gap-4 py-4 rounded-xl">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Token
+                </Label>
+                <ComboBox
+                  value={tokenAddress || ''}
+                  setValue={setTokenAddress}
+                  frameworks={tokenOptions || []}
+                />
+              </div>
+              <div className="bg-blue-600 text-white p-4 rounded-lg">
+                <h3 className="text-xl font-semibold mb-4">Select Strategy</h3>
+                <ul className="mb-4">
+                  <li>Conservative (30%): Holds through large volatility</li>
+                  <li>Balanced (20%): Balanced approach</li>
+                  <li>Aggressive (10%): Reacts to smaller dips</li>
+                </ul>
+                <div className="grid grid-cols-3 gap-4 p-6">
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("30")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "30" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                      <ShieldIcon className="h-6 w-6 mb-2" />
+                      <div>Conservative</div>
+                    </div>
+                  </Button>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                      <ScaleIcon className="h-6 w-6 mb-2" />
+                      <div>Balanced</div>
+                    </div>
+                  </Button>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("10")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "10" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                      <SwordIcon className="h-6 w-6 mb-2" />
+                      <div>Aggressive</div>
+                    </div>
+                  </Button>
                 </div>
-              </Button>
-              <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
-                <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20"? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
-                  <ScaleIcon className="h-6 w-6 mb-2" />
-                  <div>Balanced</div>
-                </div>
-              </Button>
-              <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("10")}>
-                <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "10"? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
-                  <SwordIcon className="h-6 w-6 mb-2" />
-                  <div>Aggressive</div>
-                </div>
-              </Button>
+              </div>
             </div>
+            <Button type="submit" variant="outline" className="w-full" onClick={handleDeploy}>Create</Button>
           </div>
-        </div>
+        )}
 
-        <Button type="submit" variant="outline" className="w-full" onClick={handleDeploy}>Create</Button>
+        {phase === "deposit" && (
+          <div>
+            <p> deposit here</p>
+          </div>
+        )}
+
       </DialogContent>
     </Dialog>
   );

@@ -8,6 +8,7 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { TokenList } from "~~/types/customTypes";
 import tokenList from "~~/lib/tokenList.json";
 import { Skeleton } from "~~/components/ui/skeleton";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 
 
 //load events from the contract
@@ -15,10 +16,19 @@ import { Skeleton } from "~~/components/ui/skeleton";
 //display info for the most recent events
 const Events = () => {
     const { address: userAddress } = useAccount();
+
+
     const [events, setEvents] = useState<any[]>([]);
     const { targetNetwork } = useTargetNetwork();
     const tokenData = (tokenList as TokenList)[targetNetwork.id];
     const [loading, setLoading] = useState(true);
+
+    const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
+        contractName: "TrailMixManager",
+        functionName: "getUserContracts",
+        args: [userAddress],
+    });
+    
 
     const {
         data: deployments,
@@ -79,21 +89,25 @@ const Events = () => {
 
     //only render events when events change
     useEffect(() => {
-        if (!isLoadingDeployments && deployments && !isLoadingDeposits && deposits && !isLoadingWithdrawals && withdrawals && !isLoadingSwaps && swaps) {
+        if (!isLoadingDeployments && deployments && !isLoadingDeposits && deposits && !isLoadingWithdrawals && withdrawals && !isLoadingSwaps && swaps && userAddress) {
             const sorted_events = [...deployments, ...deposits, ...withdrawals, ...swaps].sort((a, b) => Number(b.block.timestamp) - Number(a.block.timestamp));
             setEvents(sorted_events);
             if (sorted_events.length > 0) {
                 setLoading(false);
             }
         }
+        else{
+            setEvents([]);
+        }
         
     }, [deployments, deposits, swaps, withdrawals]);
 
     console.log(events);
+    console.log(userAddress);
 
     return (
         <div>
-            {loading && Array.from({ length: 5 }).map((_, index) => (
+            {loading && userAddress && Array.from({ length: 5 }).map((_, index) => (
                 <div key={index} className="flex flex-wrap justify-between items-center gap-3 p-2">
                     <section className="flex gap-3 items-center">
                         <div className="flex items-center justify-center h-12 w-12 rounded-full bg-slate-300">
@@ -157,9 +171,13 @@ const Events = () => {
                 </div>
 
             ))}
-            {!loading && Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
+            {!loading && events.length !=0 && Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
                 <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"></div>
             ))}
+
+            {!userAddress && (Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
+                <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"> placeholder</div>
+            )))}
 
         </div>
     );
