@@ -84,10 +84,21 @@ const columns: ColumnDef<Strategy>[] = [
     accessorKey: "profit",
     header: "Profit",
     cell: ({ row }) => {
+
+      const divisor = 10 ** 6 * 10 ** row.original.asset.decimals;
+      const adjustedProfit = Number(row.original.profit) / divisor;
+
+      let displayProfit;
+      if (Math.abs(adjustedProfit) < 0.01) {
+        displayProfit = "0.01";
+      } else {
+        displayProfit = adjustedProfit.toFixed(2); // Format to 2 decimal places
+      }
+
       return (
         <div className="text-base">
           <p style={{ color: Number(row.original.profit) >= 0 ? 'green' : 'red' }}>
-            {Number(row.original.profit) >= 0 ? `+$${row.original.profit}` : `-$${Math.abs(Number(row.original.profit))}`}
+            {Number(row.original.profit) >= 0 ? `+$${displayProfit}` : `-$${Math.abs(Number(displayProfit))}`}
           </p>
         </div>
       );
@@ -106,7 +117,7 @@ const columns: ColumnDef<Strategy>[] = [
       );
     },
   },
-  
+
   {
     accessorKey: "actions",
     header: "Actions",
@@ -146,19 +157,21 @@ export default function UsersPage({ }: Props) {
   }, [userContracts]); // Depend on userContracts to refetch when it changes
 
   // Function to update profit for a given index
-  const updateProfit = (index: number, profit: string, weightedEntryCost:string, percentProfit:string) => {
+  const updateProfit = (index: number, profit: string, weightedEntryCost: string, percentProfit: string) => {
     // console.log("updating profit", index, profit);
     setStrategies(currentStrategies => {
-      return currentStrategies.map((strategy, i) => 
+      return currentStrategies.map((strategy, i) =>
         i === index ? { ...strategy, profit, weightedEntryCost, percentProfit } : strategy
       );
     });
-    console.log(strategies)
+    // console.log(strategies)
   };
 
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
+      {loading && <p>Loading...</p>}
+
       {userContracts?.map((address, index) => (
         <StrategyProfitUpdater
           key={address}
