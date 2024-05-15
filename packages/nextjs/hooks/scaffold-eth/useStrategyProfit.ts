@@ -5,7 +5,7 @@ import strategyABI from '~~/contracts/strategyABI.json';
 
 const useStrategyProfit = (contractAddress: string, onProfitFetched: any) => {
   const [profit, setProfit] = useState('0');
-  const [cost, setCost] = useState('0');
+  const [entryCost, setEntryCost] = useState('0');
   const [amount, setAmount] = useState('0');
 
   const { data: deposits } = useScaffoldEventHistory({
@@ -24,31 +24,32 @@ const useStrategyProfit = (contractAddress: string, onProfitFetched: any) => {
 
   useEffect(() => {
     if (deposits && currentPrice) {
-      let totalCost = BigInt(0);
+      let totalCost = Number(0);
       let totalAmount = BigInt(0);
 
       deposits.forEach((deposit) => {
         const depositAmount = BigInt(deposit.log.args.amount ?? 0);
         const depositPrice = BigInt(deposit.log.args.depositPrice ?? 0);
-        totalCost += depositAmount * depositPrice;
+        totalCost += Number(depositAmount) * Number(depositPrice);
         totalAmount += depositAmount;
       });
 
       const latestPrice = BigInt(currentPrice.toString());
       const currentValue = totalAmount * latestPrice;
-      const computedProfit = currentValue - totalCost;
+      const computedProfit = currentValue - BigInt(totalCost);
 
       // Update state with string values to avoid BigInt in render
       setProfit(computedProfit.toString());
-      setCost(totalCost.toString());
+      setEntryCost(totalCost.toString());
       setAmount(totalAmount.toString());
 
+      const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
       // Callback to update parent component state
-      onProfitFetched(computedProfit.toString());
+      onProfitFetched(computedProfit.toString(), totalCost.toString(), percentProfit.toString());
     }
-  }, [deposits, currentPrice, onProfitFetched]);
+  }, [deposits]);
 
-  return { profit, cost, amount };
+  return { profit, entryCost };
 };
 
 export default useStrategyProfit;

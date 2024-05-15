@@ -24,11 +24,12 @@ export type Strategy = {
     manager: string;
     tslThreshold: string;
     stablecoinAddress: string;
-    // entryPrice: string; don't need if we have profit
     profit: string;
+    weightedEntryCost: string;
+    percentProfit: string;
   };  
 
-  export type TokenList {
+  export type TokenList = {
     [chainId: number]: {
         [contractAddress: string]: TokenData;
     };

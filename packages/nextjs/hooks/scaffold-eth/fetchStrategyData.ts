@@ -63,7 +63,10 @@ async function fetchStrategyData(contractAddresses: string[], targetNetwork: any
         manager: manager.toString(),
         tslThreshold: tslThreshold.toString(),
         stablecoinAddress: stablecoinAddress.toString(),
-        profit: '0'  // Ignored for now
+        profit: '0',  // Ignored for now,
+        weightedEntryCost: '0' , // Ignored for now
+        percentProfit: '0' // Ignored for now
+  
       };
 
       strategies.push(strategy);

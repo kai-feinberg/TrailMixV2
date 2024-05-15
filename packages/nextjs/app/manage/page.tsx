@@ -19,13 +19,10 @@ import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import useStrategyData from "~~/hooks/scaffold-eth/useStrategyData";
-import { useContractRead } from "wagmi";
 import fetchStrategyData from "~~/hooks/scaffold-eth/fetchStrategyData";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import DepositPopup from "~~/components/DepositPopup";
 import WithdrawButton from "~~/components/WithdrawButton";
-import useStrategyProfit from "~~/hooks/scaffold-eth/useStrategyProfit";
 import StrategyProfitUpdater from "~~/components/StrategyProfitUpdater";
 
 type Props = {};
@@ -97,6 +94,20 @@ const columns: ColumnDef<Strategy>[] = [
     }
   },
   {
+    accessorKey: "percentProfit",
+    header: "Profit %",
+    cell: ({ row }) => {
+      return (
+        <div className="text-base">
+          <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>
+            {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}%
+          </p>
+        </div>
+      );
+    },
+  },
+  
+  {
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }) => {
@@ -134,23 +145,15 @@ export default function UsersPage({ }: Props) {
     fetchStrategies();
   }, [userContracts]); // Depend on userContracts to refetch when it changes
 
-  // // Function to update profit for a given index
-  // const updateProfit = (index: any, profit: any) => {
-  //   setProfits((currentProfits) => {
-  //     const newProfits = [...currentProfits];
-  //     newProfits[index] = profit;
-  //     return newProfits;
-  //   });
-  // };
-
   // Function to update profit for a given index
-  const updateProfit = (index: number, profit: string) => {
-    console.log("updating profit", index, profit);
+  const updateProfit = (index: number, profit: string, weightedEntryCost:string, percentProfit:string) => {
+    // console.log("updating profit", index, profit);
     setStrategies(currentStrategies => {
       return currentStrategies.map((strategy, i) => 
-        i === index ? { ...strategy, profit } : strategy
+        i === index ? { ...strategy, profit, weightedEntryCost, percentProfit } : strategy
       );
     });
+    console.log(strategies)
   };
 
 

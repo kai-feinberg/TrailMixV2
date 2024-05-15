@@ -151,6 +151,9 @@ export function CreateNew() {
             <Button type="submit" variant="outline" className="w-full" onClick={handleDeploy}>Create</Button>
           </div>
         )}
+        { isPending && (
+          <span className="loading loading-spinner loading-sm"></span>
+        )}
 
         {phase === "deposit" && (
           <div>
