@@ -10,7 +10,8 @@ import { Address } from "viem";
 import { useAutoConnect, useNetworkColor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { getBlockExplorerAddressLink } from "~~/utils/scaffold-eth";
-
+import { useDisconnect } from "wagmi";
+import {Unlink} from "lucide-react";
 /**
  * Custom Wagmi Connect Button (watch balance + custom design)
  */
@@ -18,6 +19,8 @@ export const RainbowKitCustomConnectButton = () => {
   useAutoConnect();
   const networkColor = useNetworkColor();
   const { targetNetwork } = useTargetNetwork();
+  const { disconnect } = useDisconnect();
+
 
   return (
     <ConnectButton.Custom>
@@ -49,7 +52,13 @@ export const RainbowKitCustomConnectButton = () => {
                     <span className="text-xs" style={{ color: networkColor }}>
                       {chain.name}
                     </span>
+                    <button
+                    className="menu-item text-error btn-sm !rounded-xl flex gap-2 py-3"
+                    type="button"
+                    onClick={() => disconnect()}
+                  ><Unlink/> Disconnect</button>
                   </div>
+                  
                   {/* <AddressInfoDropdown
                     address={account.address as Address}
                     displayName={account.displayName}

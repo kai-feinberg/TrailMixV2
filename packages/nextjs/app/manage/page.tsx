@@ -170,7 +170,6 @@ export default function UsersPage({ }: Props) {
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
-      {loading && <p>Loading...</p>}
 
       {userContracts?.map((address, index) => (
         <StrategyProfitUpdater

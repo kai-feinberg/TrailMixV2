@@ -18,6 +18,16 @@ import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaf
 import tokenList from '~~/lib/tokenList.json';
 import { useTargetNetwork } from '~~/hooks/scaffold-eth/useTargetNetwork';
 import { ShieldIcon, ScaleIcon, SwordIcon } from "lucide-react";
+import DepositPopup from "./DepositPopup";
+import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import { IntegerInput } from "./scaffold-eth";
+
+import manABI from "~~/contracts/managerABI.json";
+import DepositContent from "./DepositContent";
+
+const managerABI = manABI.abi;
+const provider = new ethers.providers.InfuraProvider("optimism", process.env.INFURA_API_KEY);
 
 
 interface TokenData {
@@ -37,6 +47,7 @@ export function CreateNew() {
   const [strategy, setStrategy] = React.useState("20");
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
+  const [deployedAddress, setDeployedAddress] = React.useState("0x0");
 
   const [phase, setPhase] = React.useState("deploy");
 
@@ -44,6 +55,16 @@ export function CreateNew() {
   const chainId = targetNetwork?.id;
 
   const tokens = (tokenList as TokenList)[chainId];
+
+  const { address: connectedAddress } = useAccount();
+  const managerContract = new ethers.Contract("0xc20650A1d0bB00Ea255C2cFabD094d0234ED26F1", managerABI, provider)
+
+  const { data: userContracts } = useScaffoldContractRead({
+    contractName: "TrailMixManager",
+    functionName: "getUserContracts",
+    args: [connectedAddress],
+  });
+
 
   const tokenOptions = tokens ? Object.entries(tokens).map(([contractAddress, details]) => ({
     value: contractAddress, //value is value set to the state
@@ -84,24 +105,40 @@ export function CreateNew() {
   const handleDeploy = async () => {
     try {
       const deploymentResult = await deploy();
-      console.log(deploymentResult);
       setPhase("deposit");
+
+      const userContractsResult = await managerContract.getUserContracts(connectedAddress);
+      if (userContractsResult && userContractsResult.length > 0) {
+        setDeployedAddress(userContractsResult[userContractsResult.length - 1]);
+        console.log("deposit funds to", userContractsResult[userContractsResult.length - 1]);
+      } else {
+        setDeployedAddress("error");
+        console.log("No user contracts found");
+      }
+
     }
     catch (error) {
       console.log(error);
     }
   }
 
+
+
   return (
+
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-xl">Create New</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px] bg-white rounded-xl">
         <DialogHeader>
-          <DialogTitle>Create New</DialogTitle>
+          <DialogTitle>
+            {phase === "deploy" && ("Deploy New Strategy")}
+            {phase === "deposit" && ("Deposit Funds")}
+          </DialogTitle>
           <DialogDescription>
-            Deploy a new trailing stop loss strategy
+            {phase === "deploy" && ("Deploy a new trailing stop loss strategy")}
+            {phase === "deposit" && ("Deposit funds to your new strategy")}
           </DialogDescription>
         </DialogHeader>
 
@@ -149,18 +186,16 @@ export function CreateNew() {
               </div>
             </div>
             <Button type="submit" variant="outline" className="w-full" onClick={handleDeploy}>Create</Button>
+
           </div>
         )}
-        { isPending && (
+        {isPending && (
           <span className="loading loading-spinner loading-sm"></span>
         )}
 
         {phase === "deposit" && (
-          <div>
-            <p> deposit here</p>
-          </div>
+            <DepositContent contractAddress={deployedAddress} />
         )}
-
       </DialogContent>
     </Dialog>
   );
