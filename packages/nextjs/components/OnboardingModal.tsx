@@ -10,13 +10,29 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { ArrowDownFromLineIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
+import { useAccount } from "wagmi";
 
 
 const OnboardingModal = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
+    const { address: userAddress } = useAccount();
+
+    const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
+        contractName: "TrailMixManager",
+        functionName: "getUserContracts",
+        args: [userAddress],
+    });
+
+    // TRIGGER MODAL WHEN USER IS NEW (HAS NO CONTRACTS)
+    useEffect(() => {
+        if (userContracts?.length === 0 && !isLoadingContracts) {
+            setPage(1);
+        }
+    }, [userContracts]);
+
 
     return (
 
@@ -32,7 +48,10 @@ const OnboardingModal = () => {
                 </DialogHeader>
                 {page === 1 && ("page1")}
                 {page === 2 && ("page2")}
+                {page === 3 && ("page3")}
                 <Button variant="outline" onClick={() => setPage(page + 1)}>next </Button>
+                <Button variant="outline" onClick={() => setPage(page - 1)}>back </Button>
+
             </DialogContent>
         </Dialog>
     );
