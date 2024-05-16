@@ -17,6 +17,7 @@ import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
 import { useScaffoldContractRead} from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
+import {useEnsName} from "wagmi";
 
 import ercABI from "~~/contracts/erc20ABI.json";
 const erc20ABI = ercABI.abi;
@@ -92,7 +93,20 @@ export default function Home() {
 
   const { targetNetwork } = useTargetNetwork();
   const { address: connectedAddress } = useAccount();
+  const [ens, setEns] = useState<string | null>();
   
+  // const checkSumAddress = address ? getAddress(address) : undefined;
+
+  const { data: fetchedEns } = useEnsName({
+    address: connectedAddress,
+    // enabled: isAddress(checkSumAddress ?? ""),
+    chainId: 1,
+  });
+  // console.log("ens",fetchedEns);
+
+  useEffect(() => {
+    setEns(fetchedEns);
+  }, [fetchedEns]);
   
   const { data: userContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
@@ -100,10 +114,11 @@ export default function Home() {
     args: [connectedAddress],
   });
 
-
+  
+const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}`: "Welcome example_user";
   return (
     <div className="flex flex-col gap-5 w-full">
-      <PageTitle title="Dashboard" />
+      <PageTitle title={pageTitle} />
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
         {cardData.map((d, i) => (
           <Card

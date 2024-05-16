@@ -8,7 +8,7 @@ import { IntegerInput } from "./scaffold-eth";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { useScaffoldContractRead, useScaffoldContractWrite, useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
 import { useAccount } from "wagmi";
-import {ethers } from "ethers";
+import { ethers } from "ethers";
 
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         abi: strategyABI,
         functionName: "getERC20TokenAddress",
     });
-    const erc20Contract = new ethers.Contract(contractAddress, erc20ABI, provider);
+    const erc20Contract = new ethers.Contract(erc20Address as string, erc20ABI, provider);
 
 
     const {
@@ -109,7 +109,7 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         write: approve,
     } = useContractWrite(approveConfig);
 
- 
+
 
     const { writeAsync: deposit, isMining: isPending } = useScaffoldContractWrite({
         contractName: "TrailMixManager",
@@ -129,12 +129,12 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         setScaledDepositAmount(BigInt(Number(depositAmount) * dec || 0));
     }, [depositAmount]);
 
+   
 
     const handleDeposit = async () => {
-        const currentAllowance= await erc20Contract.allowance(userAddress, manager);
-        if (currentAllowance){
-            setApprovalAmount(currentAllowance.toString());
-        }
+        console.log("AAAAAAAAAA");
+        console.log("Current allowance: ", approvalAmount.toString());
+
 
         if (BigInt(approvalAmount) >= BigInt(scaledDepositAmount) && deposit) {
             await deposit();
@@ -148,7 +148,26 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
                 });
             }
         }
+
     };
+
+    useEffect(() => {
+        const fetchAllowance = async () => {
+            try {
+                const currentAllowance = await erc20Contract.allowance(userAddress, manager);
+                console.log("Current allowance: ", currentAllowance.toString());
+
+                if (currentAllowance) {
+                    setApprovalAmount(currentAllowance.toString());
+                    console.log("Current allowance: ", currentAllowance.toString());
+                }
+            } catch (error) {
+                console.error("Failed to fetch allowance", error);
+            }
+        };
+
+        fetchAllowance();
+    }, []);
 
     return (
         <div>
