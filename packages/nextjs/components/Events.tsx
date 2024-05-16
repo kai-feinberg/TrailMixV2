@@ -28,7 +28,7 @@ const Events = () => {
         functionName: "getUserContracts",
         args: [userAddress],
     });
-    
+
 
     const {
         data: deployments,
@@ -96,10 +96,10 @@ const Events = () => {
                 setLoading(false);
             }
         }
-        else{
+        else {
             setEvents([]);
         }
-        
+
     }, [deployments, deposits, swaps, withdrawals]);
 
     // console.log(events);
@@ -171,13 +171,61 @@ const Events = () => {
                 </div>
 
             ))}
-            {!loading && events.length !=0 && Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
-                <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"></div>
+            {!loading && userAddress && events.length != 0 && Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
+                <div key={index} style={{ width: '600px', height: '80px' }} className="bg-white"></div>
             ))}
 
-            {!userAddress && (Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
-                <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"> placeholder</div>
-            )))}
+            {/* PLACEHOLDER FOR WHEN NO CONNECTED ADDRESS  */}
+            {/* {!userAddress && (Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
+                // <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"> placeholder</div>
+            )))} */}
+            {!userAddress && (
+                <div>
+                    <EventCard
+                        title="Contract Deployed"
+                        detail="Deployed 20% trailing stop loss for $OP"
+                        amount=" "
+                        icon={ArrowUp}
+                        date="04/04/2024"
+                        color="slate"
+                    />
+                    <EventCard
+                            title="Funds Deposited"
+                            detail="Deposited to 0x1234...5678"
+                            amount="10 OP"
+                            icon={ArrowDown}
+                            date="03/03/2024"
+                            color="green"
+                        />
+                    <EventCard
+                        title="Swap Executed"
+                        detail="Swapped 5 OP for $12.69"
+                        amount=" "
+                        icon={ArrowLeftRight}
+                        date="02/02/2023"
+                        color="slate"
+                    />
+                    <EventCard
+                        title="Withdraw"
+                        detail="Withdrew $420.94 USDC"
+                        amount="$420.94"
+                        icon={ArrowUp}
+                        date="01/01/2023"
+                        color="red"
+                    />
+                     <EventCard
+                            title="Funds Deposited"
+                            detail="Deposited to 0x1234...5678"
+                            amount="0.43 WBTC"
+                            icon={ArrowDown}
+                            date="01/13/2024"
+                            color="green"
+                    />
+                    
+                </div>
+
+            )}
+
 
         </div>
     );

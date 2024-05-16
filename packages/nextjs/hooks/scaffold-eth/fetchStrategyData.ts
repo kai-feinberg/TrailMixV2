@@ -24,7 +24,6 @@ async function fetchStrategyData(contractAddresses: string[], targetNetwork: any
   for (const contractAddress of contractAddresses) {
     try {
       const strategyContract = new ethers.Contract(contractAddress, strategyABI, provider);
-
       // Fetch all necessary data from the strategy contract
       const [
         erc20Address,

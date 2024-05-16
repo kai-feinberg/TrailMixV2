@@ -13,7 +13,7 @@ export const IntegerInput = ({
   placeholder,
   disabled,
   variant = IntegerVariant.UINT256,
-  disableMultiplyBy1e18 = false,
+  disableMultiplyBy1e18 = true,
 }: IntegerInputProps) => {
   const [inputError, setInputError] = useState(false);
   const multiplyBy1e18 = useCallback(() => {

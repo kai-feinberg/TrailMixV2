@@ -99,7 +99,6 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         abi: erc20ABI,
         functionName: "approve",
         args: [manager, scaledDepositAmount], //make dynamic state vars,
-
     });
 
     const {
@@ -123,7 +122,7 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         },
 
     });
-
+    
     useEffect(() => {
         setAssetPrice(latestPrice as string);
         setScaledDepositAmount(BigInt(Number(depositAmount) * dec || 0));
@@ -140,17 +139,21 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
             await deposit();
         } else {
             if (approve) {
-                await Promise.resolve(approve()).then(() => {
-                    deposit();
-                    console.log("Approval successful, deposit triggered");
-                }).catch(error => {
+                try {
+                    await approve();
+                    console.log("Approval successful");
+                    if (deposit) {
+                        await deposit();
+                        console.log("Deposit triggered");
+                    }
+                } catch (error) {
                     console.error("Approval failed", error);
-                });
+                }
             }
         }
 
     };
-
+    
     useEffect(() => {
         const fetchAllowance = async () => {
             try {
@@ -167,7 +170,7 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         };
 
         fetchAllowance();
-    }, []);
+    }, [approvalAmount]);
 
     return (
         <div>

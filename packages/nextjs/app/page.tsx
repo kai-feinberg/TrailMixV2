@@ -23,6 +23,7 @@ import ercABI from "~~/contracts/erc20ABI.json";
 const erc20ABI = ercABI.abi;
 
 import stratABI from "~~/contracts/strategyABI.json";
+import OnboardingModal from "~~/components/OnboardingModal";
 const strategyABI = stratABI.abi;
 
 
@@ -120,6 +121,8 @@ const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connect
     <div className="flex flex-col gap-5 w-full">
       <PageTitle title={pageTitle} />
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
+      <OnboardingModal />
+
         {cardData.map((d, i) => (
           <Card
             key={i}
