@@ -86,6 +86,11 @@ const Events = () => {
         receiptData: true,
     });
 
+    useEffect(() => {
+        setEvents([]);
+        setLoading(true);
+    }, [userAddress]);
+    
 
     //only render events when events change
     useEffect(() => {
@@ -100,7 +105,7 @@ const Events = () => {
             setEvents([]);
         }
 
-    }, [deployments, deposits, swaps, withdrawals]);
+    }, [deployments, deposits, swaps, withdrawals, userAddress]);
 
     // console.log(events);
     // console.log(userAddress);
@@ -176,9 +181,7 @@ const Events = () => {
             ))}
 
             {/* PLACEHOLDER FOR WHEN NO CONNECTED ADDRESS  */}
-            {/* {!userAddress && (Array(Math.max(5 - events.length, 0)).fill(0).map((_, index) => (
-                // <div key={index} style={{width: '600px', height: '80px'}} className="bg-white"> placeholder</div>
-            )))} */}
+
             {!userAddress && (
                 <div>
                     <EventCard
@@ -190,13 +193,13 @@ const Events = () => {
                         color="slate"
                     />
                     <EventCard
-                            title="Funds Deposited"
-                            detail="Deposited to 0x1234...5678"
-                            amount="10 OP"
-                            icon={ArrowDown}
-                            date="03/03/2024"
-                            color="green"
-                        />
+                        title="Funds Deposited"
+                        detail="Deposited to 0x1234...5678"
+                        amount="10 OP"
+                        icon={ArrowDown}
+                        date="03/03/2024"
+                        color="green"
+                    />
                     <EventCard
                         title="Swap Executed"
                         detail="Swapped 5 OP for $12.69"
@@ -210,18 +213,18 @@ const Events = () => {
                         detail="Withdrew $420.94 USDC"
                         amount="$420.94"
                         icon={ArrowUp}
-                        date="01/01/2023"
+                        date="01/21/2023"
                         color="red"
                     />
-                     <EventCard
-                            title="Funds Deposited"
-                            detail="Deposited to 0x1234...5678"
-                            amount="0.43 WBTC"
-                            icon={ArrowDown}
-                            date="01/13/2024"
-                            color="green"
+                    <EventCard
+                        title="Funds Deposited"
+                        detail="Deposited to 0x1234...5678"
+                        amount="0.43 WBTC"
+                        icon={ArrowDown}
+                        date="01/13/2024"
+                        color="green"
                     />
-                    
+
                 </div>
 
             )}

@@ -49,7 +49,7 @@ export function CreateNew() {
   const [poolAddress, setPoolAddress] = React.useState("");
   const [deployedAddress, setDeployedAddress] = React.useState("0x9c5adcf23b29cF9a98f78CD934A6Ecd9e8Ac44A9");
 
-  const [phase, setPhase] = React.useState("deposit");
+  const [phase, setPhase] = React.useState("deploy");
 
   const { targetNetwork } = useTargetNetwork();
   const chainId = targetNetwork?.id;
