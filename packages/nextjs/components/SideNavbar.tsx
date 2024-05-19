@@ -7,7 +7,7 @@ import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 type Props = {};
 
 import {
-  ShoppingCart,
+  ClipboardPenLine,
   LayoutDashboard,
   UsersRound,
   Settings,
@@ -21,7 +21,7 @@ if (typeof window !== "undefined") {
   useWindowWidth = require("@react-hook/window-size").useWindowWidth;
 }
 
-export default function SideNavbar({}: Props) {
+export default function SideNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const onlyWidth = useWindowWidth();
@@ -46,7 +46,7 @@ export default function SideNavbar({}: Props) {
       )}
       <Nav
         isCollapsed={mobileWidth ? true : isCollapsed}
-        
+
         links={[
           {
             title: "Dashboard",
@@ -54,25 +54,25 @@ export default function SideNavbar({}: Props) {
             icon: LayoutDashboard,
             variant: "default"
           },
-          
+
           {
             title: "Manage",
             href: "/manage",
-            icon: ShoppingCart,
+            icon: ClipboardPenLine,
             variant: "ghost"
           },
-          {
-            title: "History",
-            href: "/history",
-            icon: UsersRound,
-            variant: "ghost"
-          },
-          {
-            title: "settings",
-            href: "/settings",
-            icon: Settings,
-            variant: "ghost"
-          }
+          // {
+          //   title: "History",
+          //   href: "/history",
+          //   icon: UsersRound,
+          //   variant: "ghost"
+          // },
+          // {
+          //   title: "settings",
+          //   href: "/settings",
+          //   icon: Settings,
+          //   variant: "ghost"
+          // }
         ]}
       />
       <RainbowKitCustomConnectButton />
