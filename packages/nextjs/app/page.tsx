@@ -4,7 +4,7 @@
 import PageTitle from "@/components/PageTitle";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { DollarSign, Users, CreditCard, Activity, ArrowUp, ArrowLeftRight, ArrowDown } from "lucide-react";
+import { DollarSign, Users, CreditCard, TrendingUp, ArrowUp, ArrowLeftRight, ArrowDown } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
 import BarChart from "@/components/LineChart";
 import {Button} from "@/components/ui/button";
@@ -18,6 +18,7 @@ import { useAccount } from "wagmi";
 import { useScaffoldContractRead} from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
 import {useEnsName} from "wagmi";
+import {Badge} from "~~/components/ui/badge";
 
 import ercABI from "~~/contracts/erc20ABI.json";
 const erc20ABI = ercABI.abi;
@@ -31,63 +32,29 @@ const cardData: CardProps[] = [
   {
     label: "Current Balance",
     amount: "$45,231.89",
-    discription: "+20.1% from last month",
+    description: "+20.1% from last month",
     icon: DollarSign
   },
   {
     label: "Active strategies",
     amount: "12",
-    discription: "across 5 assets",
+    description: "across 5 assets",
     icon: Users
   },
   {
     label: "Pending claims",
     amount: "$1,415.26",
-    discription: "4 closed strategies",
+    description: "4 closed strategies",
     icon: CreditCard
   },
   {
     label: "All time profit",
     amount: "$573",
-    discription: "+$201 since last month",
-    icon: Activity
+    description: "+$201 since last month",
+    icon: TrendingUp
   }
 ];
 
-const uesrSalesData: any[] = [
-  {
-    name: "Deposited 15 $OP",
-    email: "strategy: basic (15%)",
-    saleAmount: "+$1,999.00",
-    icon: ArrowDown,
-
-  },
-  {
-    name: "Sold 12.4 $ARB at price $2.41",
-    email: "strategy: basic (15%)",
-    saleAmount: "claim",
-    icon: ArrowLeftRight
-  },
-  {
-    name: "Withdrew 0.5 ETH",
-    email: "strategy : basic (15%)",
-    saleAmount: "-$39.00",
-    icon: ArrowUp
-  },
-  {
-    name: "Sold 12.4 $ARB at price $2.41",
-    email: "strategy: basic (15%)",
-    saleAmount: "claim",
-    icon: ArrowLeftRight
-  },
-  {
-    name: "Withdrew 0.5 ETH",
-    email: "strategy : basic (15%)",
-    saleAmount: "-$39.00",
-    icon: ArrowUp
-  },
-  
-];
 
 
 export default function Home() {
@@ -119,7 +86,7 @@ export default function Home() {
 const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}`: "Welcome example_user";
   return (
     <div className="flex flex-col gap-5 w-full">
-      <PageTitle title={pageTitle} />
+        <PageTitle title={pageTitle} />
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
       <OnboardingModal />
 
@@ -127,7 +94,7 @@ const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connect
           <Card
             key={i}
             amount={d.amount}
-            discription={d.discription}
+            description={d.description}
             icon={d.icon}
             label={d.label}
           />

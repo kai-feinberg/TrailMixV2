@@ -185,8 +185,15 @@ export function CreateNew() {
                 </div>
               </div>
             </div>
-            <Button type="submit" variant="outline" className="w-full rounded-xl" onClick={handleDeploy} >Create</Button>
-
+            <Button 
+              type="submit" 
+              variant="outline" 
+              className="w-full rounded-xl" 
+              onClick={handleDeploy} 
+              disabled={!tokenAddress}
+            >
+              Create
+            </Button>
           </div>
         )}
         {isPending && (

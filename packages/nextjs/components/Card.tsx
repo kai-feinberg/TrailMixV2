@@ -8,7 +8,7 @@ export type CardProps = {
   label: string;
   icon: LucideIcon;
   amount: string;
-  discription: string;
+  description: string;
 };
 
 export default function Card(props: CardProps) {
@@ -18,11 +18,11 @@ export default function Card(props: CardProps) {
         {/* label */}
         <p className="text-lg">{props.label}</p>
         {/* icon */}
-        <props.icon className="h-4 w-4 text-gray-400" />
+        <props.icon className="h-6 w-6 text-gray-400" />
       </section>
       <section className="flex flex-col gap-0">
         <h2 className="text-3xl font-semibold">{props.amount}</h2>
-        <p className="text-sm text-gray-500 py-0 leading-tight">{props.discription}</p>
+        <p className="text-sm text-gray-500 py-0 leading-tight">{props.description}</p>
       </section>
     </CardContent>
   );
