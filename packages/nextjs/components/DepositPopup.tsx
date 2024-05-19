@@ -261,7 +261,7 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
 
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
+        <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
@@ -272,7 +272,7 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
         </DialogHeader>
 
         <IntegerInput value={depositAmount} onChange={setDepositAmount} />
-        <Button variant="outline" onClick={handleDeposit}>Deposit </Button>
+        <Button variant="outline" className="rounded-xl" onClick={handleDeposit}>Deposit </Button>
       </DialogContent>
     </Dialog>        
     );

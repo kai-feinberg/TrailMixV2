@@ -156,7 +156,7 @@ export function CreateNew() {
                   frameworks={tokenOptions || []}
                 />
               </div>
-              <div className="bg-blue-600 text-white p-4 rounded-lg">
+              <div className="bg-blue-600 text-white p-4 rounded-xl">
                 <h3 className="text-xl font-semibold mb-4">Select Strategy</h3>
                 <ul className="mb-4">
                   <li>Conservative (30%): Holds through large volatility</li>
@@ -185,7 +185,7 @@ export function CreateNew() {
                 </div>
               </div>
             </div>
-            <Button type="submit" variant="outline" className="w-full" onClick={handleDeploy}>Create</Button>
+            <Button type="submit" variant="outline" className="w-full rounded-xl" onClick={handleDeploy} >Create</Button>
 
           </div>
         )}

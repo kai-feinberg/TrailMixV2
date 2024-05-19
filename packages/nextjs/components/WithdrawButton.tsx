@@ -76,14 +76,14 @@ const WithdrawButton = ({ contractAddress }: { contractAddress: string }) => {
     });
 
     useEffect(() => {
-        if (Number(stablecoinBalance)> Number(erc20Balance)){
+        if (Number(stablecoinBalance) > Number(erc20Balance)) {
             setAssetToWithdraw(stablecoinAddress as string);
         }
-        else{
+        else {
             setAssetToWithdraw(erc20Address as string);
         }
     });
-    
+
     const { writeAsync: withdraw, isMining: isPending } = useScaffoldContractWrite({
         contractName: "TrailMixManager",
         functionName: "withdraw",
@@ -98,7 +98,7 @@ const WithdrawButton = ({ contractAddress }: { contractAddress: string }) => {
     });
 
     return (
-        <Button variant="outline" size="icon" onClick={() => withdraw()}><ArrowUpFromLineIcon className="h-4 w-4" /></Button>
+        <Button variant="outline" size="icon" className="rounded-xl" onClick={() => withdraw()}><ArrowUpFromLineIcon className="h-4 w-4" /></Button>
     );
 };
 
