@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.20;
 
-import { AutomationCompatibleInterface } from "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 // import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -11,7 +10,7 @@ error NotContractOwner(); // Error for when the caller is not the contract owner
 import { TrailMix } from "./TrailMix.sol"; // Import TrailMix contract
 import { ITrailMix } from "./ITrailMix.sol"; // Import ITrailMix interface
 
-contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
+contract TrailMixManager is ReentrancyGuard {
 	//array storing all active strategies
 	address[] public activeStrategies;
 	// mapping to store index of strategy in activeStrategies array
@@ -170,14 +169,17 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 
 	/**
 	 * @notice Checks if upkeep is needed based on TSL conditions.COMPUTED OFF-CHAIN
-	 * @dev Part of the Chainlink automation interface.
-	 * @param 'checkData' Not used in this implementation.
-	 * @return upkeepNeeded Boolean flag indicating if upkeep is needed.
-	 * @return performData Encoded data on what action to perform during upkeep.
+	 * @dev Part of the Gelato automation
+	 * @return canExec Boolean flag indicating if upkeep is needed.
+	 * @return execPayload Encoded data on what action to perform during upkeep.
 	 */
-	function checkUpkeep(
-		bytes calldata /*checkData*/
-	) external view returns (bool upkeepNeeded, bytes memory performData) {
+	function checker()
+		external
+		view
+		returns (bool canExec, bytes memory execPayload)
+	{
+		bool updateNeeded = false;
+		bytes memory updateData;
 		for (uint256 i = 0; i < activeStrategies.length; i++) {
 			(bool sell, bool update, uint256 newThreshold) = ITrailMix(
 				activeStrategies[i]
@@ -185,45 +187,54 @@ contract TrailMixManager is AutomationCompatibleInterface, ReentrancyGuard {
 
 			if (sell) {
 				// Prioritize swap action if needed
-				performData = abi.encode(
-					activeStrategies[i],
-					sell,
-					update,
-					newThreshold
+				return (
+					true,
+					abi.encodeWithSelector(
+						this.performUpkeep.selector,
+						activeStrategies[i],
+						sell,
+						update,
+						newThreshold
+					)
 				);
-				return (true, performData);
 			} else if (update) {
 				// If no swap needed, check for threshold update
 				// Note: This approach only encodes action for the first strategy needing an action.
 				// If you want to encode actions for all strategies, you'd need to aggregate the data differently.
-				performData = abi.encode(
-					activeStrategies[i],
-					sell,
-					update,
-					newThreshold
-				);
+				// Store the update action if no sell actions have been found
+				if (!updateNeeded) {
+					updateNeeded = true;
+					updateData = abi.encodeWithSelector(
+						this.performUpkeep.selector,
+						activeStrategies[i],
+						sell,
+						update,
+						newThreshold
+					);
+				}
 				// Don't return yet if you want to prioritize sells across all strategies
 			}
 		}
 
-		upkeepNeeded = (performData.length > 0);
-		// performData already set within the loop for the first action identified
-		return (upkeepNeeded, performData);
+		if (updateNeeded) {
+			return (true, updateData);
+		}
+
+		return (false, "");
 	}
 
 	/**
 	 * @notice Performs the upkeep of updating the stop loss threshold or triggering a sell.
-	 * @dev Part of the Chainlink automation interface.
-	 * @param performData Encoded data indicating the actions to perform.
+	 * @dev Part of the gelato automation.
 	 */
-	function performUpkeep(bytes calldata performData) external override {
+	function performUpkeep(
+		address strategy,
+		bool sell,
+		bool updateThreshold,
+		uint256 newThreshold
+	) external {
 		// Implement logic to perform TSL (e.g., swap to stablecoin) when conditions are met
-		(
-			address strategy,
-			bool sell,
-			bool updateThreshold,
-			uint256 newThreshold
-		) = abi.decode(performData, (address, bool, bool, uint256));
+
 		if (sell) {
 			//call trigger function to sell on uniswap
 			uint256 s_erc20Balance = ITrailMix(strategy).getERC20Balance();
