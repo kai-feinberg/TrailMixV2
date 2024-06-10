@@ -27,7 +27,7 @@ import manABI from "~~/contracts/managerABI.json";
 import DepositContent from "./DepositContent";
 
 const managerABI = manABI.abi;
-const provider = new ethers.providers.InfuraProvider("optimism", process.env.INFURA_API_KEY);
+const provider = new ethers.AlchemyProvider("base", process.env.ALCHEMY_API_KEY);
 
 
 interface TokenData {

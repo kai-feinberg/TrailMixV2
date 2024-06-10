@@ -8,7 +8,7 @@ import stratABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
 
 // Assuming you have an ethers provider set up, e.g., using Infura, Alchemy, or MetaMask
-const provider = new ethers.providers.InfuraProvider("optimism", process.env.INFURA_API_KEY);
+const provider = new ethers.AlchemyProvider("base", process.env.ALCHEMY_API_KEY);
 
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
