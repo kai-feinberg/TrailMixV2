@@ -141,7 +141,6 @@ contract TrailMix is ReentrancyGuard {
 
 	/**
 	 * @notice Checks if upkeep is needed based on TSL conditions.
-	 * @dev Part of the Chainlink automation interface.
 	 * @return A tuple of three values: a boolean indicating if selling is needed, a boolean indicating if the threshold should be updated, and the new threshold value.
 	 */
 	function checkUpkeepNeeded() external view returns (bool, bool, uint256) {
