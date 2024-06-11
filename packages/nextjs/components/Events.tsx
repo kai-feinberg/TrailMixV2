@@ -36,7 +36,7 @@ const Events = () => {
     } = useScaffoldEventHistory({
         contractName: "TrailMixManager",
         eventName: "ContractDeployed",
-        fromBlock: 119000002n,
+        fromBlock: 15000235n,
         watch: false,
         filters: { creator: userAddress },
         blockData: true,
@@ -50,7 +50,7 @@ const Events = () => {
     } = useScaffoldEventHistory({
         contractName: "TrailMixManager",
         eventName: "FundsDeposited",
-        fromBlock: 119000002n,
+        fromBlock: 15000235n,
         watch: false,
         filters: { creator: userAddress },
         blockData: true,
@@ -64,7 +64,7 @@ const Events = () => {
     } = useScaffoldEventHistory({
         contractName: "TrailMixManager",
         eventName: "FundsWithdrawn",
-        fromBlock: 119000002n,
+        fromBlock: 15000235n,
         watch: false,
         filters: { creator: userAddress },
         blockData: true,
@@ -78,7 +78,7 @@ const Events = () => {
     } = useScaffoldEventHistory({
         contractName: "TrailMixManager",
         eventName: "SwapExecuted",
-        fromBlock: 119000002n,
+        fromBlock: 15000235n,
         watch: false,
         filters: { creator: userAddress },
         blockData: true,

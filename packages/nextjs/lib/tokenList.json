@@ -40,16 +40,18 @@
 
     } ,
     "8453": {
-        "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed" :{
+        "0x4ed4e862860bed51a9570b96d89af5e1b0efefed" : {
             "name": "Degen",
             "symbol": "DEGEN",
             "decimals": 18,
             "logoURI": "https://s3-alpha.figma.com/hub/file/5496766389/31a03c6a-89d1-4541-bcde-24bd847c6db3-cover.png",
             "extensions": {
               "opListId": "extended",
-              "opTokenId": "DEGEN"
+              "opTokenId": "DEGEN",
+              "optimismBridgeAddress": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+             "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35"           
             },
-            "pool":"0xc9034c3E7F58003E6ae0C8438e7c8f4598d5ACAA"
+            "pool" : "0xc9034c3E7F58003E6ae0C8438e7c8f4598d5ACAA"
 
         }
     }

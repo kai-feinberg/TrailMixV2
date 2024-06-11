@@ -7,12 +7,6 @@ interface TokenData {
     symbol: string;
     decimals: number;
     logoURI: string;
-    extensions: {
-      opListId: string;
-      opTokenId: string;
-      optimismBridgeAddress?: string;
-      baseBridgeAddress?: string;
-    };
     pool: string;
   }
 

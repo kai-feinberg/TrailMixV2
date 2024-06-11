@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ComboBox } from "@/components/ComboBox";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
@@ -47,6 +46,8 @@ export function CreateNew() {
   const [strategy, setStrategy] = React.useState("20");
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
+
+  //address of deployed strategy
   const [deployedAddress, setDeployedAddress] = React.useState("0x9c5adcf23b29cF9a98f78CD934A6Ecd9e8Ac44A9");
 
   const [phase, setPhase] = React.useState("deploy");
@@ -57,7 +58,7 @@ export function CreateNew() {
   const tokens = (tokenList as TokenList)[chainId];
 
   const { address: connectedAddress } = useAccount();
-  const managerContract = new ethers.Contract("0xc20650A1d0bB00Ea255C2cFabD094d0234ED26F1", managerABI, provider)
+  const managerContract = new ethers.Contract("0x641C5b6ad855163f0E4BD0fe05D075512a464542", managerABI, provider)
 
   const { data: userContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
@@ -73,9 +74,11 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
+    console.log(tokenAddress);
+    console.log(tokens[tokenAddress]);
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
-      console.log(tokens[tokenAddress].pool);
+      console.log("pool address", tokens[tokenAddress].pool);
     } else {
       setPoolAddress("");
     }
@@ -103,6 +106,7 @@ export function CreateNew() {
   });
 
   const handleDeploy = async () => {
+    console.log("pool", poolAddress)
     try {
       const deploymentResult = await deploy();
       setPhase("deposit");
@@ -200,9 +204,9 @@ export function CreateNew() {
           <span className="loading loading-spinner loading-sm"></span>
         )}
 
-        {phase === "deposit" && (
+        {/* {phase === "deposit" && (
           <DepositContent contractAddress={deployedAddress} />
-        )}
+        )} */}
       </DialogContent>
     </Dialog>
   );

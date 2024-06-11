@@ -52,6 +52,7 @@ async function fetchStrategyData(contractAddresses: string[], targetNetwork: any
 
       // Create a strategy object
       const strategy: Strategy = {
+      
         asset: tokenData as TokenData,
         contractAddress,
         erc20Balance: erc20Balance.toString(),

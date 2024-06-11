@@ -48,6 +48,12 @@
                 {
                     "indexed": false,
                     "internalType": "uint256",
+                    "name": "depositPrice",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
                     "name": "amount",
                     "type": "uint256"
                 },
@@ -204,23 +210,17 @@
             "type": "function"
         },
         {
-            "inputs": [
-                {
-                    "internalType": "bytes",
-                    "name": "",
-                    "type": "bytes"
-                }
-            ],
-            "name": "checkUpkeep",
+            "inputs": [],
+            "name": "checker",
             "outputs": [
                 {
                     "internalType": "bool",
-                    "name": "upkeepNeeded",
+                    "name": "canExec",
                     "type": "bool"
                 },
                 {
                     "internalType": "bytes",
-                    "name": "performData",
+                    "name": "execPayload",
                     "type": "bytes"
                 }
             ],
@@ -339,9 +339,24 @@
         {
             "inputs": [
                 {
-                    "internalType": "bytes",
-                    "name": "performData",
-                    "type": "bytes"
+                    "internalType": "address",
+                    "name": "strategy",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "sell",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "updateThreshold",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "newThreshold",
+                    "type": "uint256"
                 }
             ],
             "name": "performUpkeep",
@@ -405,4 +420,5 @@
             "type": "function"
         }
     ]
+
 }
