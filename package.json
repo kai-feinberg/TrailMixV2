@@ -46,6 +46,7 @@
   },
   "packageManager": "yarn@3.2.3",
   "dependencies": {
+    "@ethersproject/contracts": "^5.7.0",
     "@openzeppelin/contracts": "^5.0.2",
     "@uniswap/v3-periphery": "^1.4.4"
   }

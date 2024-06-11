@@ -108,7 +108,6 @@ contract TrailMix is ReentrancyGuard {
 		uint256 withdrawalAmount;
 
 		if (token == s_stablecoin) {
-			// If TSL is not active, assume user wants to withdraw stablecoins
 			// Logic to handle stablecoin withdrawal
 			withdrawalAmount = s_stablecoinBalance;
 			if (withdrawalAmount <= 0) {

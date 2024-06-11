@@ -86,12 +86,12 @@ export function CreateNew() {
     contractName: "TrailMixManager",
     functionName: "deployTrailMix",
     args: [tokenAddress, //chosen token address
-      "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85", //usdc address
-      "0xE592427A0AEce92De3Edee1F18E0157C05861564",  // Uniswap V3 router
+      "0x4200000000000000000000000000000000000006", //WETH address
+      "0x2626664c2603336E57B271c5C0b26F421741e481",  // Uniswap V3 router
       poolAddress, //pool address
-      "0xed53e3E056C34a342ec0293e6Bc84E40Fd547799", // TWAP oracle
+      "0x161824CA6a0c6d85188B1bf9A79674aC1d208621", // TWAP oracle
       BigInt(strategy), //trail amount
-      BigInt(5 as number), //granularity
+      BigInt(1 as number), //granularity
       3000],
     onBlockConfirmation: (txnReceipt) => {
       console.log("📦 Transaction blockHash", txnReceipt.blockHash);
@@ -185,11 +185,11 @@ export function CreateNew() {
                 </div>
               </div>
             </div>
-            <Button 
-              type="submit" 
-              variant="outline" 
-              className="w-full rounded-xl" 
-              onClick={handleDeploy} 
+            <Button
+              type="submit"
+              variant="outline"
+              className="w-full rounded-xl"
+              onClick={handleDeploy}
               disabled={!tokenAddress}
             >
               Create
@@ -201,7 +201,7 @@ export function CreateNew() {
         )}
 
         {phase === "deposit" && (
-            <DepositContent contractAddress={deployedAddress} />
+          <DepositContent contractAddress={deployedAddress} />
         )}
       </DialogContent>
     </Dialog>
