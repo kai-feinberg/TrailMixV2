@@ -8,7 +8,6 @@
 "use client";
 
 
-
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,7 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import DepositPopup from "~~/components/DepositPopup";
 import WithdrawButton from "~~/components/WithdrawButton";
 import StrategyProfitUpdater from "~~/components/StrategyProfitUpdater";
+import StrategyDataUpdater from "~~/components/StrategyDataUpdater";
 
 type Props = {};
 import { useAccount } from "wagmi";
@@ -146,43 +146,57 @@ export default function UsersPage({ }: Props) {
   });
   const { targetNetwork } = useTargetNetwork();
 
-  useEffect(() => {
-    const fetchStrategies = async () => {
-      const fetchedStrategies = await fetchStrategyData(userContracts as string[], targetNetwork);
-      setStrategies(fetchedStrategies);
-      setLoading(false);
-    };
+  // useEffect(() => {
+  //   const fetchStrategies = async () => {
+  //     const fetchedStrategies = await fetchStrategyData(userContracts as string[], targetNetwork);
+  //     setStrategies(fetchedStrategies);
+  //     setLoading(false);
+  //   };
 
-    fetchStrategies();
-  }, [userContracts]); // Depend on userContracts to refetch when it changes
+  //   fetchStrategies();
+  // }, [userContracts]); // Depend on userContracts to refetch when it changes
 
-  // Function to update profit for a given index
-  const updateProfit = (index: number, profit: string, weightedEntryCost: string, percentProfit: string) => {
-    // console.log("updating profit", index, profit);
-    setStrategies(currentStrategies => {
-      return currentStrategies.map((strategy, i) =>
-        i === index ? { ...strategy, profit, weightedEntryCost, percentProfit } : strategy
-      );
-    });
-    // console.log(strategies)
-  };
+  // // Function to update profit for a given index
+  // const updateProfit = (index: number, profit: string, weightedEntryCost: string, percentProfit: string) => {
+  //   // console.log("updating profit", index, profit);
+  //   setStrategies(currentStrategies => {
+  //     return currentStrategies.map((strategy, i) =>
+  //       i === index ? { ...strategy, profit, weightedEntryCost, percentProfit } : strategy
+  //     );
+  //   });
+  //   // console.log(strategies)
+  // };
+
+  const updateStrategyData = (strategy: Strategy) => {
+    console.log("updated strategies", strategies);
+    setStrategies([...strategies, strategy]);
+  }
 
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
 
-      {userContracts?.map((address, index) => (
+      {/* {userContracts?.map((address, index) => (
         <StrategyProfitUpdater
           key={address}
           contractAddress={address}
           index={index}
           onProfitFetched={updateProfit}
         />
+      ))} */}
+      {userContracts?.map((address, index) => (
+        <StrategyDataUpdater
+          key={address}
+          contractAddress={address}
+          onDataFetched={updateStrategyData}
+        />
       ))}
+
 
       <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={strategies} />
     </div>
   );
 }
+
 

@@ -44,7 +44,7 @@
             "name": "Degen",
             "symbol": "DEGEN",
             "decimals": 18,
-            "logoURI": "https://s3-alpha.figma.com/hub/file/5496766389/31a03c6a-89d1-4541-bcde-24bd847c6db3-cover.png",
+            "logoURI": "https://ethereum-optimism.github.io/data/OP/logo.png",
             "extensions": {
               "opListId": "extended",
               "opTokenId": "DEGEN",

@@ -23,7 +23,11 @@ async function fetchStrategyData(contractAddresses: string[], targetNetwork: any
   console.log('Fetching strategy data for addresses:', contractAddresses);
   for (const contractAddress of contractAddresses) {
     try {
+      console.log('Fetching strategy data for address:', contractAddress);
       const strategyContract = new ethers.Contract(contractAddress, strategyABI, provider);
+      console.log('strategyContract:', strategyContract);
+      console.log(strategyContract.getERC20TokenAddress());
+    
       // Fetch all necessary data from the strategy contract
       const [
         erc20Address,
