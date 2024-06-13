@@ -18,11 +18,9 @@ import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import fetchStrategyData from "~~/hooks/scaffold-eth/fetchStrategyData";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import DepositPopup from "~~/components/DepositPopup";
 import WithdrawButton from "~~/components/WithdrawButton";
-import StrategyProfitUpdater from "~~/components/StrategyProfitUpdater";
 import StrategyDataUpdater from "~~/components/StrategyDataUpdater";
 
 type Props = {};
@@ -45,7 +43,7 @@ const columns: ColumnDef<Strategy>[] = [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${row.original.twapPrice as number / ((10 ** (6)))}</p>
+              <p className="">${row.original.twapPrice as number / ((10 ** (18)))} ETH</p>
             </div>
           </div>
           {/* divide by decimals of USDC on the network */}

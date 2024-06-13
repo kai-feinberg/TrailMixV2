@@ -107,7 +107,7 @@ const Events = () => {
 
     }, [deployments, deposits, swaps, withdrawals, userAddress]);
 
-    // console.log(events);
+    console.log(events);
     // console.log(userAddress);
 
     return (
@@ -157,7 +157,8 @@ const Events = () => {
                         <EventCard
                             title="Deposit Made"
                             detail={`Deposited to ${event.log.args.strategy.slice(0, 6)}...${event.log.args.strategy.slice(-4)}`}
-                            amount={`${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token].decimals)))} ${tokenData[event.log.args.token].symbol}`}
+                            amount={`${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)))} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
+                            // amount = '0'
                             icon={ArrowDown}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="green"
@@ -165,7 +166,7 @@ const Events = () => {
                     )}
                     {event.log.eventName === "ContractDeployed" && (
                         <EventCard
-                            title="Contract Deployed"
+                            title="Strategy Deployed"
                             detail={`Deployed by ${event.log.args.creator}`}
                             amount=" "
                             icon={ArrowUp}
