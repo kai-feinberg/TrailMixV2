@@ -16,10 +16,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-  } from "@/components/ui/dialog";
-  import { ArrowDownFromLineIcon} from "lucide-react";
+} from "@/components/ui/dialog";
+import { ArrowDownFromLineIcon } from "lucide-react";
+import { notification } from "~~/utils/scaffold-eth";
 
-  
+
 import { Button } from "@/components/ui/button";
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
@@ -27,7 +28,7 @@ const managerABI = manager.abi;
 
 
 const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
-    const {address :userAddress} = useAccount(); // Get the user's address
+    const { address: userAddress } = useAccount(); // Get the user's address
 
     const [depositAmount, setDepositAmount] = useState<string | bigint>("0"); // State to store deposit amount
     const [assetPrice, setAssetPrice] = useState<string | bigint>("0"); // State to store latest price
@@ -54,26 +55,6 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
 
 
     const {
-        data: stablecoinAddress,
-        isLoading: isLoadingStablecoinAddress,
-        error: errorStablecoinAddress,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getStablecoinAddress",
-    });
-
-    const {
-        data: stablecoinBalance,
-        isLoading: isLoadingStablecoinBalance,
-        error: errorStablecoinBalance,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getStablecoinBalance",
-    });
-
-    const {
         data: latestPrice,
         isLoading: isLoadingLatestPrice,
         error: errorLatestPrice,
@@ -98,36 +79,6 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
     });
 
     const {
-        data: isTSLActive,
-        isLoading: isLoadingIsTSLActive,
-        error: errorIsTSLActive,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "isTSLActive",
-    });
-
-    const {
-        data: uniswapRouterAddress,
-        isLoading: isLoadingUniswapRouterAddress,
-        error: errorUniswapRouterAddress,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getUniswapRouterAddress",
-    });
-
-    const {
-        data: trailAmount,
-        isLoading: isLoadingTrailAmount,
-        error: errorTrailAmount,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getTrailAmount",
-    });
-
-    const {
         data: manager,
         isLoading: isLoadingManager,
         error: errorManager,
@@ -137,35 +88,6 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
         functionName: "getManager",
     });
 
-    const {
-        data: creator,
-        isLoading: isLoadingCreator,
-        error: errorCreator,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getCreator",
-    });
-
-    const {
-        data: granularity,
-        isLoading: isLoadingGranularity,
-        error: errorGranularity,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getGranularity",
-    });
-
-    const {
-        data: uniswapPool,
-        isLoading: isLoadingUniswapPool,
-        error: errorUniswapPool,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getUniswapPool",
-    });
 
     // Check if the allowance is sufficient
     const { data: allowance } = useContractRead({
@@ -173,6 +95,13 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
         abi: erc20ABI,
         functionName: "allowance",
         args: [userAddress, manager], // `address` is the user's address
+    });
+
+    const {data: userERC20Balance}= useContractRead({
+        address: String(erc20Address),
+        abi: erc20ABI,
+        functionName: "balanceOf",
+        args: [userAddress], // `address` is the user's address
     });
 
     const { data: tokenDecimals } = useContractRead({
@@ -242,11 +171,17 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
 
 
     const handleDeposit = async () => {
+        //error if insufficient funds
+        if (BigInt(userERC20Balance as number) < BigInt(scaledDepositAmount)) {
+            notification.error("Insufficient funds", { duration: 5000 });
+            return;
+        }
 
         if (BigInt(allowance as string) >= BigInt(scaledDepositAmount) && deposit) {
             await deposit();
         } else {
             if (approve) {
+                notification.warning("Approving funds", { duration: 5000 });
                 await Promise.resolve(approve()).then(() => {
                     deposit();
                     console.log("Approval successful, deposit triggered");
@@ -256,25 +191,27 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
             }
         }
     };
+  
 
     return (
 
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-white">
-        <DialogHeader>
-          <DialogTitle>Deposit funds</DialogTitle>
-          <DialogDescription>
-            Add funds to existing strategy
-          </DialogDescription>
-        </DialogHeader>
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] bg-white">
+                <DialogHeader>
+                    <DialogTitle>Deposit funds</DialogTitle>
+                    <DialogDescription>
+                        Add funds to existing strategy
+                    </DialogDescription>
+                </DialogHeader>
 
-        <IntegerInput value={depositAmount} onChange={setDepositAmount} />
-        <Button variant="outline" className="rounded-xl" onClick={handleDeposit}>Deposit </Button>
-      </DialogContent>
-    </Dialog>        
+                <p> Balance: {(userERC20Balance ? BigInt(userERC20Balance as number) / BigInt(10 ** (tokenDecimals as number)) : 0).toString()} </p>
+                <IntegerInput value={depositAmount} onChange={setDepositAmount} />
+                <Button variant="outline" className="rounded-xl" onClick={handleDeposit}>Deposit </Button>
+            </DialogContent>
+        </Dialog>
     );
 };
 

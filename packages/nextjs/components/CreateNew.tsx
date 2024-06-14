@@ -26,7 +26,6 @@ import manABI from "~~/contracts/managerABI.json";
 import DepositContent from "./DepositContent";
 
 const managerABI = manABI.abi;
-const provider = new ethers.AlchemyProvider("base", process.env.ALCHEMY_API_KEY);
 
 
 interface TokenData {
@@ -47,8 +46,6 @@ export function CreateNew() {
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
 
-  //address of deployed strategy
-  const [deployedAddress, setDeployedAddress] = React.useState("0x9c5adcf23b29cF9a98f78CD934A6Ecd9e8Ac44A9");
 
   const [phase, setPhase] = React.useState("deploy");
 
@@ -58,7 +55,6 @@ export function CreateNew() {
   const tokens = (tokenList as TokenList)[chainId];
 
   const { address: connectedAddress } = useAccount();
-  const managerContract = new ethers.Contract("0x641C5b6ad855163f0E4BD0fe05D075512a464542", managerABI, provider)
 
   const { data: userContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
@@ -97,7 +93,8 @@ export function CreateNew() {
       BigInt(1 as number), //granularity
       3000],
     onBlockConfirmation: (txnReceipt) => {
-      console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+      console.log("📦 deployed new contract:", txnReceipt.blockHash);
+      
     },
     onSuccess: () => {
       console.log("🚀 Strategy Deployed");
@@ -110,16 +107,6 @@ export function CreateNew() {
     try {
       const deploymentResult = await deploy();
       setPhase("deposit");
-
-      const userContractsResult = await managerContract.getUserContracts(connectedAddress);
-      if (userContractsResult && userContractsResult.length > 0) {
-        setDeployedAddress(userContractsResult[userContractsResult.length - 1]);
-        console.log("deposit funds to", userContractsResult[userContractsResult.length - 1]);
-      } else {
-        setDeployedAddress("error");
-        console.log("No user contracts found");
-      }
-
     }
     catch (error) {
       console.log(error);
