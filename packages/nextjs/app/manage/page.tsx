@@ -139,7 +139,6 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
 export default function ManagePage({ }: Props) {
   const [strategies, setStrategies] = useState<Strategy[]>([]);
-  // const [activeContracts, setActiveContracts] = useState<string[]>([]);
   
   const ethPrice = useNativeCurrencyPrice();
   const columns = getColumns(ethPrice);
@@ -153,7 +152,8 @@ export default function ManagePage({ }: Props) {
   });
 
   const activeStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true');
-  
+  console.log("activeStrategies", activeStrategies)
+
   const updateStrategyData = (strategy: Strategy) => {
     // console.log("updated strategies", strategies);
     setStrategies([...strategies, strategy]);

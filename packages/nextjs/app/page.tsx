@@ -7,18 +7,18 @@ import Image from "next/image";
 import { DollarSign, Users, CreditCard, TrendingUp, ArrowUp, ArrowLeftRight, ArrowDown } from "lucide-react";
 import Card, { CardContent, CardProps } from "@/components/Card";
 import BarChart from "@/components/LineChart";
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import EventCard, { EventProps } from "~~/components/EventCard";
-import {CreateNew} from "@/components/CreateNew";
+import { CreateNew } from "@/components/CreateNew";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
 import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
-import { useScaffoldContractRead} from "~~/hooks/scaffold-eth";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
-import {useEnsName} from "wagmi";
-import {Badge} from "~~/components/ui/badge";
+import { useEnsName } from "wagmi";
+import { Badge } from "~~/components/ui/badge";
 
 import ercABI from "~~/contracts/erc20ABI.json";
 const erc20ABI = ercABI.abi;
@@ -62,7 +62,7 @@ export default function Home() {
   const { targetNetwork } = useTargetNetwork();
   const { address: connectedAddress } = useAccount();
   const [ens, setEns] = useState<string | null>();
-  
+
   // const checkSumAddress = address ? getAddress(address) : undefined;
 
   const { data: fetchedEns } = useEnsName({
@@ -75,21 +75,24 @@ export default function Home() {
   useEffect(() => {
     setEns(fetchedEns);
   }, [fetchedEns]);
-  
-  const { data: userContracts } = useScaffoldContractRead({
+
+  const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
     functionName: "getUserContracts",
     args: [connectedAddress],
   });
 
-  
-const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}`: "Welcome example_user";
+
+
+
+  const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (
     <div className="flex flex-col gap-5 w-full">
+      <div className="flex flex-row justify-between">
         <PageTitle title={pageTitle} />
+        <OnboardingModal />
+      </div>
       <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
-      <OnboardingModal />
-
         {cardData.map((d, i) => (
           <Card
             key={i}
@@ -106,7 +109,7 @@ const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connect
             <p className="p-4 text-2xl">Overview</p>
             <CreateNew />
           </div>
-          
+
           <BarChart />
         </CardContent>
         <CardContent className="flex justify-between gap-4">
@@ -116,7 +119,7 @@ const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connect
               You made 5 transactions this month.
             </p>
           </section>
-            <Events/>
+          <Events />
         </CardContent>
 
       </section>

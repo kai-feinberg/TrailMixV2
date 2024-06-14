@@ -35,11 +35,11 @@ const OnboardingModal = () => {
 
 
     return (
-
-        <Dialog open={page != 0} onOpenChange={(open) => !open && setPage(0)}>
-            <DialogTrigger asChild >
+        <Dialog open={page !== 0} onOpenChange={(open) => !open && setPage(0)}>
+            <DialogTrigger asChild>
+                <Button onClick={() => setPage(1)} variant="outline" className="rounded-xl">tutorial</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-white" >
+            <DialogContent className="sm:max-w-[425px] bg-white">
                 <DialogHeader>
                     <DialogTitle>Hey There!</DialogTitle>
                     <DialogDescription>
@@ -49,9 +49,10 @@ const OnboardingModal = () => {
                 {page === 1 && ("page1")}
                 {page === 2 && ("page2")}
                 {page === 3 && ("page3")}
-                <Button variant="outline" onClick={() => setPage(page + 1)}>next </Button>
-                <Button variant="outline" onClick={() => setPage(page - 1)}>back </Button>
-
+                <div className="flex justify-end gap-2">
+                    <Button variant="outline" className="rounded-xl" onClick={() => setPage(page - 1)}>back</Button>
+                    <Button variant="outline" className="rounded-xl" onClick={() => setPage(page + 1)}>next</Button>
+                </div>
             </DialogContent>
         </Dialog>
     );

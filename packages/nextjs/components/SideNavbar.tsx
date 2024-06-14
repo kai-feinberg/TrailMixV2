@@ -4,6 +4,17 @@
 import { useState } from "react";
 import { Nav } from "./ui/nav";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
+import OnboardingContent from "./OnboardingContent";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 type Props = {};
 
 import {
@@ -75,6 +86,7 @@ export default function SideNavbar({ }: Props) {
           // }
         ]}
       />
+
       <RainbowKitCustomConnectButton />
 
     </div>
