@@ -107,7 +107,7 @@ const Events = () => {
 
     }, [deployments, deposits, swaps, withdrawals, userAddress]);
 
-    console.log(events);
+    // console.log(events);
     // console.log(userAddress);
 
     return (

@@ -22,12 +22,17 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import DepositPopup from "~~/components/DepositPopup";
 import WithdrawButton from "~~/components/WithdrawButton";
 import StrategyDataUpdater from "~~/components/StrategyDataUpdater";
+import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
+import { useContractRead } from "wagmi";
+import strategyABI from "~~/contracts/strategyABI.json";
+
+const stratABI = strategyABI.abi;
 
 type Props = {};
 import { useAccount } from "wagmi";
 
 
-const columns: ColumnDef<Strategy>[] = [
+const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
     accessorKey: "asset",
     header: "Asset",
@@ -43,10 +48,10 @@ const columns: ColumnDef<Strategy>[] = [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${row.original.twapPrice as number / ((10 ** (18)))} ETH</p>
+              <p className="">${(row.original.twapPrice * ethPrice / (10 ** 18)).toFixed(5)} USD</p>
             </div>
           </div>
-          {/* divide by decimals of USDC on the network */}
+          {/* divide by decimals of paired asset on the network */}
         </div>
       );
     },
@@ -131,10 +136,14 @@ const columns: ColumnDef<Strategy>[] = [
 ];
 
 
-export default function UsersPage({ }: Props) {
+
+export default function ManagePage({ }: Props) {
   const [strategies, setStrategies] = useState<Strategy[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [profits, setProfits] = useState<string[]>([]);
+  // const [activeContracts, setActiveContracts] = useState<string[]>([]);
+  
+  const ethPrice = useNativeCurrencyPrice();
+  const columns = getColumns(ethPrice);
+  
 
   const { address: connectedAccount } = useAccount();
   const { data: userContracts } = useScaffoldContractRead({
@@ -142,59 +151,27 @@ export default function UsersPage({ }: Props) {
     functionName: "getUserContracts",
     args: [connectedAccount],
   });
-  const { targetNetwork } = useTargetNetwork();
 
-  // useEffect(() => {
-  //   const fetchStrategies = async () => {
-  //     const fetchedStrategies = await fetchStrategyData(userContracts as string[], targetNetwork);
-  //     setStrategies(fetchedStrategies);
-  //     setLoading(false);
-  //   };
-
-  //   fetchStrategies();
-  // }, [userContracts]); // Depend on userContracts to refetch when it changes
-
-  // // Function to update profit for a given index
-  // const updateProfit = (index: number, profit: string, weightedEntryCost: string, percentProfit: string) => {
-  //   // console.log("updating profit", index, profit);
-  //   setStrategies(currentStrategies => {
-  //     return currentStrategies.map((strategy, i) =>
-  //       i === index ? { ...strategy, profit, weightedEntryCost, percentProfit } : strategy
-  //     );
-  //   });
-  //   // console.log(strategies)
-  // };
-
+  const activeStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true');
+  
   const updateStrategyData = (strategy: Strategy) => {
-    console.log("updated strategies", strategies);
+    // console.log("updated strategies", strategies);
     setStrategies([...strategies, strategy]);
   }
-
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
 
-      {/* {userContracts?.map((address, index) => (
-        <StrategyProfitUpdater
-          key={address}
-          contractAddress={address}
-          index={index}
-          onProfitFetched={updateProfit}
-        />
-      ))} */}
       {userContracts?.map((address, index) => (
         <StrategyDataUpdater
           key={address}
           contractAddress={address}
           onDataFetched={updateStrategyData}
         />
-      ))}
-
-
+      ))} 
+   
       <PageTitle title="Your Strategies" />
-      <DataTable columns={columns} data={strategies} />
+      <DataTable columns={columns} data={activeStrategies} />
     </div>
   );
 }
-
-

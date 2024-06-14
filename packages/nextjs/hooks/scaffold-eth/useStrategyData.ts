@@ -71,9 +71,13 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     functionName: 'getTSLThreshold',
   });
 
+  const {data: isTSLActive, isLoading: isLoadingTSLActive} = useContractRead({
+    address: contractAddress,
+    abi: strategyABI.abi,
+    functionName: 'isTSLActive',
+  });
+
   const { targetNetwork } = useTargetNetwork();
-
-
 
   useEffect(() => {
     
@@ -116,10 +120,11 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             stablecoinAddress: stablecoinAddress?.toString() ?? '',
             profit: profit,
             weightedEntryCost: entryCost,
-            percentProfit: percentProfit.toString()
+            percentProfit: percentProfit.toString(),
+            isTSLActive: isTSLActive?.toString() ?? '',
         }
         
-        console.log("strategy: ", strategy);
+        // console.log("strategy: ", strategy);
         onDataFetched(strategy);
         }
         catch (e) {

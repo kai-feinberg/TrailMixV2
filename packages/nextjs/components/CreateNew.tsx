@@ -74,8 +74,8 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
-    console.log(tokenAddress);
-    console.log(tokens[tokenAddress]);
+    // console.log(tokenAddress);
+    // console.log(tokens[tokenAddress]);
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       console.log("pool address", tokens[tokenAddress].pool);
