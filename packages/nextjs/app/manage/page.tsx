@@ -62,11 +62,18 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Balance",
     cell: ({ row }) => {
 
+      const ercBalance = row.getValue("erc20Balance") as number;
+      const assetDecimals = 10 ** row.original.asset.decimals;
+      const twapPrice = Number(row.original.twapPrice);
+
+      const usdValue = ((ercBalance) * ethPrice* (twapPrice))/(assetDecimals**2);
+      console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
           <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
           <p className="text-sm text-gray-500">
-            {((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : ((row.getValue("erc20Balance") as number) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)}
+            {/* {(((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : (((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)} */}
+            {usdValue < 0.01 ? "<$0.01" : usdValue.toFixed(2)} USD
           </p>
         </div>
       );
@@ -140,11 +147,11 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
 export default function ManagePage({ }: Props) {
   // const [strategies, setStrategies] = useState<Strategy[]>([]);
-  const {strategies, setStrategies} = useGlobalState();
-  
+  const { strategies, setStrategies } = useGlobalState();
+
   const ethPrice = useNativeCurrencyPrice();
   const columns = getColumns(ethPrice);
-  
+
 
   const { address: connectedAccount } = useAccount();
   const { data: userContracts } = useScaffoldContractRead({
@@ -153,7 +160,8 @@ export default function ManagePage({ }: Props) {
     args: [connectedAccount],
   });
 
-  const activeStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true');
+  // const activeStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true');
+  const activeStrategies = strategies;
   console.log("activeStrategies", activeStrategies)
 
   const updateStrategyData = (strategy: Strategy) => {
@@ -170,8 +178,8 @@ export default function ManagePage({ }: Props) {
           contractAddress={address}
           onDataFetched={updateStrategyData}
         />
-      ))} 
-   
+      ))}
+
       <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={activeStrategies} />
     </div>
