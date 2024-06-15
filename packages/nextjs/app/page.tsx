@@ -19,12 +19,14 @@ import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
 import { useEnsName } from "wagmi";
 import { Badge } from "~~/components/ui/badge";
+import { useGlobalState } from "~~/services/store/store";
 
 import ercABI from "~~/contracts/erc20ABI.json";
 const erc20ABI = ercABI.abi;
 
 import stratABI from "~~/contracts/strategyABI.json";
 import OnboardingModal from "~~/components/OnboardingModal";
+import { Strategy } from "~~/types/customTypes";
 const strategyABI = stratABI.abi;
 
 
@@ -82,9 +84,9 @@ export default function Home() {
     args: [connectedAddress],
   });
 
-
-
-
+  const {strategies, setStrategies} = useGlobalState();
+  console.log("ASCDSF strategies", strategies);
+  
   const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (
     <div className="flex flex-col gap-5 w-full">

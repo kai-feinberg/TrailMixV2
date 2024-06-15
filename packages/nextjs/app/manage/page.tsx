@@ -30,6 +30,7 @@ const stratABI = strategyABI.abi;
 
 type Props = {};
 import { useAccount } from "wagmi";
+import { useGlobalState } from "~~/services/store/store";
 
 
 const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
@@ -138,7 +139,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
 
 export default function ManagePage({ }: Props) {
-  const [strategies, setStrategies] = useState<Strategy[]>([]);
+  // const [strategies, setStrategies] = useState<Strategy[]>([]);
+  const {strategies, setStrategies} = useGlobalState();
   
   const ethPrice = useNativeCurrencyPrice();
   const columns = getColumns(ethPrice);
