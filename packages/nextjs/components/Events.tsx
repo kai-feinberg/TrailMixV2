@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useScaffoldEventHistory } from "~~/hooks/scaffold-eth";
 import { useAccount } from "wagmi";
 import EventCard from "./EventCard";
-import { ArrowDown, ArrowLeftRight, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowLeftRight, ArrowUp, BookUp } from "lucide-react";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { TokenList } from "~~/types/customTypes";
 import tokenList from "~~/lib/tokenList.json";
@@ -169,7 +169,7 @@ const Events = () => {
                             title="Strategy Deployed"
                             detail={`Deployed by ${event.log.args.creator}`}
                             amount=" "
-                            icon={ArrowUp}
+                            icon={BookUp}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="slate"
                         />

@@ -90,7 +90,17 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       );
     },
   },
-
+  {
+    accessorKey: "Sell Threshold",
+    header: "Sell Threshold",
+    cell: ({ row }) => {
+      const tslThreshold = Number(row.original.tslThreshold);
+      const price = Number(ethPrice);
+      return (
+          <p className="">${(tslThreshold * price / (10 ** 18)).toFixed(5)} USD</p>
+      );
+    },
+  },
   {
     accessorKey: "profit",
     header: "Profit",
@@ -109,26 +119,28 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       return (
         <div className="text-base">
           <p style={{ color: Number(row.original.profit) >= 0 ? 'green' : 'red' }}>
-            {Number(row.original.profit) >= 0 ? `+$${displayProfit}` : `-$${Math.abs(Number(displayProfit))}`}
+            {Number(row.original.profit) >= 0 ? `+$${displayProfit}` : `-$${Math.abs(Number(displayProfit))}`} 
+            {/* / {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}% */}
+
           </p>
         </div>
       );
     }
   },
-  {
-    accessorKey: "percentProfit",
-    header: "Profit %",
-    cell: ({ row }) => {
-      return (
-        <div className="text-base">
-          <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>
-            {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}%
-          </p>
-        </div>
-      );
-    },
-  },
-
+  // {
+  //   accessorKey: "percentProfit",
+  //   header: "Profit %",
+  //   cell: ({ row }) => {
+  //     return (
+  //       <div className="text-base">
+  //         <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>
+  //           {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}%
+  //         </p>
+  //       </div>
+  //     );
+  //   },
+  // },
+ 
   {
     accessorKey: "actions",
     header: "Actions",

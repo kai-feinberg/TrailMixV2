@@ -4,16 +4,7 @@
 import { useState } from "react";
 import { Nav } from "./ui/nav";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import OnboardingContent from "./OnboardingContent";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import Logo from "~~/public/logo-black-svg.tsx";
 
 type Props = {};
 
@@ -43,51 +34,46 @@ export default function SideNavbar({ }: Props) {
   }
 
   return (
-    <div className="relative min-w-[80px] border-r px-3  pb-10 pt-24 bg-white">
-      {!mobileWidth && (
-        <div className="absolute right-[-20px] top-7">
-          <Button
-            onClick={toggleSidebar}
-            variant="secondary"
-            className=" rounded-full p-2"
-          >
-            <ChevronRight />
-          </Button>
-        </div>
-      )}
-      <Nav
-        isCollapsed={mobileWidth ? true : isCollapsed}
+    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-white flex flex-col justify-between">
+      <div>
+        <Logo/>
+        {!mobileWidth && (
+          <div className="absolute right-[-20px] top-7">
+            <Button
+              onClick={toggleSidebar}
+              variant="secondary"
+              className=" rounded-full p-2"
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+        )}
+        <Nav
+          isCollapsed={mobileWidth ? true : isCollapsed}
 
-        links={[
-          {
-            title: "Dashboard",
-            href: "/",
-            icon: LayoutDashboard,
-            variant: "default"
-          },
+          links={[
+            {
+              title: "Dashboard",
+              href: "/",
+              icon: LayoutDashboard,
+              variant: "default"
+            },
 
-          {
-            title: "Manage",
-            href: "/manage",
-            icon: ClipboardPenLine,
-            variant: "ghost"
-          },
-          // {
-          //   title: "History",
-          //   href: "/history",
-          //   icon: UsersRound,
-          //   variant: "ghost"
-          // },
-          // {
-          //   title: "settings",
-          //   href: "/settings",
-          //   icon: Settings,
-          //   variant: "ghost"
-          // }
-        ]}
-      />
+            {
+              title: "Manage",
+              href: "/manage",
+              icon: ClipboardPenLine,
+              variant: "ghost"
+            },
+          ]}
+        />
+        <RainbowKitCustomConnectButton />
+      </div>
 
-      <RainbowKitCustomConnectButton />
+      <div className="flex text-base font-semibold text-slate-600"> 
+        <p> ❤ Built by Kaifeinberg.eth</p>
+      </div>
+
 
     </div>
   );
