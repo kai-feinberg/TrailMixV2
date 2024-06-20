@@ -4,7 +4,7 @@ pragma abicoder v2;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
-import { ISwapRouter } from "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
+import { ISwapRouter } from "./ISwapRouter.sol";
 // import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { IUniswapOracle } from "./IUniswapOracle.sol";
@@ -235,7 +235,7 @@ contract TrailMix is ReentrancyGuard {
 				tokenOut: s_stablecoin,
 				fee: s_poolFee,
 				recipient: address(this),
-				deadline: block.timestamp,
+				// deadline: block.timestamp, NOT NEEDED FOR ROUTER ON BASE
 				amountIn: amount,
 				amountOutMinimum: minAmountOut,
 				sqrtPriceLimitX96: 0

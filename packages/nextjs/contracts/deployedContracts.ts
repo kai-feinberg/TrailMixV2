@@ -425,7 +425,7 @@ const deployedContracts = {
   },
   8453: {
     TrailMixManager: {
-      address: "0x641C5b6ad855163f0E4BD0fe05D075512a464542",
+      address: "0x38BCc1cbB594866564D10d540B6E727bfE49dDF2",
       abi: [
         {
           inputs: [],
