@@ -3,12 +3,6 @@ export interface TokenData {
     symbol: string;
     decimals: number;
     logoURI: string;
-    extensions: {
-      opListId: string;
-      opTokenId: string;
-      optimismBridgeAddress?: string;
-      baseBridgeAddress?: string;
-    };
     pool: string;
   }
   
@@ -16,6 +10,7 @@ export interface TokenData {
 export type Strategy = {
     asset: TokenData;
     contractAddress: string;
+    erc20Asset: string;
     erc20Balance: string;
     twapPrice: string;
     trailAmount: string;
@@ -24,10 +19,12 @@ export type Strategy = {
     manager: string;
     tslThreshold: string;
     stablecoinAddress: string;
+    stablecoinBalance: string;
     profit: string;
     weightedEntryCost: string;
     percentProfit: string;
     isTSLActive: string;
+    
   };  
 
   export type TokenList = {

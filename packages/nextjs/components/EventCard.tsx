@@ -11,6 +11,8 @@ export type EventProps = {
   color: string;
 };
 
+
+//workaround to do dynamic colors in tailwind
 const colorClasses = {
   red: "bg-red-200",
   green: "bg-green-200",

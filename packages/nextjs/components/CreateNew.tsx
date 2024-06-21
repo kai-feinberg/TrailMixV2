@@ -45,7 +45,7 @@ export function CreateNew() {
   const [strategy, setStrategy] = React.useState("20");
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
-
+  const [newestContract, setNewestContract] = React.useState("");
 
   const [phase, setPhase] = React.useState("deploy");
 
@@ -61,6 +61,13 @@ export function CreateNew() {
     functionName: "getUserContracts",
     args: [connectedAddress],
   });
+
+  React.useEffect(() => {
+    if (userContracts) {
+      setNewestContract(userContracts[0]);
+      console.log("newest contract", newestContract);
+    }
+  }, [userContracts])
 
 
   const tokenOptions = tokens ? Object.entries(tokens).map(([contractAddress, details]) => ({
@@ -94,7 +101,7 @@ export function CreateNew() {
       3000],
     onBlockConfirmation: (txnReceipt) => {
       console.log("📦 deployed new contract:", txnReceipt.blockHash);
-      
+
     },
     onSuccess: () => {
       console.log("🚀 Strategy Deployed");
@@ -191,9 +198,9 @@ export function CreateNew() {
           <span className="loading loading-spinner loading-sm"></span>
         )}
 
-        {/* {phase === "deposit" && (
-          <DepositContent contractAddress={deployedAddress} />
-        )} */}
+        {phase === "deposit" && (
+          <DepositContent contractAddress={newestContract} />
+        )}
       </DialogContent>
     </Dialog>
   );

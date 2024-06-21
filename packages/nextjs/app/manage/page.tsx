@@ -71,7 +71,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
-          <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
+          <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.symbol}</p>
           <p className="text-sm text-gray-500">
             {/* {(((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : (((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)} */}
             {usdValue < 0.01 ? "<$0.01" : usdValue.toFixed(2)} USD
@@ -175,7 +175,8 @@ export default function ManagePage({ }: Props) {
   });
   // console.log("user contracts", userContracts)
 
-  // const activeStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true');
+  const claimableStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true' && Number(strategy.erc20Balance) === 0 && Number(strategy.stablecoinBalance) > 0);
+  
   const activeStrategies = strategies;
   console.log("activeStrategies", activeStrategies)
 

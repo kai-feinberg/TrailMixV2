@@ -45,6 +45,11 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     abi: strategyABI.abi,
     functionName: 'getStablecoinAddress',
   });
+  const { data: stablecoinBalance, isLoading: isLoadingStablecoinBalance } = useContractRead({
+    address: contractAddress,
+    abi: strategyABI.abi,
+    functionName: 'getStablecoinBalance',
+  });
   const { data: trailAmount, isLoading: isLoadingTrailAmount } = useContractRead({
     address: contractAddress,
     abi: strategyABI.abi,
@@ -81,7 +86,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
   useEffect(() => {
     
-    if (!isLoadingCurrentPrice && !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingCurrentPrice && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         let totalCost = Number(0);
@@ -111,6 +116,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             asset: tokenData as TokenData,
             contractAddress: contractAddress.toString(),
             erc20Balance: erc20Balance?.toString() ?? '',
+            erc20Asset: erc20TokenAddress?.toString() ?? '',
             twapPrice: twapPrice?.toString() ?? '',
             trailAmount: trailAmount?.toString() ?? '',
             uniswapPool: uniswapPool?.toString() ?? '',
@@ -122,6 +128,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             weightedEntryCost: entryCost,
             percentProfit: percentProfit.toString(),
             isTSLActive: isTSLActive?.toString() ?? '',
+            stablecoinBalance: stablecoinBalance?.toString() ?? ''
         }
         
         // console.log("strategy: ", strategy);
@@ -131,7 +138,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             console.info("ligma", e);
         }
     }
-  }, [erc20TokenAddress, erc20Balance, stablecoinAddress, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
+  }, [erc20TokenAddress, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
 
   return;
 };

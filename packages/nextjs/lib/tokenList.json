@@ -44,13 +44,7 @@
             "name": "Degen",
             "symbol": "DEGEN",
             "decimals": 18,
-            "logoURI": "https://ethereum-optimism.github.io/data/1INCH/logo.svg",
-            "extensions": {
-              "opListId": "extended",
-              "opTokenId": "DEGEN",
-              "optimismBridgeAddress": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
-             "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35"           
-            },
+            "logoURI": "https://www.basetokenstore.com/_next/image?url=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F34515%2Flarge%2Fandroid-chrome-512x512.png%3F1706198225&w=128&q=75",
             "pool" : "0xc9034c3E7F58003E6ae0C8438e7c8f4598d5ACAA"
         },
 
@@ -59,12 +53,6 @@
             "symbol": "WETH",
             "decimals": 18,
             "logoURI": "https://github.com/ethereum-optimism/ethereum-optimism.github.io/blob/master/data/WETH/logo.png",
-            "extensions": {
-              "opListId": "extended",
-              "opTokenId": "WETH",
-              "optimismBridgeAddress": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
-             "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35"           
-            },
             "pool" : ""
         },
 
@@ -72,13 +60,7 @@
             "name" : "Brett",
             "symbol": "BRETT",
             "decimals": 18,
-            "logoURI": "https://github.com/ethereum-optimism/ethereum-optimism.github.io/blob/master/data/WETH/logo.png",
-            "extensions": {
-              "opListId": "extended",
-              "opTokenId": "WETH",
-              "optimismBridgeAddress": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
-             "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35"           
-            },
+            "logoURI": "https://www.basetokenstore.com/_next/image?url=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F35529%2Flarge%2F1000050750.png%3F1709031995&w=128&q=75",
             "pool" : "0x76Bf0abD20f1e0155Ce40A62615a90A709a6C3D8"
         }
 
