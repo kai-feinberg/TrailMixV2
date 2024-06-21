@@ -11,7 +11,7 @@
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { XSquare, Pencil } from "lucide-react";
+import { Link, Link2 } from "lucide-react";
 import React from "react";
 import { useEffect, useState, useCallback } from "react";
 import PageTitle from "@/components/PageTitle";
@@ -25,6 +25,7 @@ import StrategyDataUpdater from "~~/components/StrategyDataUpdater";
 import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useContractRead } from "wagmi";
 import strategyABI from "~~/contracts/strategyABI.json";
+
 
 const stratABI = strategyABI.abi;
 
@@ -149,6 +150,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
         <div className="flex gap-2">
           <DepositPopup contractAddress={row.original.contractAddress} />
           <WithdrawButton contractAddress={row.original.contractAddress} />
+          <Button variant="outline" className="h-3 w-2 rounded-xl" onClick={() => window.open(`https://basescan.org/address/${row.original.contractAddress}`, '_blank')}>i</Button>
         </div>
       );
     },
