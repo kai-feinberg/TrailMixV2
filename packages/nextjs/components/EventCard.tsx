@@ -11,11 +11,19 @@ export type EventProps = {
   color: string;
 };
 
+const colorClasses = {
+  red: "bg-red-200",
+  green: "bg-green-200",
+  yellow: "bg-yellow-200",
+  blue: "bg-blue-200",
+  teal: "bg-teal-200"
+}
+
 export default function EventCard(props: EventProps) {
   return (
     <div className="flex flex-wrap justify-between items-center gap-3 p-2">
       <section className="flex gap-3 items-center">
-        <div className={`flex items-center justify-center h-12 w-12 rounded-full bg-${props.color}-200 p-1`}>
+        <div className={`flex items-center justify-center h-12 w-12 rounded-full ${colorClasses[props.color as keyof typeof colorClasses] || "bg-gray-200"} p-1`}>
           <props.icon className="text-black" size={24} />
         </div>
         <div className="space-y-1">

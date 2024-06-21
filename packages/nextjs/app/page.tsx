@@ -85,7 +85,6 @@ export default function Home() {
   });
 
   const {strategies, setStrategies} = useGlobalState();
-  console.log("ASCDSF strategies", strategies);
   
   const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (

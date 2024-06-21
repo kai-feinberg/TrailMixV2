@@ -90,7 +90,7 @@ const Events = () => {
         setEvents([]);
         setLoading(true);
     }, [userAddress]);
-    
+
 
     //only render events when events change
     useEffect(() => {
@@ -146,11 +146,13 @@ const Events = () => {
                     {event.log.eventName === "SwapExecuted" && (
                         <EventCard
                             title="Swap Executed"
-                            detail={`Swapped by ${event.log.args.creator}`}
-                            amount={`${event.log.args.amountIn} for ${event.log.args.amountOut}`}
+                            detail={`${(Number(event.log.args.amountIn) / (10 ** Number(tokenData[event.log.args.tokenIn.toLowerCase()].decimals)))} ${tokenData[event.log.args.tokenIn.toLowerCase()].symbol} 
+                            for ${(Number(event.log.args.amountOut) / (10 ** Number(tokenData[event.log.args.tokenOut.toLowerCase()].decimals))).toFixed(7)} ${tokenData[event.log.args.tokenOut.toLowerCase()].symbol}  `}
+                            amount=""
+                            
                             icon={ArrowLeftRight}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
-                            color="blue"
+                            color="yellow"
                         />
                     )}
                     {event.log.eventName === "FundsDeposited" && (
@@ -171,7 +173,7 @@ const Events = () => {
                             amount=" "
                             icon={BookUp}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
-                            color="slate"
+                            color="blue"
                         />
                     )}
                 </div>
