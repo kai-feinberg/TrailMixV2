@@ -44,7 +44,7 @@
             "name": "Degen",
             "symbol": "DEGEN",
             "decimals": 18,
-            "logoURI": "https://ethereum-optimism.github.io/data/OP/logo.png",
+            "logoURI": "https://ethereum-optimism.github.io/data/1INCH/logo.svg",
             "extensions": {
               "opListId": "extended",
               "opTokenId": "DEGEN",
@@ -66,7 +66,22 @@
              "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35"           
             },
             "pool" : ""
+        },
+
+        "0x532f27101965dd16442e59d40670faf5ebb142e4" : {
+            "name" : "Brett",
+            "symbol": "BRETT",
+            "decimals": 18,
+            "logoURI": "https://github.com/ethereum-optimism/ethereum-optimism.github.io/blob/master/data/WETH/logo.png",
+            "extensions": {
+              "opListId": "extended",
+              "opTokenId": "WETH",
+              "optimismBridgeAddress": "0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1",
+             "baseBridgeAddress": "0x3154Cf16ccdb4C6d922629664174b904d80F2C35"           
+            },
+            "pool" : "0x76Bf0abD20f1e0155Ce40A62615a90A709a6C3D8"
         }
+
 
     }
 }

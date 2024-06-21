@@ -67,7 +67,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       const twapPrice = Number(row.original.twapPrice);
 
       const usdValue = ((ercBalance) * ethPrice* (twapPrice))/(assetDecimals**2);
-      console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
+      // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
           <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.extensions.opTokenId}</p>
@@ -171,14 +171,21 @@ export default function ManagePage({ }: Props) {
     functionName: "getUserContracts",
     args: [connectedAccount],
   });
+  // console.log("user contracts", userContracts)
 
   // const activeStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true');
   const activeStrategies = strategies;
   console.log("activeStrategies", activeStrategies)
 
   const updateStrategyData = (strategy: Strategy) => {
-    // console.log("updated strategies", strategies);
-    setStrategies([...strategies, strategy]);
+    const existingStrategyIndex = strategies.findIndex(s => s.contractAddress === strategy.contractAddress);
+    if (existingStrategyIndex !== -1) {
+      const updatedStrategies = [...strategies];
+      updatedStrategies[existingStrategyIndex] = strategy;
+      setStrategies(updatedStrategies);
+    } else {
+      setStrategies([...strategies, strategy]);
+    }
   }
 
   return (

@@ -11,7 +11,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
   const [entryCost, setEntryCost] = useState('0');
   const [amount, setAmount] = useState('0');
 
-  const { data: deposits } = useScaffoldEventHistory({
+  const { data: deposits, isLoading: isLoadingDeposits } = useScaffoldEventHistory({
     contractName: 'TrailMixManager',
     eventName: 'FundsDeposited',
     fromBlock: 1100002n,
@@ -81,7 +81,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
   useEffect(() => {
     
-    if (!isLoadingCurrentPrice && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingCurrentPrice && !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         let totalCost = Number(0);
@@ -96,7 +96,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
         const latestPrice = BigInt(currentPrice?.toString() ?? '0');
         const currentValue = totalAmount * latestPrice;
-        const computedProfit = currentValue - BigInt(totalCost.toString());
+        const computedProfit = currentValue - BigInt(totalCost);
 
         setProfit(computedProfit.toString());
         setEntryCost(totalCost.toString());
@@ -128,10 +128,10 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         onDataFetched(strategy);
         }
         catch (e) {
-            console.error(e);
+            console.info("ligma", e);
         }
     }
-  }, [erc20TokenAddress, erc20Balance, stablecoinAddress, trailAmount, uniswapPool, granularity, manager, tslThreshold]);
+  }, [erc20TokenAddress, erc20Balance, stablecoinAddress, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
 
   return;
 };
