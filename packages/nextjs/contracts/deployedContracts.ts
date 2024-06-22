@@ -425,8 +425,13 @@ const deployedContracts = {
   },
   8453: {
     TrailMixManager: {
-      address: "0x38BCc1cbB594866564D10d540B6E727bfE49dDF2",
+      address: "0x45F8e0F7340835D0B83e8C7e33A03946a7c87551",
       abi: [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
         {
           inputs: [],
           name: "NotContractOwner",
@@ -442,10 +447,22 @@ const deployedContracts = {
               type: "address",
             },
             {
-              indexed: false,
+              indexed: true,
               internalType: "address",
               name: "contractAddress",
               type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "token",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "trailAmount",
+              type: "uint256",
             },
             {
               indexed: false,
@@ -787,6 +804,19 @@ const deployedContracts = {
             },
           ],
           name: "performUpkeep",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_executor",
+              type: "address",
+            },
+          ],
+          name: "setGelatoExecutor",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",

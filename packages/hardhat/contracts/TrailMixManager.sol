@@ -22,10 +22,25 @@ contract TrailMixManager is ReentrancyGuard {
 	// Mapping from user address to array of deployed TrailMix contract addresses
 	mapping(address => address[]) public userContracts;
 
+	address private gelatoExecutor; //only address authorized to call performUpkeep
+
+	address private managerDeployer; //address authorized to set gelato executor
+
+	modifier onlyAuthorized() {
+		require(
+			msg.sender == address(this) ||
+				msg.sender == address(gelatoExecutor),
+			"Not authorized"
+		);
+		_;
+	}
+
 	// Event to emit when a new TrailMix contract is deployed
 	event ContractDeployed(
 		address indexed creator,
-		address contractAddress,
+		address indexed contractAddress,
+		address indexed token,
+		uint256 trailAmount,
 		uint256 timestamp
 	);
 
@@ -60,6 +75,10 @@ contract TrailMixManager is ReentrancyGuard {
 		uint256 timestamp
 	);
 
+	constructor() {
+		managerDeployer = msg.sender;
+	}
+
 	// Function to deploy a new TrailMix contract
 	function deployTrailMix(
 		address _erc20Token,
@@ -87,19 +106,17 @@ contract TrailMixManager is ReentrancyGuard {
 
 		// Store the contract address in the userContracts mapping
 		userContracts[msg.sender].push(address(newTrailMix));
-		activeStrategies.push(address(newTrailMix));
-		isActiveStrategy[address(newTrailMix)] = true;
-		strategyIndex[address(newTrailMix)] = activeStrategies.length - 1;
 
 		// Emit an event for the deployment
 		emit ContractDeployed(
 			msg.sender,
 			address(newTrailMix),
+			_erc20Token,
+			_trailAmount,
 			block.timestamp
 		);
 	}
 
-	// IMPLEMENT DEPOSIT AND WITHDRAW FUNCTIONS
 	function deposit(
 		address _strategy,
 		uint256 _amount,
@@ -121,6 +138,13 @@ contract TrailMixManager is ReentrancyGuard {
 		// approve strategy to spend the funds and call deposit
 		IERC20(erc20TokenAddress).approve(_strategy, _amount);
 		ITrailMix(_strategy).deposit(_amount, _tslThreshold);
+
+		//if contract is not in the active array then add it to the active array
+		if (!isActiveStrategy[address(_strategy)]) {
+			activeStrategies.push(address(_strategy));
+			isActiveStrategy[address(_strategy)] = true;
+			strategyIndex[address(_strategy)] = activeStrategies.length - 1;
+		}
 
 		// Emit an event for the deposit
 		emit FundsDeposited(
@@ -152,7 +176,6 @@ contract TrailMixManager is ReentrancyGuard {
 	// Remove a strategy
 	function removeStrategy(address strategy) private {
 		require(strategy != address(0), "Invalid address");
-		require(isActiveStrategy[strategy], "Strategy not active");
 
 		isActiveStrategy[strategy] = false;
 
@@ -212,7 +235,6 @@ contract TrailMixManager is ReentrancyGuard {
 						newThreshold
 					);
 				}
-				// Don't return yet if you want to prioritize sells across all strategies
 			}
 		}
 
@@ -232,7 +254,16 @@ contract TrailMixManager is ReentrancyGuard {
 		bool sell,
 		bool updateThreshold,
 		uint256 newThreshold
-	) external {
+	) external onlyAuthorized {
+		_performUpkeep(strategy, sell, updateThreshold, newThreshold);
+	}
+
+	function _performUpkeep(
+		address strategy,
+		bool sell,
+		bool updateThreshold,
+		uint256 newThreshold
+	) private {
 		// Implement logic to perform TSL (e.g., swap to stablecoin) when conditions are met
 
 		if (sell) {
@@ -270,5 +301,11 @@ contract TrailMixManager is ReentrancyGuard {
 		address user
 	) public view returns (address[] memory) {
 		return userContracts[user];
+	}
+
+	function setGelatoExecutor(address _executor) public {
+		// Logic to set the Gelato executor address
+		require(msg.sender == managerDeployer, "Not authorized");
+		gelatoExecutor = _executor;
 	}
 }

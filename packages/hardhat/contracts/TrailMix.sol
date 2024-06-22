@@ -13,6 +13,7 @@ error InvalidAmount(); // Error for when the deposit amount is not positive
 error TransferFailed(); // Error for when the token transfer fails
 error InvalidToken(); // Error for when the token address is invalid
 
+//events are emitted in the manager contract
 contract TrailMix is ReentrancyGuard {
 	address private immutable i_manager; //address of the manager contract
 	address private immutable i_creator; // address of the creator of the contract
@@ -29,11 +30,17 @@ contract TrailMix is ReentrancyGuard {
 	uint256 private s_erc20Balance;
 	uint256 private s_stablecoinBalance; // User's ERC20 token balance
 	uint256 private s_granularity; //  % price increase to trigger an update
-	bool private s_isTSLActive; // Indicates if the TSL is currently active
 	bool private slippageProtection; // Indicates if slippage protection is enabled
 	uint24 private s_poolFee;
 
-	//events are emitted in the manager contract
+	//stores current state of contract
+	enum ContractState {
+		Uninitialized,
+		Active,
+		Claimable,
+		Inactive
+	}
+	ContractState private state;
 
 	constructor(
 		address _manager,
@@ -57,11 +64,11 @@ contract TrailMix is ReentrancyGuard {
 		s_uniswapOracle = IUniswapOracle(_uniswapOracle);
 		s_uniswapPool = _uniswapPool;
 
-		s_isTSLActive = false;
 		s_trailAmount = _trailAmount;
 		slippageProtection = true;
 		s_granularity = granularity;
 		s_poolFee = _poolFee;
+		state = ContractState.Uninitialized;
 	}
 
 	modifier onlyManager() {
@@ -93,10 +100,11 @@ contract TrailMix is ReentrancyGuard {
 
 		s_erc20Balance += amount;
 
-		if (!s_isTSLActive) {
+		if (state == ContractState.Uninitialized) {
 			// If TSL is not active, set the threshold and activate TSL
 			s_tslThreshold = (tslThreshold * (100 - s_trailAmount)) / 100;
-			s_isTSLActive = true;
+
+			state = ContractState.Active;
 		}
 	}
 
@@ -119,7 +127,8 @@ contract TrailMix is ReentrancyGuard {
 				i_creator, // sends funds to the contract creator
 				withdrawalAmount
 			);
-			s_isTSLActive = false; // Deactivate TSL when withdrawal is made
+			//deactiveate TSL
+			state = ContractState.Inactive;
 		} else if (token == s_erc20Token) {
 			// If TSL is active, user withdraws their ERC20 tokens
 			withdrawalAmount = s_erc20Balance;
@@ -132,7 +141,8 @@ contract TrailMix is ReentrancyGuard {
 				i_creator,
 				withdrawalAmount
 			);
-			s_isTSLActive = false; // Deactivate TSL when withdrawal is made
+			//deactivate tsl
+			state = ContractState.Inactive;
 		} else {
 			revert InvalidToken();
 		}
@@ -244,6 +254,7 @@ contract TrailMix is ReentrancyGuard {
 
 		uint256 amountRecieved = IERC20(s_stablecoin).balanceOf(address(this));
 		s_stablecoinBalance += amountRecieved;
+		state = ContractState.Claimable;
 	}
 
 	/**
@@ -265,10 +276,6 @@ contract TrailMix is ReentrancyGuard {
 
 	function getTSLThreshold() public view returns (uint256) {
 		return s_tslThreshold;
-	}
-
-	function isTSLActive() public view returns (bool) {
-		return s_isTSLActive;
 	}
 
 	// View function to get ERC20 token address
@@ -304,5 +311,13 @@ contract TrailMix is ReentrancyGuard {
 
 	function getUniswapPool() public view returns (address) {
 		return s_uniswapPool;
+	}
+
+	function getState() public view returns (string memory) {
+		if (state == ContractState.Uninitialized) return "Uninitialized";
+		if (state == ContractState.Active) return "Active";
+		if (state == ContractState.Claimable) return "Claimable";
+		if (state == ContractState.Inactive) return "Inactive";
+		return "Unknown"; // fallback in case of an unexpected state
 	}
 }
