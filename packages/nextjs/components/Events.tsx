@@ -158,9 +158,8 @@ const Events = () => {
                     {event.log.eventName === "FundsDeposited" && (
                         <EventCard
                             title="Deposit Made"
-                            detail={`Deposited to ${event.log.args.strategy.slice(0, 6)}...${event.log.args.strategy.slice(-4)}`}
+                            detail={`Deposited to $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with XXX% trail`}
                             amount={`${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)))} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
-                            // amount = '0'
                             icon={ArrowDown}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="green"
@@ -169,7 +168,7 @@ const Events = () => {
                     {event.log.eventName === "ContractDeployed" && (
                         <EventCard
                             title="Strategy Deployed"
-                            detail={`Deployed by ${event.log.args.creator}`}
+                            detail={`Deployed $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with ${event.log.args.trailAmount}% trail`}
                             amount=" "
                             icon={BookUp}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}

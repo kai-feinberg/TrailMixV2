@@ -205,6 +205,7 @@ export default function ManagePage({ }: Props) {
 
       <PageTitle title="Your Strategies" />
       <DataTable columns={columns} data={activeStrategies} />
+      <DataTable columns={columns} data={claimableStrategies} />
     </div>
   );
 }

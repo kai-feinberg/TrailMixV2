@@ -29,8 +29,6 @@ const managerABI = manager.abi;
 const WithdrawButton = ({ contractAddress }: { contractAddress: string }) => {
     const { address: userAddress } = useAccount(); // Get the user's address
 
-    const [depositAmount, setDepositAmount] = useState<string | bigint>("0"); // State to store deposit amount
-    const [scaledDepositAmount, setScaledDepositAmount] = useState<bigint>(BigInt(0)); // State to store scaled deposit amount
     const [assetToWithdraw, setAssetToWithdraw] = useState<string>("");
 
     // // Ensure that contractAddr is not undefined or empty
@@ -77,6 +75,7 @@ const WithdrawButton = ({ contractAddress }: { contractAddress: string }) => {
 
     useEffect(() => {
         if (Number(stablecoinBalance) > Number(erc20Balance)) {
+            // console.log("safdsa", stablecoinBalance)
             setAssetToWithdraw(stablecoinAddress as string);
         }
         else {
