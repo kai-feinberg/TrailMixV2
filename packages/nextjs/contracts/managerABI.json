@@ -2,6 +2,11 @@
     "abi": [
         {
             "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [],
             "name": "NotContractOwner",
             "type": "error"
         },
@@ -15,10 +20,22 @@
                     "type": "address"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "internalType": "address",
                     "name": "contractAddress",
                     "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "token",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "trailAmount",
+                    "type": "uint256"
                 },
                 {
                     "indexed": false,
@@ -360,6 +377,19 @@
                 }
             ],
             "name": "performUpkeep",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_executor",
+                    "type": "address"
+                }
+            ],
+            "name": "setGelatoExecutor",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

@@ -96,7 +96,8 @@ export function CreateNew() {
       "0x2626664c2603336E57B271c5C0b26F421741e481",  // Uniswap V3 router
       poolAddress, //pool address
       "0x161824CA6a0c6d85188B1bf9A79674aC1d208621", // TWAP oracle
-      BigInt(strategy), //trail amount
+      // BigInt(strategy), //trail amount
+      BigInt("1"),
       BigInt(1 as number), //granularity
       3000],
     onBlockConfirmation: (txnReceipt) => {

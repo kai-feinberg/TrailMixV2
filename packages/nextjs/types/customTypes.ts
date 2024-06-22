@@ -23,7 +23,7 @@ export type Strategy = {
     profit: string;
     weightedEntryCost: string;
     percentProfit: string;
-    isTSLActive: string;
+    contractState: string;
     
   };  
 

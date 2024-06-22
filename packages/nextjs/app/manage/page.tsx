@@ -175,9 +175,10 @@ export default function ManagePage({ }: Props) {
   });
   // console.log("user contracts", userContracts)
 
-  const claimableStrategies = strategies.filter(strategy => strategy.isTSLActive === 'true' && Number(strategy.erc20Balance) === 0 && Number(strategy.stablecoinBalance) > 0);
+  const claimableStrategies = strategies.filter(strategy => strategy.contractState === 'Claimable');
   
-  const activeStrategies = strategies;
+  const activeStrategies = strategies.filter(strategy => strategy.contractState==='Uninitialized' || strategy.contractState==='Active');
+  
   console.log("activeStrategies", activeStrategies)
 
   const updateStrategyData = (strategy: Strategy) => {

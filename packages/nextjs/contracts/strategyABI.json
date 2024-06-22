@@ -218,6 +218,19 @@
         },
         {
             "inputs": [],
+            "name": "getState",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "getTSLThreshold",
             "outputs": [
                 {
@@ -276,19 +289,6 @@
                     "internalType": "address",
                     "name": "",
                     "type": "address"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "isTSLActive",
-            "outputs": [
-                {
-                    "internalType": "bool",
-                    "name": "",
-                    "type": "bool"
                 }
             ],
             "stateMutability": "view",

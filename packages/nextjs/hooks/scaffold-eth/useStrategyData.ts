@@ -76,17 +76,17 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     functionName: 'getTSLThreshold',
   });
 
-  const {data: isTSLActive, isLoading: isLoadingTSLActive} = useContractRead({
+  const {data: contractState, isLoading: isLoadingContractState} = useContractRead({
     address: contractAddress,
     abi: strategyABI.abi,
-    functionName: 'isTSLActive',
+    functionName: 'getState',
   });
 
   const { targetNetwork } = useTargetNetwork();
 
   useEffect(() => {
     
-    if (!isLoadingCurrentPrice && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingCurrentPrice && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         let totalCost = Number(0);
@@ -127,7 +127,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             profit: profit,
             weightedEntryCost: entryCost,
             percentProfit: percentProfit.toString(),
-            isTSLActive: isTSLActive?.toString() ?? '',
+            contractState: contractState?.toString() ?? '',
             stablecoinBalance: stablecoinBalance?.toString() ?? ''
         }
         
@@ -138,7 +138,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             console.info("ligma", e);
         }
     }
-  }, [erc20TokenAddress, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
+  }, [erc20TokenAddress, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
 
   return;
 };
