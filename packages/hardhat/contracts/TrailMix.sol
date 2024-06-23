@@ -12,6 +12,7 @@ import { IUniswapOracle } from "./IUniswapOracle.sol";
 error InvalidAmount(); // Error for when the deposit amount is not positive
 error TransferFailed(); // Error for when the token transfer fails
 error InvalidToken(); // Error for when the token address is invalid
+error StrategyNotActive();
 
 //events are emitted in the manager contract
 contract TrailMix is ReentrancyGuard {
@@ -87,6 +88,9 @@ contract TrailMix is ReentrancyGuard {
 	) external onlyManager {
 		if (amount <= 0) {
 			revert InvalidAmount();
+		}
+		if (state== ContractState.Claimable || state == ContractState.Inactive){
+			revert StrategyNotActive();
 		}
 
 		bool transferSuccess = IERC20(s_erc20Token).transferFrom(

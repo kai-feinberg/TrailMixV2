@@ -50,7 +50,8 @@ contract TrailMixManager is ReentrancyGuard {
 		uint256 depositPrice,
 		uint256 amount,
 		address token,
-		uint256 timestamp
+		uint256 timestamp,
+		uint256 trailAmount
 	);
 	event FundsWithdrawn(
 		address indexed creator,
@@ -153,7 +154,8 @@ contract TrailMixManager is ReentrancyGuard {
 			ITrailMix(_strategy).getExactPrice(),
 			_amount,
 			ITrailMix(_strategy).getERC20TokenAddress(),
-			block.timestamp
+			block.timestamp,
+			ITrailMix(_strategy).getTrailAmount()
 		);
 	}
 
@@ -162,8 +164,28 @@ contract TrailMixManager is ReentrancyGuard {
 		if (ITrailMix(_strategy).getCreator() != msg.sender) {
 			revert NotContractOwner();
 		}
+
+		uint256 amount;
+		//fetch amount to be withdrawn
+		if (_token == ITrailMix(_strategy).getERC20TokenAddress()) {
+			amount = ITrailMix(_strategy).getERC20Balance();
+		} else {
+			amount = ITrailMix(_strategy).getStablecoinBalance();
+		}
+
 		ITrailMix(_strategy).withdraw(_token);
-		removeStrategy(_strategy);
+
+		if (isActiveStrategy[_strategy]) {
+			removeStrategy(_strategy);
+		}
+
+		emit FundsWithdrawn(
+			msg.sender,
+			_strategy,
+			amount,
+			_token,
+			block.timestamp
+		);
 	}
 
 	function toggleSlippageProtection(address _strategy) public {
@@ -223,8 +245,6 @@ contract TrailMixManager is ReentrancyGuard {
 			} else if (update) {
 				// If no swap needed, check for threshold update
 				// Note: This approach only encodes action for the first strategy needing an action.
-				// If you want to encode actions for all strategies, you'd need to aggregate the data differently.
-				// Store the update action if no sell actions have been found
 				if (!updateNeeded) {
 					updateNeeded = true;
 					updateData = abi.encodeWithSelector(
@@ -270,8 +290,11 @@ contract TrailMixManager is ReentrancyGuard {
 			//call trigger function to sell on uniswap
 			uint256 s_erc20Balance = ITrailMix(strategy).getERC20Balance();
 			ITrailMix(strategy).swapOnUniswap(s_erc20Balance);
+
 			//deactivate TSL
-			removeStrategy(strategy);
+			if (isActiveStrategy[strategy]) {
+				removeStrategy(strategy);
+			}
 
 			//emit swap event
 			emit SwapExecuted(
