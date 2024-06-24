@@ -45,6 +45,7 @@ export function CreateNew() {
   const [strategy, setStrategy] = React.useState("20");
   const [depositAmount, setDepositAmount] = React.useState("");
   const [poolAddress, setPoolAddress] = React.useState("");
+  const [poolFee, setPoolFee] = React.useState("");
   const [newestContract, setNewestContract] = React.useState("");
 
   const [phase, setPhase] = React.useState("deploy");
@@ -81,6 +82,7 @@ export function CreateNew() {
     // console.log(tokens[tokenAddress]);
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
+      setPoolFee(tokens[tokenAddress].poolFee);
       console.log("pool address", tokens[tokenAddress].pool);
     } else {
       setPoolAddress("");
@@ -99,7 +101,8 @@ export function CreateNew() {
       BigInt(strategy), //trail amount
       // BigInt("1"),
       BigInt(1 as number), //granularity
-      3000],
+      Number(poolFee)
+    ],
     onBlockConfirmation: (txnReceipt) => {
       console.log("📦 deployed new contract:", txnReceipt.blockHash);
 
@@ -175,8 +178,8 @@ export function CreateNew() {
                       <div>Balanced</div>
                     </div>
                   </Button>
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("10")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "10" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("1")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "1" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <SwordIcon className="h-6 w-6 mb-2" />
                       <div>Aggressive</div>
                     </div>

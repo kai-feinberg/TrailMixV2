@@ -425,7 +425,7 @@ const deployedContracts = {
   },
   8453: {
     TrailMixManager: {
-      address: "0x45F8e0F7340835D0B83e8C7e33A03946a7c87551",
+      address: "0x79d00fe5A00b8b9e1587Ba6432921f05DECCB4fd",
       abi: [
         {
           inputs: [],
@@ -511,6 +511,12 @@ const deployedContracts = {
               indexed: false,
               internalType: "uint256",
               name: "timestamp",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "trailAmount",
               type: "uint256",
             },
           ],

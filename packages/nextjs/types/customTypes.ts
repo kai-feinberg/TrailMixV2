@@ -4,6 +4,7 @@ export interface TokenData {
     decimals: number;
     logoURI: string;
     pool: string;
+    poolFee: string;
   }
   
   

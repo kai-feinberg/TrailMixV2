@@ -179,7 +179,7 @@ export default function ManagePage({ }: Props) {
   
   const activeStrategies = strategies.filter(strategy => strategy.contractState==='Uninitialized' || strategy.contractState==='Active');
   
-  console.log("activeStrategies", activeStrategies)
+  // console.log("activeStrategies", activeStrategies)
 
   const updateStrategyData = (strategy: Strategy) => {
     const existingStrategyIndex = strategies.findIndex(s => s.contractAddress === strategy.contractAddress);

@@ -135,8 +135,8 @@ const Events = () => {
                     {event.log.eventName === "FundsWithdrawn" && (
                         <EventCard
                             title="Funds Withdrawn"
-                            detail={`Withdrawn by ${event.log.args.creator}`}
-                            amount={`${event.log.args.amount} ETH`}
+                            detail={`Withdrew from $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with XXX% trail `}
+                            amount={`-${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)))} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
                             icon={ArrowUp}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="red"
@@ -158,8 +158,8 @@ const Events = () => {
                     {event.log.eventName === "FundsDeposited" && (
                         <EventCard
                             title="Deposit Made"
-                            detail={`Deposited to $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with XXX% trail`}
-                            amount={`${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)))} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
+                            detail={`Deposited to $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with ${event.log.args.trailAmount}% trail`}
+                            amount={`+${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)))} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
                             icon={ArrowDown}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="green"
