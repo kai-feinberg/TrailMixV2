@@ -25,6 +25,7 @@ export type Strategy = {
     weightedEntryCost: string;
     percentProfit: string;
     contractState: string;
+    stableAsset: TokenData;
     
   };  
 

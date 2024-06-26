@@ -89,7 +89,9 @@ contract TrailMix is ReentrancyGuard {
 		if (amount <= 0) {
 			revert InvalidAmount();
 		}
-		if (state== ContractState.Claimable || state == ContractState.Inactive){
+		if (
+			state == ContractState.Claimable || state == ContractState.Inactive
+		) {
 			revert StrategyNotActive();
 		}
 
@@ -234,8 +236,12 @@ contract TrailMix is ReentrancyGuard {
 		//gets the most up to date price to calculate slippage
 		uint256 currentPrice = getExactPrice();
 		uint256 minAmountOut;
+
+		uint256 feeBps = s_poolFee; //take into account the pool fees
+
 		if (slippageProtection) {
-			minAmountOut = (amount * currentPrice * 995) / (1000 * 1e18); //99.5% of the current price
+			minAmountOut =
+				(amount * currentPrice * (feeBps+500)) / (100000 * 1e18); //99.5% of the current price (including pool fee)
 		} else {
 			minAmountOut = 0;
 		}

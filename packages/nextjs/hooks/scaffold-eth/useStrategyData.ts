@@ -111,6 +111,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         // // Callback to update parent component state
 
         const tokenData = (tokenList as TokenList)[targetNetwork.id][erc20TokenAddress?.toString().toLowerCase() ?? ''];
+        const stableAssetData = (tokenList as TokenList)[targetNetwork.id][stablecoinAddress?.toString().toLowerCase() ?? '']
         
         const strategy: Strategy = {
             asset: tokenData as TokenData,
@@ -128,7 +129,8 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             weightedEntryCost: entryCost,
             percentProfit: percentProfit.toString(),
             contractState: contractState?.toString() ?? '',
-            stablecoinBalance: stablecoinBalance?.toString() ?? ''
+            stablecoinBalance: stablecoinBalance?.toString() ?? '',
+            stableAsset: stableAssetData as TokenData
         }
         
         // console.log("strategy: ", strategy);

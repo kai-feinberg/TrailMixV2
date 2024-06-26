@@ -21,7 +21,13 @@ import { ArrowDownFromLineIcon } from "lucide-react";
 import { notification } from "~~/utils/scaffold-eth";
 
 
+
 import { Button } from "@/components/ui/button";
+import { TokenList } from "~~/types/customTypes";
+import tokenList from "~~/lib/tokenList.json";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+
+
 const strategyABI = stratABI.abi;
 const erc20ABI = ercABI.abi;
 const managerABI = manager.abi;
@@ -33,6 +39,11 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
     const [depositAmount, setDepositAmount] = useState<string | bigint>("0"); // State to store deposit amount
     const [assetPrice, setAssetPrice] = useState<string | bigint>("0"); // State to store latest price
     const [scaledDepositAmount, setScaledDepositAmount] = useState<bigint>(BigInt(0)); // State to store scaled deposit amount
+    const [sufficientAllowance, setSufficientAllowance] = useState(false);
+
+    const { targetNetwork } = useTargetNetwork();
+    const tokenData = (tokenList as TokenList)[targetNetwork.id];
+
     const {
         data: erc20Address,
         isLoading: isLoadingErc20Address,
@@ -67,17 +78,6 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
         }
     });
 
-
-    const {
-        data: tslThreshold,
-        isLoading: isLoadingTSLThreshold,
-        error: errorTSLThreshold,
-    } = useContractRead({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "getTSLThreshold",
-    });
-
     const {
         data: manager,
         isLoading: isLoadingManager,
@@ -90,14 +90,14 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
 
 
     // Check if the allowance is sufficient
-    const { data: allowance } = useContractRead({
+    const { data: allowance, isLoading: isLoadingAllowance } = useContractRead({
         address: String(erc20Address),
         abi: erc20ABI,
         functionName: "allowance",
         args: [userAddress, manager], // `address` is the user's address
     });
 
-    const {data: userERC20Balance}= useContractRead({
+    const { data: userERC20Balance } = useContractRead({
         address: String(erc20Address),
         abi: erc20ABI,
         functionName: "balanceOf",
@@ -128,16 +128,9 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
         write: approve,
     } = useContractWrite(approveConfig);
 
-    const { config: swapConfig } = usePrepareContractWrite({
-        address: contractAddress,
-        abi: strategyABI,
-        functionName: "swapOnUniswap",
-        args: [erc20Balance],
-    });
-    const { data: swapResult, isLoading: swapLoading, isSuccess: swapSuccess, write: swap } = useContractWrite(swapConfig);
 
 
-    const { writeAsync: deposit, isMining: isPending } = useScaffoldContractWrite({
+    const { writeAsync: deposit, isLoading: isLoadingDeposit } = useScaffoldContractWrite({
         contractName: "TrailMixManager",
         functionName: "deposit",
         args: [contractAddress, BigInt(scaledDepositAmount), BigInt(assetPrice || "0")],
@@ -145,7 +138,7 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
             console.log("📦 Transaction blockHash", txnReceipt.blockHash);
         },
         onSuccess: () => {
-            console.log("🚀 Strategy Deployed");
+            console.log("🚀 Deposit success");
         },
 
     });
@@ -156,18 +149,18 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
     }, [depositAmount]);
 
 
-    const { writeAsync: withdraw, isMining: withdrawPending } = useScaffoldContractWrite({
-        contractName: "TrailMixManager",
-        functionName: "withdraw",
-        args: [contractAddress, "0x4200000000000000000000000000000000000042"],
-        onBlockConfirmation: (txnReceipt: any) => {
-            console.log("📦 Transaction blockHash", txnReceipt.blockHash);
-        },
-        onSuccess: () => {
-            console.log("🚀 funds withdrawn");
-        },
-
-    });
+    useEffect(() => {
+        if (allowance) {
+            if (BigInt(allowance as string) >= (scaledDepositAmount)) {
+                // console.log("sufficient allowance is true")
+                setSufficientAllowance(true)
+            }
+            else {
+                // console.log("sufficient allowance is false")
+                setSufficientAllowance(false)
+            }
+        }
+    }, [isLoadingAllowance, allowance, scaledDepositAmount, approveSuccess, approveResult]);
 
 
     const handleDeposit = async () => {
@@ -177,21 +170,25 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
             return;
         }
 
-        if (BigInt(allowance as string) >= BigInt(scaledDepositAmount) && deposit) {
-            await deposit();
-        } else {
-            if (approve) {
-                notification.warning("Approving funds", { duration: 5000 });
-                await Promise.resolve(approve()).then(() => {
-                    deposit();
-                    console.log("Approval successful, deposit triggered");
-                }).catch(error => {
-                    console.error("Approval failed", error);
-                });
-            }
-        }
+
+        // await approve();
+
+        //set phase to deposit
+        
+        deposit();
+        // } else {
+        //     if (approve) {
+        //         notification.warning("Approving funds", { duration: 5000 });
+        //         await Promise.resolve(approve()).then(() => {
+        //             deposit();
+        //             console.log("Approval successful, deposit triggered");
+        //         }).catch(error => {
+        //             console.error("Approval failed", error);
+        //         });
+        //     }
+        // }
     };
-  
+
 
     return (
 
@@ -207,8 +204,20 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
                     </DialogDescription>
                 </DialogHeader>
 
-                <p> Balance: {(userERC20Balance ? BigInt(userERC20Balance as number) / BigInt(10 ** (tokenDecimals as number)) : 0).toString()} </p>
+                <p> Balance: {(userERC20Balance ? BigInt(userERC20Balance as number) / BigInt(10 ** (tokenDecimals as number)) : 0).toString()} {tokenData[(erc20Address as string).toLowerCase()].symbol}
+                </p>
                 <IntegerInput value={depositAmount} onChange={setDepositAmount} />
+
+                {!sufficientAllowance &&
+                    <Button variant="outline" className="rounded-xl" onClick={approve}>
+                        {!approveLoading && <p>approve</p>}
+
+                        {approveLoading && (
+                            <span className="loading loading-spinner loading-sm"></span>
+                        )}
+                    </Button>
+                }
+
                 <Button variant="outline" className="rounded-xl" onClick={handleDeposit}>Deposit </Button>
             </DialogContent>
         </Dialog>

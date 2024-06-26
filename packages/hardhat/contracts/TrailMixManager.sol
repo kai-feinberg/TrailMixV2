@@ -58,7 +58,8 @@ contract TrailMixManager is ReentrancyGuard {
 		address indexed strategy,
 		uint256 amount,
 		address token,
-		uint256 timestamp
+		uint256 timestamp,
+		uint256 trailAmount
 	);
 	event ThresholdUpdated(
 		address indexed strategy,
@@ -184,7 +185,8 @@ contract TrailMixManager is ReentrancyGuard {
 			_strategy,
 			amount,
 			_token,
-			block.timestamp
+			block.timestamp,
+			ITrailMix(_strategy).getTrailAmount()
 		);
 	}
 
@@ -295,6 +297,7 @@ contract TrailMixManager is ReentrancyGuard {
 			if (isActiveStrategy[strategy]) {
 				removeStrategy(strategy);
 			}
+			
 
 			//emit swap event
 			emit SwapExecuted(
@@ -307,12 +310,14 @@ contract TrailMixManager is ReentrancyGuard {
 				block.timestamp
 			);
 		} else if (updateThreshold) {
+			uint256 oldThreshold = 	ITrailMix(strategy).getTSLThreshold(),
+
 			//call updateThreshold function to update the threshold
 			ITrailMix(strategy).updateTSLThreshold(newThreshold);
 			//emit event for threshold update
 			emit ThresholdUpdated(
 				strategy,
-				ITrailMix(strategy).getTSLThreshold(),
+				oldThreshold,
 				newThreshold,
 				block.timestamp
 			);

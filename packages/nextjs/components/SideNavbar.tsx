@@ -50,20 +50,19 @@ export default function SideNavbar({ }: Props) {
         )}
         <Nav
           isCollapsed={mobileWidth ? true : isCollapsed}
-
           links={[
             {
               title: "Dashboard",
               href: "/",
               icon: LayoutDashboard,
-              variant: "default"
+              variant: "default",
             },
 
             {
               title: "Manage",
               href: "/manage",
               icon: ClipboardPenLine,
-              variant: "ghost"
+              variant: "ghost",
             },
           ]}
         />

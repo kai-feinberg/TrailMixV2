@@ -57,7 +57,7 @@ export function CreateNew() {
 
   const { address: connectedAddress } = useAccount();
 
-  const { data: userContracts } = useScaffoldContractRead({
+  const { data: userContracts, isLoading: isLoadingUserContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
     functionName: "getUserContracts",
     args: [connectedAddress],
@@ -65,10 +65,11 @@ export function CreateNew() {
 
   React.useEffect(() => {
     if (userContracts) {
+      console.log("usercontracts", userContracts);
       setNewestContract(userContracts[0]);
       console.log("newest contract", newestContract);
     }
-  }, [userContracts])
+  }, [userContracts, isLoadingUserContracts])
 
 
   const tokenOptions = tokens ? Object.entries(tokens).map(([contractAddress, details]) => ({
@@ -83,7 +84,7 @@ export function CreateNew() {
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       setPoolFee(tokens[tokenAddress].poolFee);
-      console.log("pool address", tokens[tokenAddress].pool);
+      // console.log("pool address", tokens[tokenAddress].pool);
     } else {
       setPoolAddress("");
     }
@@ -104,6 +105,7 @@ export function CreateNew() {
       Number(poolFee)
     ],
     onBlockConfirmation: (txnReceipt) => {
+      console.log("txn receipt", txnReceipt);
       console.log("📦 deployed new contract:", txnReceipt.blockHash);
 
     },
