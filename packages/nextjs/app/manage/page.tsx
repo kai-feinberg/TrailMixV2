@@ -26,6 +26,8 @@ import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
 import { useContractRead } from "wagmi";
 import strategyABI from "~~/contracts/strategyABI.json";
 import ClaimsTable from "~~/components/ClaimsTable";
+import exampleActiveStrategies from "~~/components/assets/exampleActiveStrategies.json";
+import exampleClaimableStrategies from "~~/components/assets/exampleClaimableStrategies.json";
 
 
 const stratABI = strategyABI.abi;
@@ -68,7 +70,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       const assetDecimals = 10 ** row.original.asset.decimals;
       const twapPrice = Number(row.original.twapPrice);
 
-      const usdValue = ((ercBalance) * ethPrice* (twapPrice))/(assetDecimals**2);
+      const usdValue = ((ercBalance) * ethPrice * (twapPrice)) / (assetDecimals ** 2);
       // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
@@ -99,7 +101,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       const tslThreshold = Number(row.original.tslThreshold);
       const price = Number(ethPrice);
       return (
-          <p className="">${(tslThreshold * price / (10 ** 18)).toFixed(5)} USD</p>
+        <p className="">${(tslThreshold * price / (10 ** 18)).toFixed(5)} USD</p>
       );
     },
   },
@@ -121,7 +123,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       return (
         <div className="text-base">
           <p style={{ color: Number(row.original.profit) >= 0 ? 'green' : 'red' }}>
-            {Number(row.original.profit) >= 0 ? `+$${displayProfit}` : `-$${Math.abs(Number(displayProfit))}`} 
+            {Number(row.original.profit) >= 0 ? `+$${displayProfit}` : `-$${Math.abs(Number(displayProfit))}`}
             {/* / {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}% */}
 
           </p>
@@ -142,7 +144,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   //     );
   //   },
   // },
- 
+
   {
     accessorKey: "actions",
     header: "Actions",
@@ -176,10 +178,10 @@ export default function ManagePage({ }: Props) {
   });
   // console.log("user contracts", userContracts)
 
-  const claimableStrategies = strategies.filter(strategy => strategy.contractState === 'Claimable');
-  
-  const activeStrategies = strategies.filter(strategy => strategy.contractState==='Uninitialized' || strategy.contractState==='Active');
-  
+  let claimableStrategies = strategies.filter(strategy => strategy.contractState === 'Claimable');
+
+  let activeStrategies = strategies.filter(strategy => strategy.contractState === 'Uninitialized' || strategy.contractState === 'Active');
+
   // console.log("activeStrategies", activeStrategies)
 
   const updateStrategyData = (strategy: Strategy) => {
@@ -193,6 +195,15 @@ export default function ManagePage({ }: Props) {
     }
   }
 
+  console.log("claimable strats:", claimableStrategies);
+  console.log("active strats: ", activeStrategies);
+
+  if (!connectedAccount) {
+    console.log("no connected account");
+    activeStrategies = exampleActiveStrategies;
+    claimableStrategies = exampleClaimableStrategies;
+  }
+
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
 
@@ -204,10 +215,9 @@ export default function ManagePage({ }: Props) {
         />
       ))}
 
-      <PageTitle title="Your Strategies" />
+      <PageTitle title={connectedAccount && "Your Strategies" || "Example Strategies"} />
       <DataTable columns={columns} data={activeStrategies} />
-      {/* <DataTable columns={columns} data={claimableStrategies} /> */}
-      <ClaimsTable claimableStrategies={claimableStrategies}/>
+      <ClaimsTable claimableStrategies={claimableStrategies} />
     </div>
   );
 }

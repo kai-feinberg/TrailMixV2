@@ -297,7 +297,6 @@ contract TrailMixManager is ReentrancyGuard {
 			if (isActiveStrategy[strategy]) {
 				removeStrategy(strategy);
 			}
-			
 
 			//emit swap event
 			emit SwapExecuted(
@@ -310,7 +309,7 @@ contract TrailMixManager is ReentrancyGuard {
 				block.timestamp
 			);
 		} else if (updateThreshold) {
-			uint256 oldThreshold = 	ITrailMix(strategy).getTSLThreshold(),
+			uint256 oldThreshold = ITrailMix(strategy).getTSLThreshold();
 
 			//call updateThreshold function to update the threshold
 			ITrailMix(strategy).updateTSLThreshold(newThreshold);

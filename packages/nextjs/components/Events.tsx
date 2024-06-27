@@ -149,7 +149,7 @@ const Events = () => {
                             detail={`${(Number(event.log.args.amountIn) / (10 ** Number(tokenData[event.log.args.tokenIn.toLowerCase()].decimals)))} ${tokenData[event.log.args.tokenIn.toLowerCase()].symbol} 
                             for ${(Number(event.log.args.amountOut) / (10 ** Number(tokenData[event.log.args.tokenOut.toLowerCase()].decimals))).toFixed(7)} ${tokenData[event.log.args.tokenOut.toLowerCase()].symbol}  `}
                             amount=""
-                            
+
                             icon={ArrowLeftRight}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="yellow"
@@ -186,47 +186,47 @@ const Events = () => {
 
             {!userAddress && (
                 <div>
-                    <EventCard
-                        title="Contract Deployed"
-                        detail="Deployed 20% trailing stop loss for $OP"
-                        amount=" "
-                        icon={ArrowUp}
-                        date="04/04/2024"
-                        color="slate"
-                    />
+
                     <EventCard
                         title="Funds Deposited"
-                        detail="Deposited to 0x1234...5678"
-                        amount="10 OP"
+                        detail="Deposited to $HIGHER strategy with 20% trail"
+                        amount="+10 $HIGHER"
                         icon={ArrowDown}
-                        date="03/03/2024"
+                        date="03/03/2023"
                         color="green"
                     />
                     <EventCard
                         title="Swap Executed"
-                        detail="Swapped 5 OP for $12.69"
+                        detail="Swapped 5 OP for 0.0000159 WETH ($15.82)"
                         amount=" "
                         icon={ArrowLeftRight}
                         date="02/02/2023"
-                        color="slate"
+                        color="yellow"
                     />
                     <EventCard
-                        title="Withdraw"
-                        detail="Withdrew $420.94 USDC"
-                        amount="$420.94"
+                        title="Funds Withdrawn"
+                        detail="Withdrew from $degen strategy with 10% trail"
+                        amount="-$420.94"
                         icon={ArrowUp}
                         date="01/21/2023"
                         color="red"
                     />
                     <EventCard
                         title="Funds Deposited"
-                        detail="Deposited to 0x1234...5678"
-                        amount="0.43 WBTC"
+                        detail="Deposited to $DEGEN strategy with 10% trail"
+                        amount="+10 $DEGEN"
                         icon={ArrowDown}
-                        date="01/13/2024"
+                        date="01/03/2023"
                         color="green"
                     />
-
+                    <EventCard
+                        title="Strategy Deployed"
+                        detail="Deployed $OP strategy with 15% trail"
+                        amount=" "
+                        icon={BookUp}
+                        date="01/01/2023"
+                        color="blue"
+                    />
                 </div>
 
             )}
