@@ -68,6 +68,11 @@
         },
         {
             "inputs": [],
+            "name": "StrategyNotActive",
+            "type": "error"
+        },
+        {
+            "inputs": [],
             "name": "TransferFailed",
             "type": "error"
         },
@@ -166,6 +171,19 @@
         },
         {
             "inputs": [],
+            "name": "getExitPrice",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "getGranularity",
             "outputs": [
                 {
@@ -185,6 +203,19 @@
                     "internalType": "address",
                     "name": "",
                     "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getProfit",
+            "outputs": [
+                {
+                    "internalType": "int256",
+                    "name": "",
+                    "type": "int256"
                 }
             ],
             "stateMutability": "view",
@@ -289,6 +320,19 @@
                     "internalType": "address",
                     "name": "",
                     "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getWeightedEntryPrice",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
                 }
             ],
             "stateMutability": "view",
