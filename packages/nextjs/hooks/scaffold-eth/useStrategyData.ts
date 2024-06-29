@@ -7,9 +7,6 @@ import strategyABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
 
 const useStrategyData = (contractAddress: string, onDataFetched: any) => {
-  // const [profit, setProfit] = useState('0');
-  // const [entryCost, setEntryCost] = useState('0');
-  // const [amount, setAmount] = useState('0');
 
   const { data: deposits, isLoading: isLoadingDeposits } = useScaffoldEventHistory({
     contractName: 'TrailMixManager',
@@ -88,30 +85,18 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     functionName: "getProfit"
   })
 
+  const {data: weightedEntryPrice, isLoading: isLoadingWeightedEntryPrice} = useContractRead({
+    address: contractAddress,
+    abi: strategyABI.abi,
+    functionName: "getWeightedEntryPrice"
+  })
+
   const { targetNetwork } = useTargetNetwork();
 
   useEffect(() => {
     
-    if (!isLoadingCurrentPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingCurrentPrice && !isLoadingWeightedEntryPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
-        
-        // let totalCost = Number(0);
-        // let totalAmount = BigInt(0);
-
-        // deposits?.forEach((deposit) => {
-        //     const depositAmount = BigInt(deposit.log.args.amount ?? 0);
-        //     const depositPrice = BigInt(deposit.log.args.depositPrice ?? 0);
-        //     totalCost += Number(depositAmount) * Number(depositPrice);
-        //     totalAmount += depositAmount;
-        // });
-
-        // const latestPrice = BigInt(currentPrice?.toString() ?? '0');
-        // const currentValue = totalAmount * latestPrice;
-        // const computedProfit = currentValue - BigInt(totalCost);
-
-        // setProfit(computedProfit.toString());
-        // setEntryCost(totalCost.toString());
-        // setAmount(totalAmount.toString());
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
         const percentProfit = 0;
@@ -133,7 +118,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             tslThreshold: tslThreshold?.toString() ?? '',
             stablecoinAddress: stablecoinAddress?.toString() ?? '',
             profit: profit?.toString() ?? '',
-            weightedEntryCost: "",
+            weightedEntryPrice: weightedEntryPrice?.toString() ?? '',
             percentProfit: percentProfit.toString(),
             contractState: contractState?.toString() ?? '',
             stablecoinBalance: stablecoinBalance?.toString() ?? '',
@@ -148,7 +133,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             console.info("ligma", e);
         }
     }
-  }, [erc20TokenAddress, profit, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
+  }, [erc20TokenAddress, profit, weightedEntryPrice, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
 
   return;
 };

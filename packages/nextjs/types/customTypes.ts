@@ -22,7 +22,7 @@ export type Strategy = {
     stablecoinAddress: string;
     stablecoinBalance: string;
     profit: string;
-    weightedEntryCost: string;
+    weightedEntryPrice: string;
     percentProfit: string;
     contractState: string;
     stableAsset: TokenData;
