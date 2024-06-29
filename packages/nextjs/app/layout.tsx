@@ -3,6 +3,9 @@ import { Metadata } from "next";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
+import { cn } from "@/lib/utils";
+import SideNavbar from "~~/components/SideNavbar";
+import { WagmiConfig } from "wagmi";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -12,10 +15,10 @@ const imageUrl = `${baseUrl}/thumbnail.jpg`;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Scaffold-ETH 2 App",
+    default: "TrailMix",
     template: "%s | Scaffold-ETH 2",
   },
-  description: "Built with 🏗 Scaffold-ETH 2",
+  description: "Automated risk management for crypto",
   openGraph: {
     title: {
       default: "Scaffold-ETH 2 App",
@@ -44,12 +47,24 @@ export const metadata: Metadata = {
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html suppressHydrationWarning>
-      <body>
-        <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        </ThemeProvider>
-      </body>
+    <html suppressHydrationWarning lang="en">
+      <ThemeProvider enableSystem>
+        <ScaffoldEthAppWithProviders>
+          <body className={cn(
+            "w-full flex bg-slate-200 text-black",
+          )}>
+            <SideNavbar />
+
+            <div className={cn(
+              " w-full flex flex-col",
+            )}>
+
+              <div className="p-8 w-full" >{children}</div>
+
+            </div>
+          </body>
+        </ScaffoldEthAppWithProviders>
+      </ThemeProvider>
     </html>
   );
 };

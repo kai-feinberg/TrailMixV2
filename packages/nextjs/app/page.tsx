@@ -1,74 +1,129 @@
+/** @format */
 "use client";
 
-import Link from "next/link";
-import type { NextPage } from "next";
+import PageTitle from "@/components/PageTitle";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { DollarSign, Users, CreditCard, TrendingUp, ArrowUp, ArrowLeftRight, ArrowDown } from "lucide-react";
+import Card, { CardContent, CardProps } from "@/components/Card";
+import BarChart from "@/components/LineChart";
+import { Button } from "@/components/ui/button";
+import EventCard, { EventProps } from "~~/components/EventCard";
+import { CreateNew } from "@/components/CreateNew";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+import { useState, useEffect } from "react";
+import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
+import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import Strategy from "~~/components/Strategy";
-import { Address } from "~~/components/scaffold-eth";
-import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
-import DeployNew from "~~/components/DeployNew";
+import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
+import { useEnsName } from "wagmi";
+import { Badge } from "~~/components/ui/badge";
+import { useGlobalState } from "~~/services/store/store";
 
-const Home: NextPage = () => {
+import ercABI from "~~/contracts/erc20ABI.json";
+const erc20ABI = ercABI.abi;
+
+import stratABI from "~~/contracts/strategyABI.json";
+import OnboardingModal from "~~/components/OnboardingModal";
+import { Strategy } from "~~/types/customTypes";
+const strategyABI = stratABI.abi;
+
+
+const cardData: CardProps[] = [
+  {
+    label: "Current Balance",
+    amount: "$45,231.89",
+    description: "+20.1% from last month",
+    icon: DollarSign
+  },
+  {
+    label: "Active strategies",
+    amount: "12",
+    description: "across 5 assets",
+    icon: Users
+  },
+  {
+    label: "Pending claims",
+    amount: "$1,415.26",
+    description: "4 closed strategies",
+    icon: CreditCard
+  },
+  {
+    label: "All time profit",
+    amount: "$573",
+    description: "+$201 since last month",
+    icon: TrendingUp
+  }
+];
+
+
+
+export default function Home() {
+
+  const { targetNetwork } = useTargetNetwork();
   const { address: connectedAddress } = useAccount();
+  const [ens, setEns] = useState<string | null>();
 
-  const { data: userContracts } = useScaffoldContractRead({
+  // const checkSumAddress = address ? getAddress(address) : undefined;
+
+  const { data: fetchedEns } = useEnsName({
+    address: connectedAddress,
+    // enabled: isAddress(checkSumAddress ?? ""),
+    chainId: 1,
+  });
+  // console.log("ens",fetchedEns);
+
+  useEffect(() => {
+    setEns(fetchedEns);
+  }, [fetchedEns]);
+
+  const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
     functionName: "getUserContracts",
     args: [connectedAddress],
   });
 
+  const {strategies, setStrategies} = useGlobalState();
+  
+  const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (
-    <>
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <div className="flex justify-center items-center space-x-2">
-            <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
-          </div>
-          <DeployNew />
-
-          <Events userAddress={connectedAddress || ""} />
-
-          {userContracts &&
-            [...userContracts].reverse().map((contractAddress: string) => (
-              <Strategy key={contractAddress} contractAddress={contractAddress} userAddress={connectedAddress || ""} />
-            ))}
-        </div>
-
-
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contracts
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
-            </div>
-          </div>
-        </div>
+    <div className="flex flex-col gap-5 w-full">
+      <div className="flex flex-row justify-between">
+        <PageTitle title={pageTitle} />
+        <OnboardingModal />
       </div>
-    </>
-  );
-};
+      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
+        {cardData.map((d, i) => (
+          <Card
+            key={i}
+            amount={d.amount}
+            description={d.description}
+            icon={d.icon}
+            label={d.label}
+          />
+        ))}
+      </section>
+      <section className="grid grid-cols-1  gap-4 transition-all lg:grid-cols-2">
+        <CardContent>
+          <div className="flex justify-between items-center">
+            <p className="p-4 text-2xl">Overview</p>
+            <CreateNew />
+          </div>
 
-export default Home;
+          <BarChart />
+        </CardContent>
+        <CardContent className="flex justify-between gap-4">
+          <section>
+            <p>Transaction history</p>
+            <p className="text-sm text-gray-400">
+              You made 5 transactions this month.
+            </p>
+          </section>
+          <Events />
+        </CardContent>
+
+      </section>
+    </div>
+  );
+}

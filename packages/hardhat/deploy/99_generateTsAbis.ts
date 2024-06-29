@@ -63,7 +63,12 @@ function getInheritedFunctions(sources: Record<string, any>, contractName: strin
     const sourcePath = Object.keys(sources).find(key => key.includes(`/${sourceContractName}`));
     if (sourcePath) {
       const sourceName = sourcePath?.split("/").pop()?.split(".sol")[0];
-      const { abi } = JSON.parse(fs.readFileSync(`${ARTIFACTS_DIR}/${sourcePath}/${sourceName}.json`).toString());
+      const jsonFilePath = `${ARTIFACTS_DIR}/${sourcePath}/${sourceName}.json`;
+      if (!fs.existsSync(jsonFilePath)) {
+        console.warn(`Warning: ABI file not found for ${sourceName}, skipping...`);
+        continue;
+      }
+      const { abi } = JSON.parse(fs.readFileSync(jsonFilePath).toString());
       for (const functionAbi of abi) {
         if (functionAbi.type === "function") {
           inheritedFunctions[functionAbi.name] = sourcePath;
@@ -74,6 +79,7 @@ function getInheritedFunctions(sources: Record<string, any>, contractName: strin
 
   return inheritedFunctions;
 }
+
 
 function getContractDataFromDeployments() {
   if (!fs.existsSync(DEPLOYMENTS_DIR)) {

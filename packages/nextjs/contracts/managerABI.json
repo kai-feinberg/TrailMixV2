@@ -2,6 +2,11 @@
     "abi": [
         {
             "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "inputs": [],
             "name": "NotContractOwner",
             "type": "error"
         },
@@ -15,10 +20,22 @@
                     "type": "address"
                 },
                 {
-                    "indexed": false,
+                    "indexed": true,
                     "internalType": "address",
                     "name": "contractAddress",
                     "type": "address"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "token",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "trailAmount",
+                    "type": "uint256"
                 },
                 {
                     "indexed": false,
@@ -44,6 +61,12 @@
                     "internalType": "address",
                     "name": "strategy",
                     "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "depositPrice",
+                    "type": "uint256"
                 },
                 {
                     "indexed": false,
@@ -204,23 +227,17 @@
             "type": "function"
         },
         {
-            "inputs": [
-                {
-                    "internalType": "bytes",
-                    "name": "",
-                    "type": "bytes"
-                }
-            ],
-            "name": "checkUpkeep",
+            "inputs": [],
+            "name": "checker",
             "outputs": [
                 {
                     "internalType": "bool",
-                    "name": "upkeepNeeded",
+                    "name": "canExec",
                     "type": "bool"
                 },
                 {
                     "internalType": "bytes",
-                    "name": "performData",
+                    "name": "execPayload",
                     "type": "bytes"
                 }
             ],
@@ -339,12 +356,40 @@
         {
             "inputs": [
                 {
-                    "internalType": "bytes",
-                    "name": "performData",
-                    "type": "bytes"
+                    "internalType": "address",
+                    "name": "strategy",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "sell",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "updateThreshold",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "newThreshold",
+                    "type": "uint256"
                 }
             ],
             "name": "performUpkeep",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "_executor",
+                    "type": "address"
+                }
+            ],
+            "name": "setGelatoExecutor",
             "outputs": [],
             "stateMutability": "nonpayable",
             "type": "function"

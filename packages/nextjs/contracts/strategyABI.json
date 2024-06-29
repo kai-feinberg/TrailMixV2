@@ -68,6 +68,11 @@
         },
         {
             "inputs": [],
+            "name": "StrategyNotActive",
+            "type": "error"
+        },
+        {
+            "inputs": [],
             "name": "TransferFailed",
             "type": "error"
         },
@@ -166,6 +171,19 @@
         },
         {
             "inputs": [],
+            "name": "getExitPrice",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "getGranularity",
             "outputs": [
                 {
@@ -192,6 +210,19 @@
         },
         {
             "inputs": [],
+            "name": "getProfit",
+            "outputs": [
+                {
+                    "internalType": "int256",
+                    "name": "",
+                    "type": "int256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
             "name": "getStablecoinAddress",
             "outputs": [
                 {
@@ -211,6 +242,19 @@
                     "internalType": "uint256",
                     "name": "",
                     "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "getState",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
                 }
             ],
             "stateMutability": "view",
@@ -283,12 +327,12 @@
         },
         {
             "inputs": [],
-            "name": "isTSLActive",
+            "name": "getWeightedEntryPrice",
             "outputs": [
                 {
-                    "internalType": "bool",
+                    "internalType": "uint256",
                     "name": "",
-                    "type": "bool"
+                    "type": "uint256"
                 }
             ],
             "stateMutability": "view",

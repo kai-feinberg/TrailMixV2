@@ -1,0 +1,82 @@
+{
+    "10" : { 
+        "0x4200000000000000000000000000000000000042": {
+            "name": "Optimism",
+            "symbol": "OP",
+            "decimals": 18,
+            "logoURI": "https://ethereum-optimism.github.io/data/OP/logo.png",
+            
+            "pool":"0xB533c12fB4e7b53b5524EAb9b47d93fF6C7A456F",
+            "poolFee": ""
+
+
+          },
+        "0xb6ed7644c69416d67b522e20bc294a9a9b405b31": {  
+            "name": "0xBitcoin",
+            "symbol": "0xBTC",
+            "decimals": 8,
+            "logoURI": "https://ethereum-optimism.github.io/data/0xBTC/logo.png",
+            
+            "pool": "0x111111111117dc0aa78b770fa6a738034120c302",
+            "poolFee": ""
+
+
+        },
+        "0x111111111117dc0aa78b770fa6a738034120c302": { 
+            "name": "1INCH Token",
+            "symbol": "1INCH",
+            "decimals": 18,
+            "logoURI": "https://ethereum-optimism.github.io/data/1INCH/logo.svg",
+            "pool": "0x111111111117dc0aa78b770fa6a738034120c302",
+            "poolFee": ""
+        }
+
+    } ,
+    "8453": {
+        "0x4ed4e862860bed51a9570b96d89af5e1b0efefed" : {
+            "name": "Degen",
+            "symbol": "DEGEN",
+            "decimals": 18,
+            "logoURI": "https://www.basetokenstore.com/_next/image?url=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F34515%2Flarge%2Fandroid-chrome-512x512.png%3F1706198225&w=128&q=75",
+            "pool" : "0xc9034c3E7F58003E6ae0C8438e7c8f4598d5ACAA",
+            "poolFee": "3000"
+        },
+
+        "0x4200000000000000000000000000000000000006" : {
+            "name": "Wrapped Eth",
+            "symbol": "WETH",
+            "decimals": 18,
+            "logoURI": "https://github.com/ethereum-optimism/ethereum-optimism.github.io/blob/master/data/WETH/logo.png",
+            "pool" : "",
+            "poolFee": ""
+        },
+
+        "0x532f27101965dd16442e59d40670faf5ebb142e4" : {
+            "name" : "Brett",
+            "symbol": "BRETT",
+            "decimals": 18,
+            "logoURI": "https://www.basetokenstore.com/_next/image?url=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F35529%2Flarge%2F1000050750.png%3F1709031995&w=128&q=75",
+            "pool" : "0x76Bf0abD20f1e0155Ce40A62615a90A709a6C3D8",
+            "poolFee": "3000"
+        },
+
+        "0xbc45647ea894030a4e9801ec03479739fa2485f0" : {
+            "name" : "Basenji",
+            "symbol": "BENJI",
+            "decimals": 18,
+            "logoURI": "https://www.basetokenstore.com/_next/image?url=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F36416%2Flarge%2Fben200x200.jpg%3F1711420807&w=128&q=75",
+            "pool" : "0x16905890A1D02b6F824387419319Bf4188B961b0",
+            "poolFee": "3000"
+        },
+        "0x6921b130d297cc43754afba22e5eac0fbf8db75b" : {
+            "name" : "Doginme",
+            "symbol": "doginme",
+            "decimals": 18,
+            "logoURI": "https://coin-images.coingecko.com/coins/images/35123/large/doginme-logo1-transparent200.png?1710856784&quot",
+            "pool" : "0xADE9BcD4b968EE26Bed102dd43A55f6A8c2416df",
+            "poolFee": "10000"
+        }
+
+    }
+}
+
