@@ -195,8 +195,8 @@ export default function ManagePage({ }: Props) {
     }
   }
 
-  console.log("claimable strats:", claimableStrategies);
-  console.log("active strats: ", activeStrategies);
+  // console.log("claimable strats:", claimableStrategies);
+  // console.log("active strats: ", activeStrategies);
 
   if (!connectedAccount) {
     console.log("no connected account");

@@ -42,4 +42,7 @@ interface ITrailMix {
 	function getGranularity() external view returns (uint256);
 
 	function getUniswapPool() external view returns (address);
+	
+	function getProfit() external view returns (int256);
+
 }

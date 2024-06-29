@@ -15,29 +15,15 @@ import { Label } from "@/components/ui/label";
 import { ComboBox } from "@/components/ComboBox";
 import { useScaffoldContractRead, useScaffoldContractWrite } from "~~/hooks/scaffold-eth";
 import tokenList from '~~/lib/tokenList.json';
+import { TokenData, TokenList } from "~~/types/customTypes";
 import { useTargetNetwork } from '~~/hooks/scaffold-eth/useTargetNetwork';
 import { ShieldIcon, ScaleIcon, SwordIcon } from "lucide-react";
-import DepositPopup from "./DepositPopup";
-import { useAccount } from "wagmi";
-import { ethers } from "ethers";
-import { IntegerInput } from "./scaffold-eth";
+import { useAccount, useTransaction } from "wagmi";
 
 import manABI from "~~/contracts/managerABI.json";
 import DepositContent from "./DepositContent";
 
 const managerABI = manABI.abi;
-
-
-interface TokenData {
-  [key: string]: any;  // Replace 'any' with a more specific type based on your token data structure
-}
-
-interface TokenList {
-  [chainId: number]: {
-    [contractAddress: string]: TokenData;
-  };
-}
-
 
 export function CreateNew() {
 
@@ -65,9 +51,7 @@ export function CreateNew() {
 
   React.useEffect(() => {
     if (userContracts) {
-      console.log("usercontracts", userContracts);
-      setNewestContract(userContracts[0]);
-      console.log("newest contract", newestContract);
+      setNewestContract(userContracts[userContracts.length-1]);
     }
   }, [userContracts, isLoadingUserContracts])
 
@@ -79,8 +63,6 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
-    // console.log(tokenAddress);
-    // console.log(tokens[tokenAddress]);
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       setPoolFee(tokens[tokenAddress].poolFee);
@@ -106,8 +88,7 @@ export function CreateNew() {
     ],
     onBlockConfirmation: (txnReceipt) => {
       console.log("txn receipt", txnReceipt);
-      console.log("📦 deployed new contract:", txnReceipt.blockHash);
-
+      // console.log("📦 deployed new contract:", txnReceipt.blockHash);
     },
     onSuccess: () => {
       console.log("🚀 Strategy Deployed");
@@ -204,7 +185,7 @@ export function CreateNew() {
           <span className="loading loading-spinner loading-sm"></span>
         )}
 
-        {phase === "deposit" && (
+        {phase === "deposit" && newestContract !== "" && (
           <DepositContent contractAddress={newestContract} />
         )}
       </DialogContent>

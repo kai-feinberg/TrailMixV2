@@ -2,9 +2,10 @@
 pragma solidity 0.8.20;
 pragma abicoder v2;
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
 import { ISwapRouter } from "./ISwapRouter.sol";
+import { IERC20withDecimals } from "./IERC20withDecimals.sol";
+
 // import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { IUniswapOracle } from "./IUniswapOracle.sol";
@@ -33,6 +34,13 @@ contract TrailMix is ReentrancyGuard {
 	uint256 private s_granularity; //  % price increase to trigger an update
 	bool private slippageProtection; // Indicates if slippage protection is enabled
 	uint24 private s_poolFee;
+
+	//USED FOR PROFIT TRACKING
+	uint256 private s_weightedEntryPrice;
+	uint256 private s_totalDeposited; // Total amount deposited in ERC20
+	uint256 private s_exitPrice;
+	uint8 private s_stablecoinDecimals; //number of decimals the stablecoin has
+	uint8 private s_erc20TokenDecimals;
 
 	//stores current state of contract
 	enum ContractState {
@@ -70,6 +78,8 @@ contract TrailMix is ReentrancyGuard {
 		s_granularity = granularity;
 		s_poolFee = _poolFee;
 		state = ContractState.Uninitialized;
+		s_stablecoinDecimals = IERC20withDecimals(_stablecoin).decimals();
+		s_erc20TokenDecimals = IERC20withDecimals(_erc20Token).decimals();
 	}
 
 	modifier onlyManager() {
@@ -95,7 +105,7 @@ contract TrailMix is ReentrancyGuard {
 			revert StrategyNotActive();
 		}
 
-		bool transferSuccess = IERC20(s_erc20Token).transferFrom(
+		bool transferSuccess = IERC20withDecimals(s_erc20Token).transferFrom(
 			i_manager,
 			address(this),
 			amount
@@ -112,11 +122,19 @@ contract TrailMix is ReentrancyGuard {
 
 			state = ContractState.Active;
 		}
+
+		//store price at time of deposit
+		uint256 currentPrice = getExactPrice();
+
+		s_weightedEntryPrice =
+			(s_weightedEntryPrice * s_totalDeposited + currentPrice * amount) /
+			(s_totalDeposited + amount);
+		s_totalDeposited += amount;
 	}
 
 	/**
 	 * @notice Withdraws the user's funds from the contract.
-	 * @dev Allows withdrawal of either ERC20 tokens or stablecoins, based on TSL status.
+	 * @dev Allows withdrawal of either ERC20 tokens or stablecoins
 	 */
 	function withdraw(address token) external onlyManager {
 		uint256 withdrawalAmount;
@@ -151,6 +169,11 @@ contract TrailMix is ReentrancyGuard {
 			state = ContractState.Inactive;
 		} else {
 			revert InvalidToken();
+		}
+
+		//set exit price at withdrawal if not already set
+		if (s_exitPrice == 0) {
+			s_exitPrice = getExactPrice();
 		}
 	}
 
@@ -241,12 +264,16 @@ contract TrailMix is ReentrancyGuard {
 
 		if (slippageProtection) {
 			minAmountOut =
-				(amount * currentPrice * (feeBps+500)) / (100000 * 1e18); //99.5% of the current price (including pool fee)
+				(amount * currentPrice * (feeBps + 500)) /
+				(100000 * 1e18); //99.5% of the current price (including pool fee)
 		} else {
 			minAmountOut = 0;
 		}
 
-		IERC20(s_erc20Token).approve(address(s_uniswapRouter), amount);
+		IERC20withDecimals(s_erc20Token).approve(
+			address(s_uniswapRouter),
+			amount
+		);
 
 		s_erc20Balance -= amount;
 		ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
@@ -262,7 +289,9 @@ contract TrailMix is ReentrancyGuard {
 			});
 		s_uniswapRouter.exactInputSingle(params);
 
-		uint256 amountRecieved = IERC20(s_stablecoin).balanceOf(address(this));
+		uint256 amountRecieved = IERC20withDecimals(s_stablecoin).balanceOf(
+			address(this)
+		);
 		s_stablecoinBalance += amountRecieved;
 		state = ContractState.Claimable;
 	}
@@ -323,11 +352,39 @@ contract TrailMix is ReentrancyGuard {
 		return s_uniswapPool;
 	}
 
+	function getWeightedEntryPrice() public view returns (uint256) {
+		return s_weightedEntryPrice;
+	}
+
+	function getExitPrice() public view returns (uint256) {
+		return s_exitPrice;
+	}
+
 	function getState() public view returns (string memory) {
 		if (state == ContractState.Uninitialized) return "Uninitialized";
 		if (state == ContractState.Active) return "Active";
 		if (state == ContractState.Claimable) return "Claimable";
 		if (state == ContractState.Inactive) return "Inactive";
 		return "Unknown"; // fallback in case of an unexpected state
+	}
+
+	function getProfit() public view returns (int256) {
+		uint256 scalingFactor = 10 ** uint256(s_erc20TokenDecimals);
+
+		if (state == ContractState.Active) {
+			uint256 livePrice = getExactPrice();
+			uint256 currentValue = (s_erc20Balance * livePrice) / scalingFactor;
+			uint256 totalCost = (s_totalDeposited * s_weightedEntryPrice) /
+				scalingFactor;
+			return int256(currentValue) - int256(totalCost);
+		} else if (
+			state == ContractState.Claimable || state == ContractState.Inactive
+		) {
+			uint256 profit = (s_totalDeposited *
+				(s_exitPrice - s_weightedEntryPrice)) / scalingFactor;
+			return int256(profit);
+		} else {
+			return 0;
+		}
 	}
 }
