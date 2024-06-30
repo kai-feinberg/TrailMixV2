@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useScaffoldEventHistory } from "./useScaffoldEventHistory";
 import { Strategy, TokenData, TokenList } from '~~/types/customTypes';
 import { useContractRead } from "wagmi";
@@ -14,12 +14,6 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     fromBlock: 1100002n,
     watch: false,
     filters: { strategy: contractAddress },
-  });
-
-  const { data: currentPrice, isLoading: isLoadingCurrentPrice } = useContractRead({
-    address: contractAddress,
-    abi: strategyABI.abi,
-    functionName: 'getTwapPrice',
   });
 
   const { data: erc20TokenAddress, isLoading: isLoadingErc20TokenAddress } = useContractRead({
@@ -95,7 +89,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
   useEffect(() => {
     
-    if (!isLoadingCurrentPrice && !isLoadingWeightedEntryPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingWeightedEntryPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;

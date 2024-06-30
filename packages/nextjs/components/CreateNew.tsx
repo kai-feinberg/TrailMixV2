@@ -149,14 +149,14 @@ export function CreateNew() {
                   <li>Aggressive (10%): Reacts to smaller dips</li>
                 </ul>
                 <div className="grid grid-cols-3 gap-4 p-6">
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("30")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "30" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <ShieldIcon className="h-6 w-6 mb-2" />
                       <div>Conservative</div>
                     </div>
                   </Button>
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("10")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "10" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <ScaleIcon className="h-6 w-6 mb-2" />
                       <div>Balanced</div>
                     </div>

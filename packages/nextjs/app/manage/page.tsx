@@ -11,14 +11,11 @@
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Link, Link2 } from "lucide-react";
 import React from "react";
-import { useEffect, useState, useCallback } from "react";
 import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import DepositPopup from "~~/components/DepositPopup";
 import WithdrawButton from "~~/components/WithdrawButton";
 import StrategyDataUpdater from "~~/components/StrategyDataUpdater";

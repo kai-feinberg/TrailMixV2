@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { Nav } from "./ui/nav";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import Logo from "~~/public/logo-black-svg.tsx";
+import Logo from "~~/public/logo-black-svg";
 
 type Props = {};
 

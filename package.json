@@ -25,7 +25,7 @@
     "next:build": "yarn workspace @se-2/nextjs build",
     "next:check-types": "yarn workspace @se-2/nextjs check-types",
     "next:format": "yarn workspace @se-2/nextjs format",
-    "next:lint": "yarn workspace @se-2/nextjs lint",
+    "next:lint": "yarn workspace @se-2/nextjs lint --format eslint-formatter-friendly --quiet",
     "precommit": "lint-staged",
     "prepare": "install-self-peers -- --ignore-scripts",
     "start": "yarn workspace @se-2/nextjs dev",
@@ -38,6 +38,7 @@
     "usehooks-ts@^2.7.2": "patch:usehooks-ts@npm:^2.7.2#./.yarn/patches/usehooks-ts-npm-2.7.2-fceffe0e43.patch"
   },
   "devDependencies": {
+    "eslint-formatter-friendly": "^7.0.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "husky": "~8.0.3",
     "lint-staged": "~13.2.2",

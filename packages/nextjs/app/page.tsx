@@ -61,7 +61,6 @@ const cardData: CardProps[] = [
 
 export default function Home() {
 
-  const { targetNetwork } = useTargetNetwork();
   const { address: connectedAddress } = useAccount();
   const [ens, setEns] = useState<string | null>();
 
@@ -78,13 +77,13 @@ export default function Home() {
     setEns(fetchedEns);
   }, [fetchedEns]);
 
-  const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
-    contractName: "TrailMixManager",
-    functionName: "getUserContracts",
-    args: [connectedAddress],
-  });
+  // const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
+  //   contractName: "TrailMixManager",
+  //   functionName: "getUserContracts",
+  //   args: [connectedAddress],
+  // });
 
-  const {strategies, setStrategies} = useGlobalState();
+  // const {strategies, setStrategies} = useGlobalState();
   
   const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (

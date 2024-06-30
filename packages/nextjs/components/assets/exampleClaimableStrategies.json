@@ -19,7 +19,7 @@
         "tslThreshold": "2615361723398",
         "stablecoinAddress": "0x4200000000000000000000000000000000000006",
         "profit": "0",
-        "weightedEntryCost": "0",
+        "weightedEntryPrice": "0",
         "percentProfit": "-3.50685487296772",
         "contractState": "Claimable",
         "stablecoinBalance": "7812986778019",
