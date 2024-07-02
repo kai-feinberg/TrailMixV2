@@ -61,7 +61,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
     accessorKey: "erc20Balance",
     header: "Balance",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
 
       const ercBalance = row.getValue("erc20Balance") as number;
       const assetDecimals = 10 ** row.original.asset.decimals;
@@ -83,7 +83,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
     accessorKey: "trailAmount",
     header: "Strategy",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
       return (
         <div className="text-base">
           <p>{row.original.trailAmount}% trail</p>
@@ -94,7 +94,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
     accessorKey: "Sell Threshold",
     header: "Sell Threshold",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
       const tslThreshold = Number(row.original.tslThreshold);
       const price = Number(ethPrice);
       return (
@@ -105,7 +105,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
     accessorKey: "profit",
     header: "Profit",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
 
       const divisor = 10 ** 6 * 10 ** row.original.asset.decimals;
       const adjustedProfit = Number(row.original.profit) / divisor;
@@ -131,7 +131,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   // {
   //   accessorKey: "percentProfit",
   //   header: "Profit %",
-  //   cell: ({ row }) => {
+  //   cell: ({ row }: { row: any }) => {
   //     return (
   //       <div className="text-base">
   //         <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>
@@ -145,7 +145,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
     accessorKey: "actions",
     header: "Actions",
-    cell: ({ row }) => {
+    cell: ({ row }: { row: any }) => {
       return (
         <div className="flex gap-2">
           <DepositPopup contractAddress={row.original.contractAddress} />

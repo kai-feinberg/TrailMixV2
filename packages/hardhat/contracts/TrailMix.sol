@@ -293,7 +293,7 @@ contract TrailMix is ReentrancyGuard {
 			address(this)
 		);
 		s_stablecoinBalance += amountRecieved;
-		s_exitPrice = currentPrice; 
+		// s_exitPrice = currentPrice; 
 		state = ContractState.Claimable;
 	}
 

@@ -64,14 +64,11 @@ export default function Home() {
   const { address: connectedAddress } = useAccount();
   const [ens, setEns] = useState<string | null>();
 
-  // const checkSumAddress = address ? getAddress(address) : undefined;
-
   const { data: fetchedEns } = useEnsName({
     address: connectedAddress,
-    // enabled: isAddress(checkSumAddress ?? ""),
     chainId: 1,
+    enabled: !!connectedAddress,
   });
-  // console.log("ens",fetchedEns);
 
   useEffect(() => {
     setEns(fetchedEns);

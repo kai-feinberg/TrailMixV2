@@ -17,11 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 
-// import { useWindowWidth } from "@react-hook/window-size";
-let useWindowWidth: any;
-if (typeof window !== "undefined") {
-  useWindowWidth = require("@react-hook/window-size").useWindowWidth;
-}
+import { useWindowWidth } from "@react-hook/window-size";
 
 export default function SideNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
