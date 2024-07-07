@@ -33,6 +33,7 @@ export function CreateNew() {
   const [poolAddress, setPoolAddress] = React.useState("");
   const [poolFee, setPoolFee] = React.useState("");
   const [newestContract, setNewestContract] = React.useState("");
+  const [loadingNewStrategy, setLoadingNewStrategy]= React.useState(false);
 
   const [phase, setPhase] = React.useState("deploy");
 
@@ -100,13 +101,18 @@ export function CreateNew() {
     console.log("pool", poolAddress)
     try {
       const deploymentResult = await deploy();
+
+      setLoadingNewStrategy(true);
+      const sleep = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
+      await sleep(10000);
+      setLoadingNewStrategy(false);
+
       setPhase("deposit");
     }
     catch (error) {
       console.log(error);
     }
   }
-
 
 
   return (
@@ -128,7 +134,7 @@ export function CreateNew() {
         </DialogHeader>
 
 
-        {phase === "deploy" && (
+        {phase === "deploy" && !loadingNewStrategy && (
           <div>
             <div className="grid gap-4 py-4 rounded-xl">
               <div className="grid grid-cols-4 items-center gap-4">
@@ -185,7 +191,10 @@ export function CreateNew() {
           <span className="loading loading-spinner loading-sm"></span>
         )}
 
-        {phase === "deposit" && newestContract !== "" && (
+        {loadingNewStrategy && (
+          "deploying newest strategy..."
+        )}
+        {phase === "deposit" && newestContract !== "" && !loadingNewStrategy &&(
           <DepositContent contractAddress={newestContract} />
         )}
       </DialogContent>

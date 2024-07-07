@@ -249,10 +249,10 @@ contract TrailMix is ReentrancyGuard {
 
 	/**
 	 * @notice Swaps the user's ERC20 tokens for stablecoins on Uniswap.
-	 * @dev Currently public for testing, but intended to be private in deployment. Non-reentrant.
+	 * @dev only callable by the manager contract. Non-reentrant.
 	 * @param amount The amount of the ERC20 token to swap.
 	 */
-	function swapOnUniswap(uint256 amount) public nonReentrant {
+	function swapOnUniswap(uint256 amount) public onlyManager nonReentrant {
 		//swap ERC20 tokens for stablecoin on uniswap
 		//need to approve uniswap to spend ERC20 tokens
 
@@ -293,7 +293,7 @@ contract TrailMix is ReentrancyGuard {
 			address(this)
 		);
 		s_stablecoinBalance += amountRecieved;
-		// s_exitPrice = currentPrice; 
+		s_exitPrice = currentPrice;
 		state = ContractState.Claimable;
 	}
 

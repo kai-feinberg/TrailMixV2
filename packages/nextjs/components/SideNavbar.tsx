@@ -13,7 +13,8 @@ import {
   LayoutDashboard,
   UsersRound,
   Settings,
-  ChevronRight
+  ChevronRight,
+  Github
 } from "lucide-react";
 import { Button } from "./ui/button";
 
@@ -30,9 +31,13 @@ export default function SideNavbar({ }: Props) {
   }
 
   return (
-    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-white flex flex-col justify-between">
-      <div>
+    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-slate-600 text-white flex flex-col justify-between">
+      
+      <div className="absolute top-[-1px] mt-3 left-50 w-full">
         <Logo/>
+      </div>
+
+      <div className="pt-18">
         {!mobileWidth && (
           <div className="absolute right-[-20px] top-7">
             <Button
@@ -65,10 +70,11 @@ export default function SideNavbar({ }: Props) {
         <RainbowKitCustomConnectButton />
       </div>
 
-      <div className="flex text-base font-semibold text-slate-600"> 
+
+      <div className="flex flex-col text-base font-semibold text-slate-100 mb-10"> 
+        <a href="https://github.com/kai-feinberg/TrailMixV2" target="_blank" rel="noopener noreferrer" className= "flex m-1 underline"><Github/>Github</a>
         <p> ❤ Built by Kaifeinberg.eth</p>
       </div>
-
 
     </div>
   );
