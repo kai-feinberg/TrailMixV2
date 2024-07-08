@@ -31,8 +31,8 @@ export default function SideNavbar({ }: Props) {
   }
 
   return (
-    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-slate-600 text-white flex flex-col justify-between">
-      
+    // <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-slate-600 text-white flex flex-col justify-between">
+    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-gradient-to-b from-slate-600 to-black text-white flex flex-col justify-between">
       <div className="absolute top-[-1px] mt-3 left-50 w-full">
         <Logo/>
       </div>

@@ -51,7 +51,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider enableSystem>
         <ScaffoldEthAppWithProviders>
           <body className={cn(
-            "w-full flex bg-orange-100 text-black",
+            "w-full flex bg-gradient-to-b from-orange-100 to-orange-200 text-black",
           )}>
             <SideNavbar />
 

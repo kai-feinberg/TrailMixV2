@@ -132,6 +132,12 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   //   accessorKey: "percentProfit",
   //   header: "Profit %",
   //   cell: ({ row }: { row: any }) => {
+        //  if ((row.original.exitPrice) !=0){ 
+      //     (exitPrice - entryPrice)/entryPrice
+      //   }
+
+      // // else
+      //   (twapPrice - entryPrice)/entryPrice
   //     return (
   //       <div className="text-base">
   //         <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>

@@ -85,11 +85,17 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     functionName: "getWeightedEntryPrice"
   })
 
+  const {data: exitPrice, isLoading: isLoadingExitPrice} = useContractRead({
+    address: contractAddress,
+    abi: strategyABI.abi,
+    functionName: "getExitPrice"
+  })
+
   const { targetNetwork } = useTargetNetwork();
 
   useEffect(() => {
     
-    if (!isLoadingWeightedEntryPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingWeightedEntryPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
@@ -113,6 +119,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             stablecoinAddress: stablecoinAddress?.toString() ?? '',
             profit: profit?.toString() ?? '',
             weightedEntryPrice: weightedEntryPrice?.toString() ?? '',
+            exitPrice: exitPrice?.toString() ?? '',
             percentProfit: percentProfit.toString(),
             contractState: contractState?.toString() ?? '',
             stablecoinBalance: stablecoinBalance?.toString() ?? '',
@@ -127,7 +134,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             console.info("ligma", e);
         }
     }
-  }, [erc20TokenAddress, profit, weightedEntryPrice, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
+  }, [erc20TokenAddress, profit, exitPrice, weightedEntryPrice, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
 
   return;
 };
