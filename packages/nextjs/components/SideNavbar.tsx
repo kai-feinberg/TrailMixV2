@@ -19,6 +19,7 @@ import {
 import { Button } from "./ui/button";
 
 import { useWindowWidth } from "@react-hook/window-size";
+import { NetworkOptions } from "./scaffold-eth/RainbowKitCustomConnectButton/NetworkOptions";
 
 export default function SideNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -38,7 +39,7 @@ export default function SideNavbar({ }: Props) {
       </div>
 
       <div className="pt-18">
-        {!mobileWidth && (
+        {/* {!mobileWidth && (
           <div className="absolute right-[-20px] top-7">
             <Button
               onClick={toggleSidebar}
@@ -48,7 +49,7 @@ export default function SideNavbar({ }: Props) {
               <ChevronRight />
             </Button>
           </div>
-        )}
+        )} */}
         <Nav
           isCollapsed={mobileWidth ? true : isCollapsed}
           links={[
@@ -71,6 +72,7 @@ export default function SideNavbar({ }: Props) {
       </div>
 
 
+      <NetworkOptions />
       <div className="flex flex-col text-base font-semibold text-slate-100 mb-10"> 
         <a href="https://github.com/kai-feinberg/TrailMixV2" target="_blank" rel="noopener noreferrer" className= "flex m-1 underline"><Github/>Github</a>
         <p> ❤ Built by Kaifeinberg.eth</p>

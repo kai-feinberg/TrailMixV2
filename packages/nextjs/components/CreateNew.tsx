@@ -150,9 +150,9 @@ export function CreateNew() {
               <div className="bg-blue-600 text-white p-4 rounded-xl">
                 <h3 className="text-xl font-semibold mb-4">Select Strategy</h3>
                 <ul className="mb-4">
-                  <li>Conservative (30%): Holds through large volatility</li>
-                  <li>Balanced (20%): Balanced approach</li>
-                  <li>Aggressive (10%): Reacts to smaller dips</li>
+                  <li>Conservative (20%): Holds through large volatility</li>
+                  <li>Balanced (10%): Balanced approach</li>
+                  <li>Aggressive (5%): Reacts to smaller dips</li>
                 </ul>
                 <div className="grid grid-cols-3 gap-4 p-6">
                   <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
@@ -167,8 +167,8 @@ export function CreateNew() {
                       <div>Balanced</div>
                     </div>
                   </Button>
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("1")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "1" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("5")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "5" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <SwordIcon className="h-6 w-6 mb-2" />
                       <div>Aggressive</div>
                     </div>
