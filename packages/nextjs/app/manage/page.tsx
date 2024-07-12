@@ -107,8 +107,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Profit",
     cell: ({ row }: { row: any }) => {
 
-      const divisor = 10 ** 6 * 10 ** row.original.asset.decimals;
-      const adjustedProfit = Number(row.original.profit) / divisor;
+      const divisor = 10 ** row.original.asset.decimals;
+      const adjustedProfit = Number(row.original.profit)*ethPrice / divisor;
 
       let displayProfit;
       if (Math.abs(adjustedProfit) < 0.01) {
@@ -116,6 +116,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       } else {
         displayProfit = adjustedProfit.toFixed(2); // Format to 2 decimal places
       }
+
 
       return (
         <div className="text-base">
@@ -163,7 +164,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
         <div className="flex gap-2">
           <DepositPopup contractAddress={row.original.contractAddress} />
           <WithdrawButton contractAddress={row.original.contractAddress} />
-          <Button variant="outline" className="h-3 w-2 rounded-xl" onClick={() => window.open(`https://basescan.org/address/${row.original.contractAddress}`, '_blank')}>i</Button>
+          <Button variant="outline" className="h-3 w-2 rounded-xl" onClick={() => window.open(`https://optimistic.etherscan.io//address/${row.original.contractAddress}`, '_blank')}>i</Button>
         </div>
       );
     },

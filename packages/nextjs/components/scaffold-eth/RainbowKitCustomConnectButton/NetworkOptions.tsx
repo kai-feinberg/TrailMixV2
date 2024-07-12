@@ -21,7 +21,7 @@ export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
       {allowedNetworks
         .filter(allowedNetwork => allowedNetwork.id !== chain?.id)
         .map(allowedNetwork => (
-          <li key={allowedNetwork.id} className={hidden ? "hidden" : ""}>
+          <div key={allowedNetwork.id} className={hidden ? "hidden" : ""}>
             <button
               className="menu-item btn-sm !rounded-xl flex gap-3 py-3 whitespace-nowrap"
               type="button"
@@ -41,7 +41,7 @@ export const NetworkOptions = ({ hidden = false }: NetworkOptionsProps) => {
                 </span>
               </span>
             </button>
-          </li>
+          </div>
         ))}
     </>
   );

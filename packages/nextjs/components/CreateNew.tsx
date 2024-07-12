@@ -34,6 +34,7 @@ export function CreateNew() {
   const [poolFee, setPoolFee] = React.useState("");
   const [newestContract, setNewestContract] = React.useState("");
   const [loadingNewStrategy, setLoadingNewStrategy]= React.useState(false);
+  const [pairAddress, setPairAddress] = React.useState("")
 
   const [phase, setPhase] = React.useState("deploy");
 
@@ -67,21 +68,36 @@ export function CreateNew() {
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       setPoolFee(tokens[tokenAddress].poolFee);
+      setPairAddress(tokens[tokenAddress].pooledAgainst)
       // console.log("pool address", tokens[tokenAddress].pool);
     } else {
       setPoolAddress("");
     }
   }, [tokenAddress]);
 
+  let uniswapRouterAddress;
+  let twapOracle;
+  if (chainId == 10){ //optimism network
+    uniswapRouterAddress = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45"  // Uniswap V3 router
+    twapOracle = "0x9Af728C794f68E457f8ffBF763155622Da66dd62" 
+  }
+  else if (chainId == 8453){ //base network
+    uniswapRouterAddress = "0x2626664c2603336E57B271c5C0b26F421741e481"  // Uniswap V3 router
+    twapOracle = "0x161824CA6a0c6d85188B1bf9A79674aC1d208621"
+  }
+  else {
+    uniswapRouterAddress = ""
+    twapOracle = ""
+  }
 
   const { writeAsync: deploy, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "deployTrailMix",
     args: [tokenAddress, //chosen token address
-      "0x4200000000000000000000000000000000000006", //WETH address
-      "0x2626664c2603336E57B271c5C0b26F421741e481",  // Uniswap V3 router
+      pairAddress, //WETH address
+      uniswapRouterAddress,
       poolAddress, //pool address
-      "0x161824CA6a0c6d85188B1bf9A79674aC1d208621", // TWAP oracle
+      twapOracle, // TWAP oracle
       BigInt(strategy), //trail amount
       // BigInt("1"),
       BigInt(1 as number), //granularity

@@ -5,6 +5,7 @@ export interface TokenData {
     logoURI: string;
     pool: string;
     poolFee: string;
+    pooledAgainst: string;
   }
   
   

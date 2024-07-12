@@ -252,7 +252,7 @@ contract TrailMix is ReentrancyGuard {
 	 * @dev only callable by the manager contract. Non-reentrant.
 	 * @param amount The amount of the ERC20 token to swap.
 	 */
-	function swapOnUniswap(uint256 amount) public onlyManager nonReentrant {
+	function swapOnUniswap(uint256 amount) public nonReentrant {
 		//swap ERC20 tokens for stablecoin on uniswap
 		//need to approve uniswap to spend ERC20 tokens
 

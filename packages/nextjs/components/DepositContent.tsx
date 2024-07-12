@@ -47,7 +47,7 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         if (erc20Address) {
             setStoredErc20Address(erc20Address as string);
         }
-    }, [erc20Address]);
+    }, [erc20Address, isLoadingErc20Address]);
 
     const {
         data: erc20Balance,
@@ -175,11 +175,11 @@ const DepositContent = ({ contractAddress }: { contractAddress: string }) => {
         deposit();
 
     };
-
+    console.log("balance of user", userERC20Balance)
 
     return (
         <div>
-            <p> Balance: {(userERC20Balance ? BigInt(userERC20Balance as number) / BigInt(10 ** (tokenDecimals as number)) : 0).toString()} {tokenData[(storedErc20Address as string).toLowerCase()]?.symbol || ''}
+            <p> Balance: {userERC20Balance ? (BigInt(userERC20Balance as number) / BigInt(10 ** Number(tokenDecimals || 18))).toString() : '0'} {tokenData[(storedErc20Address as string).toLowerCase()]?.symbol || ''}
             </p>
             <IntegerInput value={depositAmount} onChange={setDepositAmount} />
             {!sufficientAllowance &&
