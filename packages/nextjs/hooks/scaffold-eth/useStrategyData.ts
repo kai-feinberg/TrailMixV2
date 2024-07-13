@@ -95,7 +95,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
   useEffect(() => {
     
-    if (!isLoadingWeightedEntryPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingWeightedEntryPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
@@ -126,7 +126,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             stableAsset: stableAssetData as TokenData
         }
         
-        // console.log("strategy: ", strategy);
+        console.log("strategy: ", strategy);
         // console.log("profit", profit)
         onDataFetched(strategy);
         }

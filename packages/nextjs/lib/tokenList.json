@@ -48,15 +48,7 @@
             "poolFee": "3000",
             "pooledAgainst": "0x4200000000000000000000000000000000000006"
         },
-        "0x68f180fcc6836688e9084f035309e29bf0a2095": {
-            "name": "Wrapped Bitcoin",
-            "symbol": "WBTC",
-            "decimals": 8,
-            "logoURI": "",
-            "pool":"0xaDAb76dD2dcA7aE080A796F0ce86170e482AfB4a",
-            "poolFee": "3000",
-            "pooledAgainst": "0x0b2c639c533813f4aa9d7837caf62653d097ff85"
-        },
+     
         "0x920cf626a271321c151d027030d5d08af699456b": {
             "name": "Kwenta",
             "symbol": "KWENTA",
@@ -84,6 +76,15 @@
             "poolFee": "3000",
             "pooledAgainst": "0x4200000000000000000000000000000000000006"
         },
+        "0x68f180fce6836688e9084f035309e29bf0a2095": {
+            "name": "Wrapped Bitcoin",
+            "symbol": "WBTC",
+            "decimals": 8,
+            "logoURI": "",
+            "pool":"0xaDAb76dD2dcA7aE080A796F0ce86170e482AfB4a",
+            "poolFee": "3000",
+            "pooledAgainst": "0x0b2c639c533813f4aa9d7837caf62653d097ff85"
+        },
         "0x9b88d293b7a791e40d36a39765ffd5a1b9b5c349":{
             "name": "Celo",
             "symbol": "CELO",
@@ -92,8 +93,7 @@
             "pool":"0x6B3a3d6eD64FAF933a7a4B1Bd44b2efbA47614AC",
             "poolFee": "3000",
             "pooledAgainst": "0x4200000000000000000000000000000000000006"
-        }
-                
+        }          
 
     } ,
     "8453": {

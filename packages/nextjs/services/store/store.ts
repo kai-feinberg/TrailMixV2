@@ -18,7 +18,7 @@ type GlobalState = {
   targetNetwork: ChainWithAttributes;
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => void;
   strategies: Strategy[];
-  setStrategies: (newStrategies: Strategy[]) => void;
+  setStrategies: (newStrategies: Strategy[] | ((prevStrategies: Strategy[]) => Strategy[])) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -27,5 +27,9 @@ export const useGlobalState = create<GlobalState>(set => ({
   targetNetwork: scaffoldConfig.targetNetworks[0],
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
   strategies: [],
-  setStrategies: (newStrategies: Strategy[]) => set(() => ({ strategies: newStrategies })),
+  setStrategies: (newStrategies) => set((state) => ({ 
+    strategies: typeof newStrategies === 'function' 
+      ? newStrategies(state.strategies) 
+      : newStrategies 
+  })),
 }));

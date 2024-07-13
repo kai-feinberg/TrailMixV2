@@ -17,24 +17,34 @@ import { Button } from "@/components/ui/button";
 
 
 const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
+    const [open, setOpen] = React.useState(false);
+    
+    
+    const handleSuccess = () => {
+        setOpen(false);
+    };
+
+
 
     return (
 
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] bg-white">
-                <DialogHeader>
-                    <DialogTitle>Deposit funds</DialogTitle>
-                    <DialogDescription>
-                        Add funds to existing strategy
-                    </DialogDescription>
-                </DialogHeader>
+        <div>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] bg-white">
+                    <DialogHeader>
+                        <DialogTitle>Deposit funds</DialogTitle>
+                        <DialogDescription>
+                            Add funds to existing strategy
+                        </DialogDescription>
+                    </DialogHeader>
 
-                <DepositContent contractAddress={contractAddress}/>
-            </DialogContent>
-        </Dialog>
+                    <DepositContent contractAddress={contractAddress} onSuccess={handleSuccess}/>
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 };
 

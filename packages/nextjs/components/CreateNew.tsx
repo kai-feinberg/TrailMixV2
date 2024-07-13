@@ -19,11 +19,13 @@ import { TokenData, TokenList } from "~~/types/customTypes";
 import { useTargetNetwork } from '~~/hooks/scaffold-eth/useTargetNetwork';
 import { ShieldIcon, ScaleIcon, SwordIcon } from "lucide-react";
 import { useAccount, useTransaction } from "wagmi";
+import {getAddress } from 'viem'
 
 import manABI from "~~/contracts/managerABI.json";
 import DepositContent from "./DepositContent";
 
 const managerABI = manABI.abi;
+import {ethers} from 'ethers';
 
 export function CreateNew() {
 
@@ -33,7 +35,7 @@ export function CreateNew() {
   const [poolAddress, setPoolAddress] = React.useState("");
   const [poolFee, setPoolFee] = React.useState("");
   const [newestContract, setNewestContract] = React.useState("");
-  const [loadingNewStrategy, setLoadingNewStrategy]= React.useState(false);
+  const [loadingNewStrategy, setLoadingNewStrategy] = React.useState(false);
   const [pairAddress, setPairAddress] = React.useState("")
 
   const [phase, setPhase] = React.useState("deploy");
@@ -53,7 +55,7 @@ export function CreateNew() {
 
   React.useEffect(() => {
     if (userContracts) {
-      setNewestContract(userContracts[userContracts.length-1]);
+      setNewestContract(userContracts[userContracts.length - 1]);
     }
   }, [userContracts, isLoadingUserContracts])
 
@@ -65,23 +67,24 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
+    // console.log(tokenAddress);
+    // console.log(tokens[tokenAddress]?.pool)
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       setPoolFee(tokens[tokenAddress].poolFee);
-      setPairAddress(tokens[tokenAddress].pooledAgainst)
-      // console.log("pool address", tokens[tokenAddress].pool);
+      setPairAddress(tokens[tokenAddress].pooledAgainst);
     } else {
       setPoolAddress("");
     }
-  }, [tokenAddress]);
+  }, [tokenAddress, tokens]);
 
   let uniswapRouterAddress;
   let twapOracle;
-  if (chainId == 10){ //optimism network
+  if (chainId == 10) { //optimism network
     uniswapRouterAddress = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45"  // Uniswap V3 router
-    twapOracle = "0x9Af728C794f68E457f8ffBF763155622Da66dd62" 
+    twapOracle = "0x9Af728C794f68E457f8ffBF763155622Da66dd62"
   }
-  else if (chainId == 8453){ //base network
+  else if (chainId == 8453) { //base network
     uniswapRouterAddress = "0x2626664c2603336E57B271c5C0b26F421741e481"  // Uniswap V3 router
     twapOracle = "0x161824CA6a0c6d85188B1bf9A79674aC1d208621"
   }
@@ -93,7 +96,7 @@ export function CreateNew() {
   const { writeAsync: deploy, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "deployTrailMix",
-    args: [tokenAddress, //chosen token address
+    args: [tokenAddress, //checksummed token address
       pairAddress, //WETH address
       uniswapRouterAddress,
       poolAddress, //pool address
@@ -116,10 +119,11 @@ export function CreateNew() {
   const handleDeploy = async () => {
     console.log("pool", poolAddress)
     try {
+      
       const deploymentResult = await deploy();
 
       setLoadingNewStrategy(true);
-      const sleep = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
+      const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
       await sleep(10000);
       setLoadingNewStrategy(false);
 
@@ -131,9 +135,15 @@ export function CreateNew() {
   }
 
 
+  const [open, setOpen] = React.useState(false);
+
+
+  const handleSuccess = () => {
+    setOpen(false);
+  };
   return (
 
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-xl">Create New</Button>
       </DialogTrigger>
@@ -210,8 +220,8 @@ export function CreateNew() {
         {loadingNewStrategy && (
           "deploying newest strategy..."
         )}
-        {phase === "deposit" && newestContract !== "" && !loadingNewStrategy &&(
-          <DepositContent contractAddress={newestContract} />
+        {phase === "deposit" && newestContract !== "" && !loadingNewStrategy && (
+          <DepositContent contractAddress={newestContract} onSuccess={handleSuccess} />
         )}
       </DialogContent>
     </Dialog>

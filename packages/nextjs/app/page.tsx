@@ -13,7 +13,6 @@ import { CreateNew } from "@/components/CreateNew";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useState, useEffect } from "react";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
-import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
