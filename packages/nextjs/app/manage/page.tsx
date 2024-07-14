@@ -179,78 +179,6 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 ];
 
 
-
-// export default function ManagePage({ }: Props) {
-//   // const [strategies, setStrategies] = useState<Strategy[]>([]);
-//   const { strategies, setStrategies } = useGlobalState();
-//   const [activeStrats, setActiveStrats] = useState<Strategy[]>([])
-
-//   const ethPrice = useNativeCurrencyPrice();
-//   let columns = getColumns(ethPrice);
-
-
-//   const { address: connectedAccount } = useAccount();
-//   const { data: userContracts } = useScaffoldContractRead({
-//     contractName: "TrailMixManager",
-//     functionName: "getUserContracts",
-//     args: [connectedAccount],
-//   });
-//   // console.log("user contracts", userContracts)
-
-//   let claimableStrategies = strategies.filter(strategy => strategy.contractState === 'Claimable');
-
-//   let activeStrategies = strategies.filter(strategy => strategy.contractState === 'Uninitialized' || strategy.contractState === 'Active');
-
-//   useEffect(() => {
-//     const active = strategies.filter(
-//       (strategy) =>
-//         strategy.contractState === "Uninitialized" ||
-//         strategy.contractState === "Active"
-//     );
-//     setActiveStrats(active);
-//   }, [strategies]);
-  
-
-
-//   const updateStrategyData = (strategy: Strategy) => {
-//     const existingStrategyIndex = strategies.findIndex(s => s.contractAddress === strategy.contractAddress);
-//     if (existingStrategyIndex !== -1) {
-//       const updatedStrategies = [...strategies];
-//       updatedStrategies[existingStrategyIndex] = strategy;
-//       setStrategies(updatedStrategies);
-
-//     } else {
-//       setStrategies([...strategies, strategy]);
-//     }
-//   }
-
-//   // console.log("claimable strats:", claimableStrategies);
-//   // console.log("active strats: ", activeStrategies);
-
-//   if (!connectedAccount) {
-//     console.log("no connected account");
-//     activeStrategies = exampleActiveStrategies;
-//     claimableStrategies = exampleClaimableStrategies;
-//   }
-
-//   return (
-//     <div className="flex flex-col gap-4 w-full px-4 ">
-
-//       {userContracts?.map((address, index) => (
-//         <StrategyDataUpdater
-//           key={address}
-//           contractAddress={address}
-//           onDataFetched={updateStrategyData}
-//         />
-//       ))}
-
-//       <PageTitle title={connectedAccount && "Your Strategies" || "Example Strategies"} />
-//       <DataTable columns={columns} data={activeStrats} />
-//       <ClaimsTable claimableStrategies={claimableStrategies} />
-//     </div>
-//   );
-// }
-
 export default function ManagePage({ }: Props) {
   const { strategies, setStrategies } = useGlobalState();
   const [activeStrats, setActiveStrats] = useState<Strategy[]>([]);
@@ -286,37 +214,9 @@ export default function ManagePage({ }: Props) {
     }
   }, [connectedAccount, strategies]);
 
-const updateStrategyData = (strategy: Strategy) => {
-  setStrategies((prevStrategies: Strategy[] | undefined) => {
-    // Ensure prevStrategies is an array
-    const currentStrategies = Array.isArray(prevStrategies) ? prevStrategies : [];
-
-    const existingStrategyIndex = currentStrategies.findIndex(
-      (s) => s.contractAddress === strategy.contractAddress
-    );
-
-    if (existingStrategyIndex !== -1) {
-      // Update existing strategy
-      return currentStrategies.map((s, index) => 
-        index === existingStrategyIndex ? strategy : s
-      );
-    } else {
-      // Add new strategy
-      return [...currentStrategies, strategy];
-    }
-  });
-};
-
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
-      {userContracts?.map((address) => (
-        <StrategyDataUpdater
-          key={address}
-          contractAddress={address}
-          onDataFetched={updateStrategyData}
-        />
-      ))}
-
+ 
       <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
       
       {isLoading ? (
