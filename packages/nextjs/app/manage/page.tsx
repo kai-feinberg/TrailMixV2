@@ -167,10 +167,9 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "actions",
     header: "Actions",
     cell: ({ row }: { row: any }) => {
-      const MemoizedDeposit = React.memo(DepositPopup);
       return (
         <div className="flex gap-2">
-          <MemoizedDeposit contractAddress={row.original.contractAddress} />
+          <DepositPopup contractAddress={row.original.contractAddress} />
           <WithdrawButton contractAddress={row.original.contractAddress} />
           <Button variant="outline" className="h-3 w-2 rounded-xl" onClick={() => window.open(`https://optimistic.etherscan.io//address/${row.original.contractAddress}`, '_blank')}>i</Button>
         </div>
@@ -276,7 +275,7 @@ export default function ManagePage({ }: Props) {
     } else {
       const active = strategies.filter(
         (strategy) =>
-          strategy.contractState === "Uninitialized" ||
+          // strategy.contractState === "Uninitialized" || hiding uninitilized strategies 
           strategy.contractState === "Active"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');

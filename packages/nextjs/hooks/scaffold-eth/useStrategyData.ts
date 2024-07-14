@@ -126,7 +126,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             stableAsset: stableAssetData as TokenData
         }
         
-        console.log("strategy: ", strategy);
+        // console.log("strategy: ", strategy);
         // console.log("profit", profit)
         onDataFetched(strategy);
         }

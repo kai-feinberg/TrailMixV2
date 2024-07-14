@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { ArrowDownFromLineIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {useCallback} from 'react'
+import Portal from "./Portal";
 
 
 const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
@@ -24,11 +26,13 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
         setOpen(false);
     };
 
+    const handleModalOpenChange = useCallback((open: boolean | ((prevState: boolean) => boolean)) => {
+        setOpen(open);
+      }, []);
+      
 
 
     return (
-
-        <div>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
@@ -44,7 +48,6 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
                     <DepositContent contractAddress={contractAddress} onSuccess={handleSuccess}/>
                 </DialogContent>
             </Dialog>
-        </div>
     );
 };
 
