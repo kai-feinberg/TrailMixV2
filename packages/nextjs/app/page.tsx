@@ -13,7 +13,6 @@ import { CreateNew } from "@/components/CreateNew";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 import { useState, useEffect } from "react";
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi";
-import Deposit from "~~/components/DepositPopup";
 import { useAccount } from "wagmi";
 import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
 import Events from "~~/components/Events";
@@ -61,30 +60,26 @@ const cardData: CardProps[] = [
 
 export default function Home() {
 
-  const { targetNetwork } = useTargetNetwork();
   const { address: connectedAddress } = useAccount();
   const [ens, setEns] = useState<string | null>();
 
-  // const checkSumAddress = address ? getAddress(address) : undefined;
-
   const { data: fetchedEns } = useEnsName({
     address: connectedAddress,
-    // enabled: isAddress(checkSumAddress ?? ""),
     chainId: 1,
+    enabled: !!connectedAddress,
   });
-  // console.log("ens",fetchedEns);
 
   useEffect(() => {
     setEns(fetchedEns);
   }, [fetchedEns]);
 
-  const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
-    contractName: "TrailMixManager",
-    functionName: "getUserContracts",
-    args: [connectedAddress],
-  });
+  // const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
+  //   contractName: "TrailMixManager",
+  //   functionName: "getUserContracts",
+  //   args: [connectedAddress],
+  // });
 
-  const {strategies, setStrategies} = useGlobalState();
+  // const {strategies, setStrategies} = useGlobalState();
   
   const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (

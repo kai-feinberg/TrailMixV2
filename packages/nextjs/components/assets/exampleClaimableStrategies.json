@@ -6,7 +6,8 @@
             "decimals": 18,
             "logoURI": "https://www.basetokenstore.com/_next/image?url=https%3A%2F%2Fcoin-images.coingecko.com%2Fcoins%2Fimages%2F34515%2Flarge%2Fandroid-chrome-512x512.png%3F1706198225&w=128&q=75",
             "pool": "0xc9034c3E7F58003E6ae0C8438e7c8f4598d5ACAA",
-            "poolFee": "3000"
+            "poolFee": "3000",
+            "pooledAgainst": "USDC"
         },
         "contractAddress": "0x7597c22d98733A6A180fBA0Cd47E8a76d8581937",
         "erc20Balance": "0",
@@ -19,7 +20,8 @@
         "tslThreshold": "2615361723398",
         "stablecoinAddress": "0x4200000000000000000000000000000000000006",
         "profit": "0",
-        "weightedEntryCost": "0",
+        "weightedEntryPrice": "0",
+        "exitPrice": "0",
         "percentProfit": "-3.50685487296772",
         "contractState": "Claimable",
         "stablecoinBalance": "7812986778019",
@@ -29,7 +31,9 @@
             "decimals": 18,
             "logoURI": "https://github.com/ethereum-optimism/ethereum-optimism.github.io/blob/master/data/WETH/logo.png",
             "pool": "",
-            "poolFee": ""
+            "poolFee": "",
+            "pooledAgainst": "USDC"
+
         }
     }
 ]

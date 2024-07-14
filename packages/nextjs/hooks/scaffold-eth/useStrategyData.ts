@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useScaffoldEventHistory } from "./useScaffoldEventHistory";
 import { Strategy, TokenData, TokenList } from '~~/types/customTypes';
 import { useContractRead } from "wagmi";
@@ -14,12 +14,6 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     fromBlock: 1100002n,
     watch: false,
     filters: { strategy: contractAddress },
-  });
-
-  const { data: currentPrice, isLoading: isLoadingCurrentPrice } = useContractRead({
-    address: contractAddress,
-    abi: strategyABI.abi,
-    functionName: 'getTwapPrice',
   });
 
   const { data: erc20TokenAddress, isLoading: isLoadingErc20TokenAddress } = useContractRead({
@@ -91,11 +85,17 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     functionName: "getWeightedEntryPrice"
   })
 
+  const {data: exitPrice, isLoading: isLoadingExitPrice} = useContractRead({
+    address: contractAddress,
+    abi: strategyABI.abi,
+    functionName: "getExitPrice"
+  })
+
   const { targetNetwork } = useTargetNetwork();
 
   useEffect(() => {
     
-    if (!isLoadingCurrentPrice && !isLoadingWeightedEntryPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingErc20TokenAddress && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingWeightedEntryPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
@@ -119,6 +119,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             stablecoinAddress: stablecoinAddress?.toString() ?? '',
             profit: profit?.toString() ?? '',
             weightedEntryPrice: weightedEntryPrice?.toString() ?? '',
+            exitPrice: exitPrice?.toString() ?? '',
             percentProfit: percentProfit.toString(),
             contractState: contractState?.toString() ?? '',
             stablecoinBalance: stablecoinBalance?.toString() ?? '',
@@ -126,14 +127,14 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         }
         
         // console.log("strategy: ", strategy);
-        console.log("profit", profit)
+        // console.log("profit", profit)
         onDataFetched(strategy);
         }
         catch (e) {
             console.info("ligma", e);
         }
     }
-  }, [erc20TokenAddress, profit, weightedEntryPrice, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
+  }, [erc20TokenAddress, profit, exitPrice, weightedEntryPrice, contractState, erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, tslThreshold, deposits]);
 
   return;
 };

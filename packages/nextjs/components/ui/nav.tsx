@@ -78,17 +78,17 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   }),
                   link.variant === "default" &&
                     "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                  "justify-start"
+                  "justify-start text-xl mb-4"
                 )}
               >
-                <link.icon className="mr-2 h-4 w-4" />
+                <link.icon className="mr-2 h-6 w-6" />
                 {link.title}
                 {link.label && (
                   <span
                     className={cn(
                       "ml-auto",
                       link.variant === "default" &&
-                        "text-background dark:text-white"
+                        "text-background dark:text-white" // Changed from text-xl to text-4xl for extra large text
                     )}
                   >
                     {link.label}

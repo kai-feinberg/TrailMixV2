@@ -7,8 +7,13 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   10: {
     TrailMixManager: {
-      address: "0xc20650A1d0bB00Ea255C2cFabD094d0234ED26F1",
+      address: "0x7db5f08eBB8a1c108872b6Ddb74915eac29ba545",
       abi: [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
         {
           inputs: [],
           name: "NotContractOwner",
@@ -24,10 +29,22 @@ const deployedContracts = {
               type: "address",
             },
             {
-              indexed: false,
+              indexed: true,
               internalType: "address",
               name: "contractAddress",
               type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "token",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "trailAmount",
+              type: "uint256",
             },
             {
               indexed: false,
@@ -78,6 +95,12 @@ const deployedContracts = {
               name: "timestamp",
               type: "uint256",
             },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "trailAmount",
+              type: "uint256",
+            },
           ],
           name: "FundsDeposited",
           type: "event",
@@ -113,6 +136,12 @@ const deployedContracts = {
               indexed: false,
               internalType: "uint256",
               name: "timestamp",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "trailAmount",
               type: "uint256",
             },
           ],
@@ -219,23 +248,17 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "bytes",
-              name: "",
-              type: "bytes",
-            },
-          ],
-          name: "checkUpkeep",
+          inputs: [],
+          name: "checker",
           outputs: [
             {
               internalType: "bool",
-              name: "upkeepNeeded",
+              name: "canExec",
               type: "bool",
             },
             {
               internalType: "bytes",
-              name: "performData",
+              name: "execPayload",
               type: "bytes",
             },
           ],
@@ -354,12 +377,40 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "bytes",
-              name: "performData",
-              type: "bytes",
+              internalType: "address",
+              name: "strategy",
+              type: "address",
+            },
+            {
+              internalType: "bool",
+              name: "sell",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "updateThreshold",
+              type: "bool",
+            },
+            {
+              internalType: "uint256",
+              name: "newThreshold",
+              type: "uint256",
             },
           ],
           name: "performUpkeep",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_executor",
+              type: "address",
+            },
+          ],
+          name: "setGelatoExecutor",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",

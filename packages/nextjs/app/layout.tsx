@@ -50,19 +50,17 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning lang="en">
       <ThemeProvider enableSystem>
         <ScaffoldEthAppWithProviders>
-          <body className={cn(
-            "w-full flex bg-slate-200 text-black",
-          )}>
-            <SideNavbar />
-
-            <div className={cn(
-              " w-full flex flex-col",
+            
+            <body className={cn(
+              "w-full flex bg-gradient-to-b from-orange-100 to-orange-200 text-black",
             )}>
-
-              <div className="p-8 w-full" >{children}</div>
-
-            </div>
-          </body>
+              <SideNavbar />
+              <div className={cn(
+                " w-full flex flex-col",
+              )}>
+                <div className="p-8 w-full" >{children}</div>
+              </div>
+            </body>
         </ScaffoldEthAppWithProviders>
       </ThemeProvider>
     </html>

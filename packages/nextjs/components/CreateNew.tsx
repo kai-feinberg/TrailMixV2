@@ -19,11 +19,13 @@ import { TokenData, TokenList } from "~~/types/customTypes";
 import { useTargetNetwork } from '~~/hooks/scaffold-eth/useTargetNetwork';
 import { ShieldIcon, ScaleIcon, SwordIcon } from "lucide-react";
 import { useAccount, useTransaction } from "wagmi";
+import {getAddress } from 'viem'
 
 import manABI from "~~/contracts/managerABI.json";
 import DepositContent from "./DepositContent";
 
 const managerABI = manABI.abi;
+import {ethers} from 'ethers';
 
 export function CreateNew() {
 
@@ -33,6 +35,8 @@ export function CreateNew() {
   const [poolAddress, setPoolAddress] = React.useState("");
   const [poolFee, setPoolFee] = React.useState("");
   const [newestContract, setNewestContract] = React.useState("");
+  const [loadingNewStrategy, setLoadingNewStrategy] = React.useState(false);
+  const [pairAddress, setPairAddress] = React.useState("")
 
   const [phase, setPhase] = React.useState("deploy");
 
@@ -51,7 +55,7 @@ export function CreateNew() {
 
   React.useEffect(() => {
     if (userContracts) {
-      setNewestContract(userContracts[userContracts.length-1]);
+      setNewestContract(userContracts[userContracts.length - 1]);
     }
   }, [userContracts, isLoadingUserContracts])
 
@@ -63,24 +67,40 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
+    // console.log(tokenAddress);
+    // console.log(tokens[tokenAddress]?.pool)
     if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       setPoolFee(tokens[tokenAddress].poolFee);
-      // console.log("pool address", tokens[tokenAddress].pool);
+      setPairAddress(tokens[tokenAddress].pooledAgainst);
     } else {
       setPoolAddress("");
     }
-  }, [tokenAddress]);
+  }, [tokenAddress, tokens]);
 
+  let uniswapRouterAddress;
+  let twapOracle;
+  if (chainId == 10) { //optimism network
+    uniswapRouterAddress = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45"  // Uniswap V3 router
+    twapOracle = "0x9Af728C794f68E457f8ffBF763155622Da66dd62"
+  }
+  else if (chainId == 8453) { //base network
+    uniswapRouterAddress = "0x2626664c2603336E57B271c5C0b26F421741e481"  // Uniswap V3 router
+    twapOracle = "0x161824CA6a0c6d85188B1bf9A79674aC1d208621"
+  }
+  else {
+    uniswapRouterAddress = ""
+    twapOracle = ""
+  }
 
   const { writeAsync: deploy, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "deployTrailMix",
-    args: [tokenAddress, //chosen token address
-      "0x4200000000000000000000000000000000000006", //WETH address
-      "0x2626664c2603336E57B271c5C0b26F421741e481",  // Uniswap V3 router
+    args: [tokenAddress, //checksummed token address
+      pairAddress, //WETH address
+      uniswapRouterAddress,
       poolAddress, //pool address
-      "0x161824CA6a0c6d85188B1bf9A79674aC1d208621", // TWAP oracle
+      twapOracle, // TWAP oracle
       BigInt(strategy), //trail amount
       // BigInt("1"),
       BigInt(1 as number), //granularity
@@ -99,7 +119,14 @@ export function CreateNew() {
   const handleDeploy = async () => {
     console.log("pool", poolAddress)
     try {
+      
       const deploymentResult = await deploy();
+
+      setLoadingNewStrategy(true);
+      const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+      await sleep(10000);
+      setLoadingNewStrategy(false);
+
       setPhase("deposit");
     }
     catch (error) {
@@ -108,10 +135,15 @@ export function CreateNew() {
   }
 
 
+  const [open, setOpen] = React.useState(false);
 
+
+  const handleSuccess = () => {
+    setOpen(false);
+  };
   return (
 
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-xl">Create New</Button>
       </DialogTrigger>
@@ -128,7 +160,7 @@ export function CreateNew() {
         </DialogHeader>
 
 
-        {phase === "deploy" && (
+        {phase === "deploy" && !loadingNewStrategy && (
           <div>
             <div className="grid gap-4 py-4 rounded-xl">
               <div className="grid grid-cols-4 items-center gap-4">
@@ -144,25 +176,25 @@ export function CreateNew() {
               <div className="bg-blue-600 text-white p-4 rounded-xl">
                 <h3 className="text-xl font-semibold mb-4">Select Strategy</h3>
                 <ul className="mb-4">
-                  <li>Conservative (30%): Holds through large volatility</li>
-                  <li>Balanced (20%): Balanced approach</li>
-                  <li>Aggressive (10%): Reacts to smaller dips</li>
+                  <li>Conservative (20%): Holds through large volatility</li>
+                  <li>Balanced (10%): Balanced approach</li>
+                  <li>Aggressive (5%): Reacts to smaller dips</li>
                 </ul>
                 <div className="grid grid-cols-3 gap-4 p-6">
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("30")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "30" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <ShieldIcon className="h-6 w-6 mb-2" />
                       <div>Conservative</div>
                     </div>
                   </Button>
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("20")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "20" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("10")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "10" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <ScaleIcon className="h-6 w-6 mb-2" />
                       <div>Balanced</div>
                     </div>
                   </Button>
-                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("1")}>
-                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "1" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
+                  <Button className={`w-full flex justify-center rounded-xl`} onClick={() => setStrategy("5")}>
+                    <div className={`flex flex-col items-center p-4 bg-white text-blue-600 ${strategy === "5" ? "border-4 border-black" : "border-2 border-transparent"} rounded-xl`}>
                       <SwordIcon className="h-6 w-6 mb-2" />
                       <div>Aggressive</div>
                     </div>
@@ -185,8 +217,11 @@ export function CreateNew() {
           <span className="loading loading-spinner loading-sm"></span>
         )}
 
-        {phase === "deposit" && newestContract !== "" && (
-          <DepositContent contractAddress={newestContract} />
+        {loadingNewStrategy && (
+          "deploying newest strategy..."
+        )}
+        {phase === "deposit" && newestContract !== "" && !loadingNewStrategy && (
+          <DepositContent contractAddress={newestContract} onSuccess={handleSuccess} />
         )}
       </DialogContent>
     </Dialog>

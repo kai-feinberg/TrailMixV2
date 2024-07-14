@@ -80,16 +80,28 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     },
   },
   {
-    accessorKey: "Sell Threshold",
-    header: "Sell Threshold",
+    accessorKey: "Entry Price",
+    header: "Entry Price",
     cell: ({ row }) => {
-      const tslThreshold = Number(row.original.tslThreshold);
-      const price = Number(ethPrice);
+      const entryPrice = Number(row.original.weightedEntryPrice);
+      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
       return (
-          <p className="">${(tslThreshold * price / (10 ** 18)).toFixed(5)} USD</p>
+          <p className="">${(entryPrice * price / (10 ** 18)).toFixed(4)} USD</p>
       );
     },
   },
+  {
+    accessorKey: "Exit Price",
+    header: "Exit Price",
+    cell: ({ row }) => {
+      const exitPrice = Number(row.original.exitPrice);
+      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
+      return (
+          <p className="">${(exitPrice * price / (10 ** 18)).toFixed(4)} USD</p>
+      );
+    },
+  },
+
   {
     accessorKey: "profit",
     header: "Profit",

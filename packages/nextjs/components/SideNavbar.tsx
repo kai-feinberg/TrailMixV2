@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { Nav } from "./ui/nav";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import Logo from "~~/public/logo-black-svg.tsx";
+import Logo from "~~/public/logo-black-svg";
 
 type Props = {};
 
@@ -13,15 +13,13 @@ import {
   LayoutDashboard,
   UsersRound,
   Settings,
-  ChevronRight
+  ChevronRight,
+  Github
 } from "lucide-react";
 import { Button } from "./ui/button";
 
-// import { useWindowWidth } from "@react-hook/window-size";
-let useWindowWidth: any;
-if (typeof window !== "undefined") {
-  useWindowWidth = require("@react-hook/window-size").useWindowWidth;
-}
+import { useWindowWidth } from "@react-hook/window-size";
+import { NetworkOptions } from "./scaffold-eth/RainbowKitCustomConnectButton/NetworkOptions";
 
 export default function SideNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -34,10 +32,14 @@ export default function SideNavbar({ }: Props) {
   }
 
   return (
-    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-white flex flex-col justify-between">
-      <div>
+    // <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-slate-600 text-white flex flex-col justify-between">
+    <div className="relative min-w-[80px] border-r px-3 pb-10 pt-24 bg-gradient-to-b from-slate-600 to-black text-white flex flex-col justify-between">
+      <div className="absolute top-[-1px] mt-3 left-50 w-full">
         <Logo/>
-        {!mobileWidth && (
+      </div>
+
+      <div className="pt-18">
+        {/* {!mobileWidth && (
           <div className="absolute right-[-20px] top-7">
             <Button
               onClick={toggleSidebar}
@@ -47,7 +49,7 @@ export default function SideNavbar({ }: Props) {
               <ChevronRight />
             </Button>
           </div>
-        )}
+        )} */}
         <Nav
           isCollapsed={mobileWidth ? true : isCollapsed}
           links={[
@@ -69,10 +71,12 @@ export default function SideNavbar({ }: Props) {
         <RainbowKitCustomConnectButton />
       </div>
 
-      <div className="flex text-base font-semibold text-slate-600"> 
+
+      <NetworkOptions />
+      <div className="flex flex-col text-base font-semibold text-slate-100 mb-10"> 
+        <a href="https://github.com/kai-feinberg/TrailMixV2" target="_blank" rel="noopener noreferrer" className= "flex m-1 underline"><Github/>Github</a>
         <p> ❤ Built by Kaifeinberg.eth</p>
       </div>
-
 
     </div>
   );
