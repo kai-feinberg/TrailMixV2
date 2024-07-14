@@ -65,21 +65,15 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "erc20Balance",
     header: "Balance",
     cell: ({ row }: { row: any }) => {
-
-      const ercBalance = row.getValue("erc20Balance") as number;
-      const assetDecimals = 10 ** row.original.asset.decimals;
-      const twapPrice = Number(row.original.twapPrice);
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
-
-      const usdValue = ((ercBalance) * price * (twapPrice)) / (assetDecimals ** 2);
       
+      const usdValue = row.original.balanceInUsd
       // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
           <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.symbol}</p>
           <p className="text-sm text-gray-500">
             {/* {(((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : (((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)} */}
-            {usdValue < 0.01 ? "<$0.01" : usdValue.toFixed(2)} USD
+            {usdValue < 0.01 ? "<$0.01" : Number(usdValue).toFixed(2)} USD
           </p>
         </div>
       );
@@ -111,19 +105,16 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "profit",
     header: "Profit",
     cell: ({ row }: { row: any }) => {
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
-
-      const divisor = 10 ** row.original.asset.decimals;
-      const adjustedProfit = Number(row.original.profit)*price / divisor;
+      
+      const adjustedProfit = row.original.profitInUsd
 
       let displayProfit;
       if (Math.abs(adjustedProfit) < 0.01) {
         displayProfit = "0.01";
       } else {
-        displayProfit = adjustedProfit.toFixed(2); // Format to 2 decimal places
+        displayProfit = Number(adjustedProfit).toFixed(2); // Format to 2 decimal places
       }
 
-      // console.log("profit", row.original.profit, "adjusted profit", adjustedProfit)
 
       return (
         <div className="text-base">
