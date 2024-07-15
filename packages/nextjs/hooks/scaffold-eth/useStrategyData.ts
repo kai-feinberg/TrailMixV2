@@ -108,10 +108,10 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         const stableAssetData = (tokenList as TokenList)[targetNetwork.id][stablecoinAddress?.toString().toLowerCase() ?? '']
         
         const assetDecimals = 10**tokenData.decimals;
-        const price = (stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
+        const price = (stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? (10**12) : ethPrice;
         
-        const usdValue = (Number(erc20Balance) * (price) * Number(twapPrice)) / (assetDecimals ** 2);
-        const profitInUsd = Number(profit)*price / assetDecimals
+        const usdValue = (Number(erc20Balance) * (price) * Number(twapPrice)) / ((assetDecimals ** 2) );
+        const profitInUsd = Number(profit)*price / (assetDecimals * 10**(18-tokenData.decimals)**2)
 
         const stableBalUsd = (Number(stablecoinBalance) * price)/ assetDecimals
         const strategy: Strategy = {

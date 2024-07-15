@@ -53,7 +53,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${(row.original.twapPrice * price / (10 ** 18)).toFixed(5)} USD</p>
+              <p className="">${(row.original.twapPrice * price / (10 ** 18 * 10**(18-row.original.asset.decimals))).toFixed(5)} USD</p>
             </div>
           </div>
           {/* divide by decimals of paired asset on the network */}
@@ -66,8 +66,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Balance",
     cell: ({ row }: { row: any }) => {
       
-      const usdValue = row.original.balanceInUsd
-      // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
+      const usdValue = row.original.balanceInUsd / ((10**(18-row.original.asset.decimals))**2 )
+      console.log("usdValue", usdValue)
       return (
         <div className="space-y-2" >
           <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.symbol}</p>
@@ -97,7 +97,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       const tslThreshold = Number(row.original.tslThreshold);
       const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
       return (
-        <p className="">${(tslThreshold * price / (10 ** 18)).toFixed(5)} USD</p>
+        <p className="">${(tslThreshold * price / (10 ** 18 * 10**(18-row.original.asset.decimals))).toFixed(5)} USD</p>
       );
     },
   },

@@ -28,6 +28,7 @@ import OnboardingModal from "~~/components/OnboardingModal";
 import { Strategy } from "~~/types/customTypes";
 const strategyABI = stratABI.abi;
 import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
+import Page2 from "~~/public/page2";
 
 
 
@@ -50,30 +51,30 @@ export default function Home() {
 
   const { strategies, setStrategies } = useGlobalState();
   const activeStrategies = strategies.filter((strategy) => strategy.contractState === "Active");
-  
+
   const numberStrats = activeStrategies.length;
   let usdBalance = 0;
   let profit = 0;
-  
+
   activeStrategies.forEach((strategy) => {
     usdBalance += Number(strategy.balanceInUsd);
     profit += Number(strategy.profitInUsd);
   });
-  
+
   const claimableStrategies = strategies.filter((strategy) => strategy.contractState === "Claimable");
   let claimBalance = 0
   const numClaims = claimableStrategies.length;
-  claimableStrategies.forEach((strategy)=> {
-    claimBalance+= Number(strategy.stablecoinBalanceInUsd);
+  claimableStrategies.forEach((strategy) => {
+    claimBalance += Number(strategy.stablecoinBalanceInUsd);
   })
 
-  
+
 
   const cardData: CardProps[] = [
     {
       label: "Current Balance",
       amount: `$${usdBalance.toFixed(2)}`,
-      description: "+20.1% from last month",
+      description: `Up $${profit.toFixed(2)} from initial invesment`,
       icon: DollarSign
     },
     {
@@ -95,7 +96,7 @@ export default function Home() {
       icon: TrendingUp
     }
   ];
-  
+
   const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -121,13 +122,14 @@ export default function Home() {
             <CreateNew />
           </div>
 
-          <BarChart />
+          {/* <BarChart /> */}
+          <Page2 />
         </CardContent>
         <CardContent className="flex justify-between gap-4">
           <section>
             <p>Transaction history</p>
             <p className="text-sm text-gray-400">
-              You made 5 transactions this month.
+              Your 5 most recent transactions.
             </p>
           </section>
           <Events />
