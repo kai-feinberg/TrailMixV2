@@ -66,8 +66,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Balance",
     cell: ({ row }: { row: any }) => {
       
-      const usdValue = row.original.balanceInUsd / ((10**(18-row.original.asset.decimals))**2 )
-      console.log("usdValue", usdValue)
+      const usdValue = row.original.balanceInUsd
+      // console.log("usdValue", usdValue)
       return (
         <div className="space-y-2" >
           <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.symbol}</p>
@@ -176,7 +176,9 @@ export default function ManagePage({ }: Props) {
   const [claimableStrats, setClaimableStrats] = useState<Strategy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+
   const ethPrice = useNativeCurrencyPrice();
+  // const ethPrice = ();
   let columns = getColumns(ethPrice);
 
   const { address: connectedAccount } = useAccount();

@@ -129,18 +129,31 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     }
   },
   // {
-  //   accessorKey: "percentProfit",
-  //   header: "Profit %",
-  //   cell: ({ row }) => {
-  //     return (
-  //       <div className="text-base">
-  //         <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>
-  //           {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}%
-  //         </p>
-  //       </div>
-  //     );
+  //     accessorKey: "percentProfit",
+  //     header: "Profit %",
+  //     cell: ({ row }: { row: any }) => {
+  
+  //       const exitPrice = row.original.exitPrice;
+  //       const entryPrice = row.original.weightedEntryPrice;
+  //       let percentProfit;
+  
+  //       if (exitPrice != 0) {
+  //         percentProfit = (exitPrice - entryPrice) / entryPrice
+  //       }
+  //       else{
+  //         percentProfit = (row.original.twapPrice - entryPrice) / entryPrice
+  //       }
+  //       console.log("pp", exitPrice, " ",entryPrice)
+  
+  //       return (
+  //         <div className="text-base">
+  //           <p style={{ color: Number(percentProfit) > 0 ? 'green' : 'red' }}>
+  //             {Number(percentProfit) > 0 ? `+${percentProfit.toString().substring(0, 4)}` : percentProfit.toString().substring(0, 5)}%
+  //           </p>
+  //         </div>
+  //       );
+  //     },
   //   },
-  // },
  
   {
     accessorKey: "actions",

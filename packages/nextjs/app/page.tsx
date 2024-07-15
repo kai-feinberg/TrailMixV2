@@ -66,6 +66,7 @@ export default function Home() {
   const numClaims = claimableStrategies.length;
   claimableStrategies.forEach((strategy) => {
     claimBalance += Number(strategy.stablecoinBalanceInUsd);
+    profit += Number(strategy.profitInUsd)
   })
 
 
@@ -92,7 +93,7 @@ export default function Home() {
     {
       label: "Current profit",
       amount: `$${profit.toFixed(2)}`,
-      description: "+$201 since last month",
+      description: "+20% since last month",
       icon: TrendingUp
     }
   ];

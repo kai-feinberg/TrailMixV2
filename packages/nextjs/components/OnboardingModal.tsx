@@ -40,7 +40,7 @@ const OnboardingModal = () => {
     return (
         <Dialog open={page !== 0 && page < 4} onOpenChange={(open) => !open && setPage(0)}>
             <DialogTrigger asChild>
-                <Button onClick={() => setPage(1)} variant="outline" className="rounded-xl">tutorial</Button>
+                <Button onClick={() => setPage(1)} variant="default" className="rounded-xl bg-white">tutorial</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[700px] bg-white">
                 <DialogHeader>

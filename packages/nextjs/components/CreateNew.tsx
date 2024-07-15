@@ -65,9 +65,7 @@ export function CreateNew() {
     label: `${details.name} ($${details.symbol})`, //label is displayed on front end in dropdown
   })) : [];
 
-  console.log(tokenOptions)
 
-  let ta;
   React.useEffect(() => {
     console.log(tokenAddress);
     if (tokenAddress ==="0x68f180fcce6836688e9084f035309e29bf0a2095"){
