@@ -196,7 +196,7 @@ export default function ManagePage({ }: Props) {
     } else {
       const active = strategies.filter(
         (strategy) =>
-          // strategy.contractState === "Uninitialized" || hiding uninitilized strategies 
+          strategy.contractState === "Uninitialized" || 
           strategy.contractState === "Active"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
