@@ -5,7 +5,7 @@ import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { cn } from "@/lib/utils";
 import SideNavbar from "~~/components/SideNavbar";
-import { WagmiConfig } from "wagmi";
+import StrategyUpdater from "~~/components/StrategyUpdater";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -45,22 +45,24 @@ export const metadata: Metadata = {
   },
 };
 
+
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning lang="en">
       <ThemeProvider enableSystem>
         <ScaffoldEthAppWithProviders>
-            
-            <body className={cn(
-              "w-full flex bg-gradient-to-b from-orange-100 to-orange-200 text-black",
+
+          <body className={cn(
+            "w-full flex bg-gradient-to-b from-orange-100 to-orange-200 text-black",
+          )}>
+            <SideNavbar />
+            <div className={cn(
+              " w-full flex flex-col",
             )}>
-              <SideNavbar />
-              <div className={cn(
-                " w-full flex flex-col",
-              )}>
-                <div className="p-8 w-full" >{children}</div>
-              </div>
-            </body>
+            <StrategyUpdater/>
+              <div className="p-8 w-full" >{children}</div>
+            </div>
+          </body>
         </ScaffoldEthAppWithProviders>
       </ThemeProvider>
     </html>

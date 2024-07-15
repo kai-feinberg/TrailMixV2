@@ -53,7 +53,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${(row.original.twapPrice * price / (10 ** 18)).toFixed(5)} USD</p>
+              <p className="">${(row.original.twapPrice * price / (10 ** 18 * 10**(18-row.original.asset.decimals))).toFixed(5)} USD</p>
             </div>
           </div>
           {/* divide by decimals of paired asset on the network */}
@@ -65,21 +65,15 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "erc20Balance",
     header: "Balance",
     cell: ({ row }: { row: any }) => {
-
-      const ercBalance = row.getValue("erc20Balance") as number;
-      const assetDecimals = 10 ** row.original.asset.decimals;
-      const twapPrice = Number(row.original.twapPrice);
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
-
-      const usdValue = ((ercBalance) * price * (twapPrice)) / (assetDecimals ** 2);
       
-      // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
+      const usdValue = row.original.balanceInUsd
+      // console.log("usdValue", usdValue)
       return (
         <div className="space-y-2" >
           <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.symbol}</p>
           <p className="text-sm text-gray-500">
             {/* {(((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : (((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)} */}
-            {usdValue < 0.01 ? "<$0.01" : usdValue.toFixed(2)} USD
+            {usdValue < 0.01 ? "<$0.01" : Number(usdValue).toFixed(2)} USD
           </p>
         </div>
       );
@@ -103,7 +97,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       const tslThreshold = Number(row.original.tslThreshold);
       const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
       return (
-        <p className="">${(tslThreshold * price / (10 ** 18)).toFixed(5)} USD</p>
+        <p className="">${(tslThreshold * price / (10 ** 18 * 10**(18-row.original.asset.decimals))).toFixed(5)} USD</p>
       );
     },
   },
@@ -111,19 +105,16 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "profit",
     header: "Profit",
     cell: ({ row }: { row: any }) => {
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
-
-      const divisor = 10 ** row.original.asset.decimals;
-      const adjustedProfit = Number(row.original.profit)*price / divisor;
+      
+      const adjustedProfit = row.original.profitInUsd
 
       let displayProfit;
       if (Math.abs(adjustedProfit) < 0.01) {
         displayProfit = "0.01";
       } else {
-        displayProfit = adjustedProfit.toFixed(2); // Format to 2 decimal places
+        displayProfit = Number(adjustedProfit).toFixed(2); // Format to 2 decimal places
       }
 
-      // console.log("profit", row.original.profit, "adjusted profit", adjustedProfit)
 
       return (
         <div className="text-base">
@@ -179,85 +170,15 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 ];
 
 
-
-// export default function ManagePage({ }: Props) {
-//   // const [strategies, setStrategies] = useState<Strategy[]>([]);
-//   const { strategies, setStrategies } = useGlobalState();
-//   const [activeStrats, setActiveStrats] = useState<Strategy[]>([])
-
-//   const ethPrice = useNativeCurrencyPrice();
-//   let columns = getColumns(ethPrice);
-
-
-//   const { address: connectedAccount } = useAccount();
-//   const { data: userContracts } = useScaffoldContractRead({
-//     contractName: "TrailMixManager",
-//     functionName: "getUserContracts",
-//     args: [connectedAccount],
-//   });
-//   // console.log("user contracts", userContracts)
-
-//   let claimableStrategies = strategies.filter(strategy => strategy.contractState === 'Claimable');
-
-//   let activeStrategies = strategies.filter(strategy => strategy.contractState === 'Uninitialized' || strategy.contractState === 'Active');
-
-//   useEffect(() => {
-//     const active = strategies.filter(
-//       (strategy) =>
-//         strategy.contractState === "Uninitialized" ||
-//         strategy.contractState === "Active"
-//     );
-//     setActiveStrats(active);
-//   }, [strategies]);
-  
-
-
-//   const updateStrategyData = (strategy: Strategy) => {
-//     const existingStrategyIndex = strategies.findIndex(s => s.contractAddress === strategy.contractAddress);
-//     if (existingStrategyIndex !== -1) {
-//       const updatedStrategies = [...strategies];
-//       updatedStrategies[existingStrategyIndex] = strategy;
-//       setStrategies(updatedStrategies);
-
-//     } else {
-//       setStrategies([...strategies, strategy]);
-//     }
-//   }
-
-//   // console.log("claimable strats:", claimableStrategies);
-//   // console.log("active strats: ", activeStrategies);
-
-//   if (!connectedAccount) {
-//     console.log("no connected account");
-//     activeStrategies = exampleActiveStrategies;
-//     claimableStrategies = exampleClaimableStrategies;
-//   }
-
-//   return (
-//     <div className="flex flex-col gap-4 w-full px-4 ">
-
-//       {userContracts?.map((address, index) => (
-//         <StrategyDataUpdater
-//           key={address}
-//           contractAddress={address}
-//           onDataFetched={updateStrategyData}
-//         />
-//       ))}
-
-//       <PageTitle title={connectedAccount && "Your Strategies" || "Example Strategies"} />
-//       <DataTable columns={columns} data={activeStrats} />
-//       <ClaimsTable claimableStrategies={claimableStrategies} />
-//     </div>
-//   );
-// }
-
 export default function ManagePage({ }: Props) {
   const { strategies, setStrategies } = useGlobalState();
   const [activeStrats, setActiveStrats] = useState<Strategy[]>([]);
   const [claimableStrats, setClaimableStrats] = useState<Strategy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+
   const ethPrice = useNativeCurrencyPrice();
+  // const ethPrice = ();
   let columns = getColumns(ethPrice);
 
   const { address: connectedAccount } = useAccount();
@@ -275,7 +196,7 @@ export default function ManagePage({ }: Props) {
     } else {
       const active = strategies.filter(
         (strategy) =>
-          // strategy.contractState === "Uninitialized" || hiding uninitilized strategies 
+          strategy.contractState === "Uninitialized" || 
           strategy.contractState === "Active"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
@@ -286,37 +207,9 @@ export default function ManagePage({ }: Props) {
     }
   }, [connectedAccount, strategies]);
 
-const updateStrategyData = (strategy: Strategy) => {
-  setStrategies((prevStrategies: Strategy[] | undefined) => {
-    // Ensure prevStrategies is an array
-    const currentStrategies = Array.isArray(prevStrategies) ? prevStrategies : [];
-
-    const existingStrategyIndex = currentStrategies.findIndex(
-      (s) => s.contractAddress === strategy.contractAddress
-    );
-
-    if (existingStrategyIndex !== -1) {
-      // Update existing strategy
-      return currentStrategies.map((s, index) => 
-        index === existingStrategyIndex ? strategy : s
-      );
-    } else {
-      // Add new strategy
-      return [...currentStrategies, strategy];
-    }
-  });
-};
-
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
-      {userContracts?.map((address) => (
-        <StrategyDataUpdater
-          key={address}
-          contractAddress={address}
-          onDataFetched={updateStrategyData}
-        />
-      ))}
-
+ 
       <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
       
       {isLoading ? (

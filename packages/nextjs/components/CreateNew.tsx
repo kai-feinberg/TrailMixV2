@@ -67,9 +67,13 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
-    // console.log(tokenAddress);
-    // console.log(tokens[tokenAddress]?.pool)
-    if (tokenAddress && tokens[tokenAddress]?.pool) {
+    console.log(tokenAddress);
+    if (tokenAddress ==="0x68f180fcce6836688e9084f035309e29bf0a2095"){
+      setPoolAddress(tokens["0x68f180fcCe6836688e9084f035309E29Bf0A2095"].pool);
+      setPoolFee(tokens["0x68f180fcCe6836688e9084f035309E29Bf0A2095"].poolFee);
+      setPairAddress(tokens["0x68f180fcCe6836688e9084f035309E29Bf0A2095"].pooledAgainst);
+      
+    } else if (tokenAddress && tokens[tokenAddress]?.pool) {
       setPoolAddress(tokens[tokenAddress].pool);
       setPoolFee(tokens[tokenAddress].poolFee);
       setPairAddress(tokens[tokenAddress].pooledAgainst);

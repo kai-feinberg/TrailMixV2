@@ -12,10 +12,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { ArrowDownFromLineIcon } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {useCallback} from 'react'
-import Portal from "./Portal";
 
 
 const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
@@ -35,7 +34,7 @@ const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
     return (
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-xl"><ArrowDownFromLineIcon className="h-4 w-4" /></Button>
+                    <Button variant="outline" size="icon" className="rounded-xl"><Download className="h-4 w-4" /></Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] bg-white">
                     <DialogHeader>
