@@ -5,6 +5,7 @@ import { useContractRead } from "wagmi";
 import { useTargetNetwork } from "./useTargetNetwork";
 import strategyABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
+import { useNativeCurrencyPrice } from "./useNativeCurrencyPrice";
 
 const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
@@ -92,10 +93,11 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
   })
 
   const { targetNetwork } = useTargetNetwork();
+  const ethPrice = useNativeCurrencyPrice();
 
   useEffect(() => {
     
-    if (!isLoadingWeightedEntryPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
       try {
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
@@ -105,10 +107,18 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         const tokenData = (tokenList as TokenList)[targetNetwork.id][erc20TokenAddress?.toString().toLowerCase() ?? ''];
         const stableAssetData = (tokenList as TokenList)[targetNetwork.id][stablecoinAddress?.toString().toLowerCase() ?? '']
         
+        const assetDecimals = 10**tokenData.decimals;
+        const price = (stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? (10**12) : ethPrice;
+        
+        const usdValue = (Number(erc20Balance) * (price) * Number(twapPrice)) / ((assetDecimals ** 2)* ((10**(18-tokenData.decimals))**2 ) );
+        const profitInUsd = Number(profit)*price / (assetDecimals * 10**(18-tokenData.decimals)**2)
+
+        const stableBalUsd = (Number(stablecoinBalance) * price)/ assetDecimals
         const strategy: Strategy = {
             asset: tokenData as TokenData,
             contractAddress: contractAddress.toString(),
             erc20Balance: erc20Balance?.toString() ?? '',
+            balanceInUsd: usdValue?.toString() ?? '',
             erc20Asset: erc20TokenAddress?.toString() ?? '',
             twapPrice: twapPrice?.toString() ?? '',
             trailAmount: trailAmount?.toString() ?? '',
@@ -121,8 +131,10 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             weightedEntryPrice: weightedEntryPrice?.toString() ?? '',
             exitPrice: exitPrice?.toString() ?? '',
             percentProfit: percentProfit.toString(),
+            profitInUsd: profitInUsd.toString() ?? '',
             contractState: contractState?.toString() ?? '',
             stablecoinBalance: stablecoinBalance?.toString() ?? '',
+            stablecoinBalanceInUsd: stableBalUsd?.toString() ?? '',
             stableAsset: stableAssetData as TokenData
         }
         

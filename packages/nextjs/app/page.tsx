@@ -27,34 +27,8 @@ import stratABI from "~~/contracts/strategyABI.json";
 import OnboardingModal from "~~/components/OnboardingModal";
 import { Strategy } from "~~/types/customTypes";
 const strategyABI = stratABI.abi;
-
-
-const cardData: CardProps[] = [
-  {
-    label: "Current Balance",
-    amount: "$45,231.89",
-    description: "+20.1% from last month",
-    icon: DollarSign
-  },
-  {
-    label: "Active strategies",
-    amount: "12",
-    description: "across 5 assets",
-    icon: Users
-  },
-  {
-    label: "Pending claims",
-    amount: "$1,415.26",
-    description: "4 closed strategies",
-    icon: CreditCard
-  },
-  {
-    label: "All time profit",
-    amount: "$573",
-    description: "+$201 since last month",
-    icon: TrendingUp
-  }
-];
+import { useNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
+import Page2 from "~~/public/page2";
 
 
 
@@ -62,6 +36,8 @@ export default function Home() {
 
   const { address: connectedAddress } = useAccount();
   const [ens, setEns] = useState<string | null>();
+  const ethPrice = useNativeCurrencyPrice();
+
 
   const { data: fetchedEns } = useEnsName({
     address: connectedAddress,
@@ -73,14 +49,55 @@ export default function Home() {
     setEns(fetchedEns);
   }, [fetchedEns]);
 
-  // const { data: userContracts, isLoading: isLoadingContracts } = useScaffoldContractRead({
-  //   contractName: "TrailMixManager",
-  //   functionName: "getUserContracts",
-  //   args: [connectedAddress],
-  // });
+  const { strategies, setStrategies } = useGlobalState();
+  const activeStrategies = strategies.filter((strategy) => strategy.contractState === "Active");
 
-  // const {strategies, setStrategies} = useGlobalState();
-  
+  const numberStrats = activeStrategies.length;
+  let usdBalance = 0;
+  let profit = 0;
+
+  activeStrategies.forEach((strategy) => {
+    usdBalance += Number(strategy.balanceInUsd);
+    profit += Number(strategy.profitInUsd);
+  });
+
+  const claimableStrategies = strategies.filter((strategy) => strategy.contractState === "Claimable");
+  let claimBalance = 0
+  const numClaims = claimableStrategies.length;
+  claimableStrategies.forEach((strategy) => {
+    claimBalance += Number(strategy.stablecoinBalanceInUsd);
+    profit += Number(strategy.profitInUsd)
+  })
+
+
+
+  const cardData: CardProps[] = [
+    {
+      label: "Current Balance",
+      amount: `$${usdBalance.toFixed(2)}`,
+      description: `Up $${profit.toFixed(2)} from initial invesment`,
+      icon: DollarSign
+    },
+    {
+      label: "Active strategies",
+      amount: String(numberStrats),
+      description: "across 5 assets",
+      icon: Users
+    },
+    {
+      label: "Pending claims",
+      amount: `$${claimBalance.toFixed(2)}`,
+      description: `${numClaims} closed strategies`,
+      icon: CreditCard
+    },
+    {
+      label: "Current profit",
+      amount: `$${profit.toFixed(2)}`,
+      description: "+20% since last month",
+      icon: TrendingUp
+    }
+  ];
+
   const pageTitle = ens ? `Welcome ${ens}` : connectedAddress ? `Welcome ${connectedAddress?.slice(0, 6)}...${connectedAddress?.slice(-4)}` : "Welcome example_user";
   return (
     <div className="flex flex-col gap-5 w-full">
@@ -106,13 +123,14 @@ export default function Home() {
             <CreateNew />
           </div>
 
-          <BarChart />
+          {/* <BarChart /> */}
+          <Page2 />
         </CardContent>
         <CardContent className="flex justify-between gap-4">
           <section>
             <p>Transaction history</p>
             <p className="text-sm text-gray-400">
-              You made 5 transactions this month.
+              Your 5 most recent transactions.
             </p>
           </section>
           <Events />

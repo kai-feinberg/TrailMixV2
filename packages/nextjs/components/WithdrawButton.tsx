@@ -17,7 +17,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { ArrowUpFromLineIcon } from "lucide-react";
+import { Upload } from "lucide-react";
 
 
 import { Button } from "@/components/ui/button";
@@ -98,7 +98,7 @@ const WithdrawButton = ({ contractAddress, buttonContent }: { contractAddress: s
 
     return (
         <Button variant="outline" size="icon" className="rounded-xl" onClick={() => withdraw()}>
-            {buttonContent ? buttonContent : <ArrowUpFromLineIcon className="h-4 w-4" />}
+            {buttonContent ? buttonContent : <Upload className="h-4 w-4" />}
         </Button>
     );
 };

@@ -53,10 +53,11 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Balance",
     cell: ({ row }) => {
 
-      const ercBalance = row.getValue("stablecoinBalance") as number;
-      const assetDecimals = 10 ** row.original.stableAsset.decimals;
+      // const ercBalance = row.getValue("stablecoinBalance") as number;
+      // const assetDecimals = 10 ** row.original.stableAsset.decimals;
 
-      const usdValue = ((ercBalance) * ethPrice)/(assetDecimals);
+      // const usdValue = ((ercBalance) * ethPrice)/(assetDecimals);
+      const usdValue = Number(row.original.stablecoinBalanceInUsd)
       // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
@@ -107,8 +108,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Profit",
     cell: ({ row }) => {
 
-      const divisor = 10 ** 6 * 10 ** row.original.asset.decimals;
-      const adjustedProfit = Number(row.original.profit) / divisor;
+      const adjustedProfit = Number(row.original.profitInUsd)
 
       let displayProfit;
       if (Math.abs(adjustedProfit) < 0.01) {
@@ -129,18 +129,31 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     }
   },
   // {
-  //   accessorKey: "percentProfit",
-  //   header: "Profit %",
-  //   cell: ({ row }) => {
-  //     return (
-  //       <div className="text-base">
-  //         <p style={{ color: Number(row.original.percentProfit) > 0 ? 'green' : 'red' }}>
-  //           {Number(row.original.percentProfit) > 0 ? `+${row.original.percentProfit.substring(0, 4)}` : row.original.percentProfit.substring(0, 5)}%
-  //         </p>
-  //       </div>
-  //     );
+  //     accessorKey: "percentProfit",
+  //     header: "Profit %",
+  //     cell: ({ row }: { row: any }) => {
+  
+  //       const exitPrice = row.original.exitPrice;
+  //       const entryPrice = row.original.weightedEntryPrice;
+  //       let percentProfit;
+  
+  //       if (exitPrice != 0) {
+  //         percentProfit = (exitPrice - entryPrice) / entryPrice
+  //       }
+  //       else{
+  //         percentProfit = (row.original.twapPrice - entryPrice) / entryPrice
+  //       }
+  //       console.log("pp", exitPrice, " ",entryPrice)
+  
+  //       return (
+  //         <div className="text-base">
+  //           <p style={{ color: Number(percentProfit) > 0 ? 'green' : 'red' }}>
+  //             {Number(percentProfit) > 0 ? `+${percentProfit.toString().substring(0, 4)}` : percentProfit.toString().substring(0, 5)}%
+  //           </p>
+  //         </div>
+  //       );
+  //     },
   //   },
-  // },
  
   {
     accessorKey: "actions",

@@ -14,6 +14,7 @@ export type Strategy = {
     contractAddress: string;
     erc20Asset: string;
     erc20Balance: string;
+    balanceInUsd: string; 
     twapPrice: string;
     trailAmount: string;
     uniswapPool: string;
@@ -22,7 +23,9 @@ export type Strategy = {
     tslThreshold: string;
     stablecoinAddress: string;
     stablecoinBalance: string;
-    profit: string;
+    stablecoinBalanceInUsd: string;
+    profit: string; 
+    profitInUsd: string; //profit in usd 
     weightedEntryPrice: string;
     exitPrice: string,
     percentProfit: string;

@@ -11,6 +11,7 @@
         },
         "contractAddress": "0x7597c22d98733A6A180fBA0Cd47E8a76d8581937",
         "erc20Balance": "0",
+        "balanceInUsd": "7.89",
         "erc20Asset": "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
         "twapPrice": "2497413409239",
         "trailAmount": "1",
@@ -23,8 +24,11 @@
         "weightedEntryPrice": "0",
         "exitPrice": "0",
         "percentProfit": "-3.50685487296772",
+        "profitInUsd": "5.32",
         "contractState": "Claimable",
         "stablecoinBalance": "7812986778019",
+        "stablecoinBalanceInUsd": "3.21",
+
         "stableAsset": {
             "name": "Wrapped Eth",
             "symbol": "WETH",
