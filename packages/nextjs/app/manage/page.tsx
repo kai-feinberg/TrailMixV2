@@ -35,6 +35,7 @@ type Props = {};
 import { useAccount } from "wagmi";
 import { useGlobalState } from "~~/services/store/store";
 import useTokenData from "~~/hooks/scaffold-eth/useTokenData";
+import { StrategyCard } from "~~/components/StrategyCard";
 
 
 const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
@@ -214,10 +215,11 @@ export default function ManagePage({ }: Props) {
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
-
-      {activeStrats.map((strategy) => (
-        <PriceChart key={strategy.contractAddress} priceData={strategy.priceData} />
-      ))}
+      <div className="flex flex-col items-center justify-center gap-4">
+        {activeStrats.map((strategy) => (
+          <StrategyCard strategy={strategy} />
+        ))}
+      </div>
 
       <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
 

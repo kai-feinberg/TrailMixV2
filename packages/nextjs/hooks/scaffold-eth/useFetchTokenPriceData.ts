@@ -23,7 +23,6 @@ const useFetchTokenPriceData = (tokenId: string, startingTimestamp: string, curr
         };
 
         const response = await axios.request(options)
-        // const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&from=${startingTimestamp}&to=${currentTimestamp}&precision=5`);
         setTokenData(response.data.prices);
       } catch (err) {
         setError('Failed to fetch token data');

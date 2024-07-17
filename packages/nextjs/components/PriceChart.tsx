@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis, YAxis, ResponsiveContainer } from "recharts"
 
 import {
   Card,
@@ -45,25 +45,22 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function PriceChart({ priceData }: { priceData: [number, number][] }) {
-    // Format the data
+  // Format the data
   if (!priceData) {
-      return <div>Loading...</div>; // or handle loading/error state appropriately
+    return <div>Loading...</div>; // or handle loading/error state appropriately
   }
 
   const chartData = priceData.map(([timestamp, price]: [number, number]) => ({
     timestamp: new Date(timestamp).toLocaleDateString(),
     price,
   }));
-  
-  console.log("chart data", chartData)
+
+  // console.log("chart data", chartData)
 
   return (
-    <Card style={{ backgroundColor: 'white' }}>
-      <CardHeader>
-        <CardTitle>Line Chart - Multiple</CardTitle>
-        <CardDescription>$SYMBOL Price</CardDescription>
-      </CardHeader>
-      <CardContent>
+
+    <div className="aspect-[21/9] mb-2 w-full">
+      <ResponsiveContainer width="100%" height="100%">
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
@@ -80,12 +77,14 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 4)}
+              tick={true}
             />
-             <YAxis
+            <YAxis
               domain={['dataMin', 'dataMax']}
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
+              tick={false}
+              width={0}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Line
@@ -96,27 +95,16 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
               dot={false}
             />
             {/* <Line
-              dataKey="mobile"
-              type="monotone"
-              stroke="red"
-              strokeWidth={2}
-              dot={false}
-            /> */}
+                  dataKey="mobile"
+                  type="monotone"
+                  stroke="red"
+                  strokeWidth={2}
+                  dot={false}
+                /> */}
           </LineChart>
         </ChartContainer>
-      </CardContent>
-      {/* <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              Showing total visitors for the last 6 months
-            </div>
-          </div>
-        </div>
-      </CardFooter> */}
-    </Card>
+      </ResponsiveContainer>
+    </div>
+
   )
 }
