@@ -26,13 +26,15 @@ import strategyABI from "~~/contracts/strategyABI.json";
 import ClaimsTable from "~~/components/ClaimsTable";
 import exampleActiveStrategies from "~~/components/assets/exampleActiveStrategies.json";
 import exampleClaimableStrategies from "~~/components/assets/exampleClaimableStrategies.json";
-
+import useFetchTokenPrice from "~~/hooks/scaffold-eth/useFetchTokenPriceData";
+import { PriceChart } from "~~/components/PriceChart"
 
 const stratABI = strategyABI.abi;
 
 type Props = {};
 import { useAccount } from "wagmi";
 import { useGlobalState } from "~~/services/store/store";
+import useTokenData from "~~/hooks/scaffold-eth/useTokenData";
 
 
 const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
@@ -40,7 +42,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "asset",
     header: "Asset",
     cell: ({ row }: { row: any }) => {
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
+      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
 
       return (
         <div>
@@ -53,7 +55,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${(row.original.twapPrice * price / (10 ** 18 * 10**(18-row.original.asset.decimals))).toFixed(5)} USD</p>
+              <p className="">${(row.original.twapPrice * price / (10 ** 18 * 10 ** (18 - row.original.asset.decimals))).toFixed(5)} USD</p>
             </div>
           </div>
           {/* divide by decimals of paired asset on the network */}
@@ -65,7 +67,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "erc20Balance",
     header: "Balance",
     cell: ({ row }: { row: any }) => {
-      
+
       const usdValue = row.original.balanceInUsd
       // console.log("usdValue", usdValue)
       return (
@@ -95,9 +97,9 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Sell Threshold",
     cell: ({ row }: { row: any }) => {
       const tslThreshold = Number(row.original.tslThreshold);
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
+      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
       return (
-        <p className="">${(tslThreshold * price / (10 ** 18 * 10**(18-row.original.asset.decimals))).toFixed(5)} USD</p>
+        <p className="">${(tslThreshold * price / (10 ** 18 * 10 ** (18 - row.original.asset.decimals))).toFixed(5)} USD</p>
       );
     },
   },
@@ -105,7 +107,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "profit",
     header: "Profit",
     cell: ({ row }: { row: any }) => {
-      
+
       const adjustedProfit = row.original.profitInUsd
 
       let displayProfit;
@@ -181,6 +183,8 @@ export default function ManagePage({ }: Props) {
   // const ethPrice = ();
   let columns = getColumns(ethPrice);
 
+  // const { tokenData: td, loading: ld, error: er } = useFetchTokenPrice("optimistic-ethereum", "1711929600", "1721225041")
+
   const { address: connectedAccount } = useAccount();
   const { data: userContracts } = useScaffoldContractRead({
     contractName: "TrailMixManager",
@@ -196,22 +200,27 @@ export default function ManagePage({ }: Props) {
     } else {
       const active = strategies.filter(
         (strategy) =>
-          strategy.contractState === "Uninitialized" || 
+          strategy.contractState === "Uninitialized" ||
           strategy.contractState === "Active"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
-      
+
       setActiveStrats(active);
       setClaimableStrats(claimable);
       setIsLoading(false);
     }
   }, [connectedAccount, strategies]);
 
+
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
- 
+
+      {activeStrats.map((strategy) => (
+        <PriceChart key={strategy.contractAddress} priceData={strategy.priceData} />
+      ))}
+
       <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
-      
+
       {isLoading ? (
         <p>Loading strategies...</p>
       ) : (

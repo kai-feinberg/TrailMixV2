@@ -6,6 +6,7 @@ export interface TokenData {
     pool: string;
     poolFee: string;
     pooledAgainst: string;
+    coinGeckoId: string;
   }
   
   
@@ -31,6 +32,7 @@ export type Strategy = {
     percentProfit: string;
     contractState: string;
     stableAsset: TokenData;
+    priceData: [number, number][];
     
   };  
 

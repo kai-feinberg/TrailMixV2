@@ -38,6 +38,8 @@
             "poolFee": "",
             "pooledAgainst": "USDC"
 
-        }
+        },
+        "priceData" : [[0,0]]
+
     }
 ]

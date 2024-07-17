@@ -2873,6 +2873,7 @@ __metadata:
     "@uniswap/sdk-core": ~4.0.1
     "@uniswap/v2-sdk": ~3.0.1
     autoprefixer: ~10.4.12
+    axios: ^1.7.2
     blo: ~1.0.1
     class-variance-authority: ^0.7.0
     clsx: ^2.1.1
@@ -2884,7 +2885,7 @@ __metadata:
     eslint-config-prettier: ~8.5.0
     eslint-plugin-prettier: ~4.2.1
     ethers: ^6.13.0
-    lucide-react: ^0.399.0
+    lucide-react: ^0.408.0
     next: ^14.2.4
     next-themes: ~0.2.1
     nprogress: ~0.2.0
@@ -2895,7 +2896,7 @@ __metadata:
     react-copy-to-clipboard: ~5.1.0
     react-dom: ^18.3.1
     react-hot-toast: ~2.4.0
-    recharts: ^2.10.3
+    recharts: ^2.12.7
     tailwind-merge: ^2.3.0
     tailwindcss: ~3.3.3
     tailwindcss-animate: ^1.0.7
@@ -5547,7 +5548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.5.1":
+"axios@npm:^1.5.1, axios@npm:^1.7.2":
   version: 1.7.2
   resolution: "axios@npm:1.7.2"
   dependencies:
@@ -10887,12 +10888,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.399.0":
-  version: 0.399.0
-  resolution: "lucide-react@npm:0.399.0"
+"lucide-react@npm:^0.408.0":
+  version: 0.408.0
+  resolution: "lucide-react@npm:0.408.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 017a2c624e2fd5f29777e18d2607b3c2f24ebfb1600b6978392bb03a51b48eff44888a966b6ddf38bf204aaf10f1ef50b82a1f0a1878996e38cd35f0b934abb6
+  checksum: 80318ea5b49057db3761e5d8909336a14a8c84ebe205ef68c20100013b23aadcdee628b1175c630aec14c20b85320fb502723f6d4a9b46a6a9659451ed5fce48
   languageName: node
   linkType: hard
 
@@ -12961,7 +12962,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recharts@npm:^2.10.3":
+"recharts@npm:^2.12.7":
   version: 2.12.7
   resolution: "recharts@npm:2.12.7"
   dependencies:

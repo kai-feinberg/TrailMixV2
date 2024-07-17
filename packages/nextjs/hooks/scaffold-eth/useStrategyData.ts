@@ -6,6 +6,7 @@ import { useTargetNetwork } from "./useTargetNetwork";
 import strategyABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
 import { useNativeCurrencyPrice } from "./useNativeCurrencyPrice";
+import useFetchTokenPrice from "./useFetchTokenPriceData";
 
 const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
@@ -95,9 +96,16 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
   const { targetNetwork } = useTargetNetwork();
   const ethPrice = useNativeCurrencyPrice();
 
+
+  const coinGeckoId = (tokenList as TokenList)[targetNetwork.id][erc20TokenAddress?.toString().toLowerCase() ?? ''].coinGeckoId
+  const {tokenData: priceData, loading: isLoadingPriceData} = useFetchTokenPrice(coinGeckoId, "1720627777", Date.now().toString())
+
+
   useEffect(() => {
     
-    if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&& !isLoadingDeposits && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold) {
+    if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&& !isLoadingDeposits
+       && !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
+        && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold && !isLoadingPriceData ) {
       try {
         
         // const percentProfit = Number(totalCost) === 0 ? 0 : (Number(computedProfit) / Number(totalCost)) * 100;
@@ -135,11 +143,13 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             contractState: contractState?.toString() ?? '',
             stablecoinBalance: stablecoinBalance?.toString() ?? '',
             stablecoinBalanceInUsd: stableBalUsd?.toString() ?? '',
-            stableAsset: stableAssetData as TokenData
-        }
+            stableAsset: stableAssetData as TokenData,
+            priceData: (priceData) as [number, number][]
+          }
         
         // console.log("strategy: ", strategy);
         // console.log("profit", profit)
+        // console.log("price data", priceData)
         onDataFetched(strategy);
         }
         catch (e) {
