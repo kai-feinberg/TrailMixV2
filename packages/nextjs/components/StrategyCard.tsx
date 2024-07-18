@@ -38,7 +38,7 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
             </Badge>
           </div>
         </div>
-        <div className="h-4/5 pr-5 pt-5">
+        <div className="pr-5 pt-5">
           <PriceChart priceData={strategy.priceData} />
         </div>
         <div className="col-span-2 flex justify-end gap-2">

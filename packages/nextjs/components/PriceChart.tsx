@@ -59,7 +59,7 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
 
   return (
 
-    <div className="aspect-[21/9] mb-2 w-full">
+    <div className="aspect-[16/9] mb-2 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <ChartContainer config={chartConfig}>
           <LineChart
@@ -77,7 +77,7 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => value.slice(0, 4)}
-              tick={true}
+              tick={false}
             />
             <YAxis
               domain={['dataMin', 'dataMax']}
@@ -90,7 +90,7 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
             <Line
               dataKey="price"
               type="monotone"
-              stroke="green"
+              stroke="gold"
               strokeWidth={2}
               dot={false}
             />
