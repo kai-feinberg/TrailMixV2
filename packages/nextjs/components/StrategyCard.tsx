@@ -39,9 +39,10 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
           </div>
         </div>
         <div className="pr-5 pt-5">
-          <PriceChart priceData={strategy.priceData} />
+          {/* <PriceChart priceData={strategy.priceData} /> */}
+          <PriceChart priceData={strategy.updateData} />
         </div>
-        <div className="col-span-2 flex justify-end gap-2">
+        <div className="col-span-2 flex justify-end gap-2 pr-4">
           <Button variant="outline" className="text-base">Deposit</Button>
           <Button variant="outline" className="text-base">Withdraw</Button>
         </div>

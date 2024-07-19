@@ -215,9 +215,9 @@ export default function ManagePage({ }: Props) {
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="flex flex-wrap justify-between gap-6">
         {activeStrats.map((strategy, index) => (
-          <div key={index} className="flex-1 min-w-[20%]">
+          <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
             <StrategyCard strategy={strategy} />
           </div>
         ))}

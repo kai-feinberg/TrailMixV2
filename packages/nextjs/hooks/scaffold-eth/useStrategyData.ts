@@ -107,12 +107,25 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     receiptData: true,
   });
 
+  const { data: thresholdUpdates, isLoading: isLoadingThresholdUpdates } = useScaffoldEventHistory({
+    contractName: 'TrailMixManager',
+    eventName: 'ThresholdUpdated',
+    fromBlock: 122731186n,
+    watch: false,
+    filters: { strategy: contractAddress },
+    blockData: true,
+    transactionData: true,
+    receiptData: true,
+  });
+
+  // console.log("tu: ", thresholdUpdates)
+
   useEffect(() => {
     
     if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&&
         !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
         && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold &&!isLoadingDeployEvent
-        &&deployEvent 
+        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates
       ) {
       try {
         
@@ -130,6 +143,13 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         const profitInUsd = Number(profit)*price / (assetDecimals * 10**(18-tokenData.decimals)**2)
 
         const stableBalUsd = (Number(stablecoinBalance) * price)/ assetDecimals
+
+        let thresholdUpdateData: [number, number][] = [];
+        if (thresholdUpdates.length >0){
+          thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)/10**(12)]);
+          thresholdUpdateData.push([Number(deployEvent[0].args.timestamp), Number(thresholdUpdates[0].args.oldThreshold)])
+        }
+        thresholdUpdateData.push([Number(Date.now), Number(tslThreshold)])
 
         const examplePriceData = [[
           1711930196348,
@@ -423,7 +443,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
           1712189472392,
           66103.92369277785
         ]]
-        
+
         const strategy: Strategy = {
             asset: tokenData as TokenData,
             dateCreated: deployEvent[0].args.timestamp?.toString() ?? '',
@@ -448,7 +468,10 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             stablecoinBalanceInUsd: stableBalUsd?.toString() ?? '',
             stableAsset: stableAssetData as TokenData,
             priceData: examplePriceData as [number, number][],
-            updateData: [[0,0]]
+            // updateData: [[0,0]]
+
+            updateData: thresholdUpdateData as [number, number][]
+          
           }
         
         // console.log("strategy: ", strategy);
@@ -462,7 +485,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     }
   }, [erc20TokenAddress, profit, exitPrice, weightedEntryPrice, contractState,
      erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, 
-     tslThreshold, deployEvent]);
+     tslThreshold, deployEvent, thresholdUpdates]);
 
   return;
 };

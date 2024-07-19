@@ -51,7 +51,7 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
   }
 
   const chartData = priceData.map(([timestamp, price]: [number, number]) => ({
-    timestamp: new Date(timestamp).toLocaleDateString(),
+    timestamp: new Date(timestamp * 1000).toLocaleDateString(),
     price,
   }));
 
@@ -90,7 +90,7 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
             <Line
               dataKey="price"
               type="monotone"
-              stroke="gold"
+              stroke="blue"
               strokeWidth={2}
               dot={false}
             />
