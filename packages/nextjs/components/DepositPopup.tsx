@@ -14,39 +14,37 @@ import {
 } from "@/components/ui/dialog";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {useCallback} from 'react'
+import { useCallback } from 'react'
 
-
-const DepositPopup = ({ contractAddress }: { contractAddress: string }) => {
+const DepositPopup = ({ contractAddress, text }: { contractAddress: string; text?: string }) => {
     const [open, setOpen] = React.useState(false);
-    
-    
+
     const handleSuccess = () => {
         setOpen(false);
     };
 
     const handleModalOpenChange = useCallback((open: boolean | ((prevState: boolean) => boolean)) => {
         setOpen(open);
-      }, []);
-      
-
+    }, []);
 
     return (
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-xl"><Download className="h-4 w-4" /></Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] bg-white">
-                    <DialogHeader>
-                        <DialogTitle>Deposit funds</DialogTitle>
-                        <DialogDescription>
-                            Add funds to existing strategy
-                        </DialogDescription>
-                    </DialogHeader>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" size={text ? "default" : "icon"} className="rounded-xl">
+                    {text ? text : <Download className="h-4 w-4" />}
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] bg-white">
+                <DialogHeader>
+                    <DialogTitle>Deposit funds</DialogTitle>
+                    <DialogDescription>
+                        Add funds to existing strategy
+                    </DialogDescription>
+                </DialogHeader>
 
-                    <DepositContent contractAddress={contractAddress} onSuccess={handleSuccess}/>
-                </DialogContent>
-            </Dialog>
+                <DepositContent contractAddress={contractAddress} onSuccess={handleSuccess} />
+            </DialogContent>
+        </Dialog>
     );
 };
 

@@ -36,6 +36,7 @@ import { useAccount } from "wagmi";
 import { useGlobalState } from "~~/services/store/store";
 import useTokenData from "~~/hooks/scaffold-eth/useTokenData";
 import { StrategyCard } from "~~/components/StrategyCard";
+import { CreateNew } from "~~/components/CreateNew";
 
 
 const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
@@ -215,7 +216,11 @@ export default function ManagePage({ }: Props) {
 
   return (
     <div className="flex flex-col gap-4 w-full px-4 ">
-      <div className="flex flex-wrap justify-between gap-6">
+      <div className="flex gap-4 items-center">
+        <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
+        <div className="bg-white rounded-xl"><CreateNew /></div>
+      </div>
+      <div className="flex flex-wrap justify-start gap-6">
         {activeStrats.map((strategy, index) => (
           <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
             <StrategyCard strategy={strategy} />
@@ -223,7 +228,6 @@ export default function ManagePage({ }: Props) {
         ))}
       </div>
 
-      <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
 
       {isLoading ? (
         <p>Loading strategies...</p>

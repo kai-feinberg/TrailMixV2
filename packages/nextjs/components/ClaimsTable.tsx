@@ -161,7 +161,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     cell: ({ row }) => {
       return (
         <div className="flex gap-2">
-          <WithdrawButton contractAddress={row.original.contractAddress} buttonContent={"claim!"}/>
+          <WithdrawButton contractAddress={row.original.contractAddress} text="claim!"/>
         </div>
       );
     },
