@@ -35,25 +35,37 @@ import {
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "PriceData",
     color: "hsl(var(--chart-1))",
   },
   mobile: {
-    label: "Mobile",
+    label: "UpdateData",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig
 
-export function PriceChart({ priceData }: { priceData: [number, number][] }) {
+export function PriceChart({ priceData, updateData }: { priceData: [number, number][] , updateData: [number, number][]}) {
   // Format the data
-  if (!priceData) {
+  if (!priceData || !updateData) {
     return <div>Loading...</div>; // or handle loading/error state appropriately
   }
 
-  const chartData = priceData.map(([timestamp, price]: [number, number]) => ({
-    timestamp: new Date(timestamp * 1000).toLocaleDateString(),
+  let chartData = priceData.map(([timestamp, price]: [number, number]) => ({
+    timestamp: new Date(timestamp).toLocaleDateString(),
     price,
   }));
+  let updateChartData = updateData.map(([timestamp, price]: [number, number]) => ({
+    timestamp: new Date(timestamp).toLocaleDateString(),
+    thresholdPrice: price/10**12,
+  }));
+
+    // Merge the data based on timestamps
+    const mergedData = chartData.map((data, index) => ({
+      ...data,
+      thresholdPrice: updateChartData[index]?.thresholdPrice || null,
+    }));
+
+
 
   // console.log("chart data", chartData)
 
@@ -64,7 +76,7 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={mergedData}
             margin={{
               left: 8,
               right: 12,
@@ -94,13 +106,13 @@ export function PriceChart({ priceData }: { priceData: [number, number][] }) {
               strokeWidth={2}
               dot={false}
             />
-            {/* <Line
-                  dataKey="mobile"
+            <Line
+                  dataKey="thresholdPrice"
                   type="monotone"
                   stroke="red"
                   strokeWidth={2}
                   dot={false}
-                /> */}
+            />
           </LineChart>
         </ChartContainer>
       </ResponsiveContainer>

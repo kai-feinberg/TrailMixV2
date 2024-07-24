@@ -6,6 +6,7 @@ import { useTargetNetwork } from "./useTargetNetwork";
 import strategyABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
 import { useNativeCurrencyPrice } from "./useNativeCurrencyPrice";
+import useFetchTokenPriceData from "./useFetchTokenPriceData";
 
 const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
@@ -94,8 +95,6 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
   //   }
   // }, [erc20TokenAddress])
 
-  // const {tokenData: priceData, loading: isLoadingPriceData} = useFetchTokenPrice("optimism", "1720627777", Date.now().toString())
-
   const { data: deployEvent, isLoading: isLoadingDeployEvent } = useScaffoldEventHistory({
     contractName: 'TrailMixManager',
     eventName: 'ContractDeployed',
@@ -117,15 +116,24 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     transactionData: true,
     receiptData: true,
   });
-
-  // console.log("tu: ", thresholdUpdates)
+  const {data: fundsDeposited, isLoading: isLoadingFundsDeposited}= useScaffoldEventHistory({
+    contractName: 'TrailMixManager',
+    eventName: 'FundsDeposited',
+    fromBlock: 122731186n,
+    watch: false,
+    filters: { strategy: contractAddress },
+    blockData: true,
+    transactionData: true,
+    receiptData: true,
+  });
+  
 
   useEffect(() => {
     
     if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&&
         !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
         && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold &&!isLoadingDeployEvent
-        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates
+        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited && fundsDeposited
       ) {
       try {
         
@@ -145,12 +153,14 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         const stableBalUsd = (Number(stablecoinBalance) * price)/ assetDecimals
 
         let thresholdUpdateData: [number, number][] = [];
-        if (thresholdUpdates.length >0){
-          thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)/10**(12)]);
-          thresholdUpdateData.push([Number(deployEvent[0].args.timestamp), Number(thresholdUpdates[0].args.oldThreshold)])
+        if (thresholdUpdates.length >0 && fundsDeposited.length >0){
+          thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)/price]);
         }
-        thresholdUpdateData.push([Number(Date.now), Number(tslThreshold)])
+        thresholdUpdateData.push([Number(Date.now()/1000), Number(tslThreshold)/price])
+        // thresholdUpdateData.push([Number(fundsDeposited[0].args.timestamp), Number(fundsDeposited[0].args.depositPrice)*(100-Number(trailAmount)/100)/10**12])
 
+        thresholdUpdateData.sort((a, b) => a[0] - b[0]);
+        console.log(thresholdUpdateData)
         const examplePriceData = [[
           1711930196348,
           71229.87655843626
@@ -474,7 +484,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
           
           }
         
-        // console.log("strategy: ", strategy);
+        console.log("strategy: ", strategy);
         // console.log("profit", profit)
         // console.log("price data", priceData)
         onDataFetched(strategy);
@@ -485,7 +495,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     }
   }, [erc20TokenAddress, profit, exitPrice, weightedEntryPrice, contractState,
      erc20Balance, stablecoinAddress, stablecoinBalance, trailAmount, uniswapPool, granularity, manager, 
-     tslThreshold, deployEvent, thresholdUpdates]);
+     tslThreshold, deployEvent, thresholdUpdates, fundsDeposited]);
 
   return;
 };

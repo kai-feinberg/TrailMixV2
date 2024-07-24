@@ -27,7 +27,7 @@ import ClaimsTable from "~~/components/ClaimsTable";
 import exampleActiveStrategies from "~~/components/assets/exampleActiveStrategies.json";
 import exampleClaimableStrategies from "~~/components/assets/exampleClaimableStrategies.json";
 import useFetchTokenPrice from "~~/hooks/scaffold-eth/useFetchTokenPriceData";
-import { PriceChart } from "~~/components/PriceChart"
+import { LayoutGrid, Sheet } from "lucide-react";
 
 const stratABI = strategyABI.abi;
 
@@ -179,6 +179,7 @@ export default function ManagePage({ }: Props) {
   const [activeStrats, setActiveStrats] = useState<Strategy[]>([]);
   const [claimableStrats, setClaimableStrats] = useState<Strategy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [cardView, setCardView] = useState(true);
 
 
   const ethPrice = useNativeCurrencyPrice();
@@ -219,17 +220,32 @@ export default function ManagePage({ }: Props) {
       <div className="flex gap-4 items-center">
         <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
         <div className="bg-white rounded-xl"><CreateNew /></div>
-      </div>
-      <div className="flex flex-wrap justify-start gap-6">
-        {activeStrats.map((strategy, index) => (
-          <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-            <StrategyCard strategy={strategy} />
+        <div className="flex flex-row space-x-2">
+          <div className="bg-white rounded-xl justify-center">
+            <Button onClick={() => setCardView(true)}>
+              <div className={`p-2 ${cardView === true ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
+                <LayoutGrid className="h-6 w-6" />
+              </div>
+            </Button>
+            <Button onClick={() => setCardView(false)}>
+              <div className={`p-2 ${cardView === false ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
+                <Sheet className="h-6 w-6" />
+              </div>
+            </Button>
           </div>
-        ))}
+        </div>
       </div>
+      {cardView && (
+        <div className="flex flex-wrap justify-start gap-6">
+          {activeStrats.map((strategy, index) => (
+            <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+              <StrategyCard strategy={strategy} />
+            </div>
+          ))}
+        </div>
+      )}
 
-
-      {isLoading ? (
+      {isLoading &&!cardView ? (
         <p>Loading strategies...</p>
       ) : (
         <>

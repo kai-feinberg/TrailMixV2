@@ -30,7 +30,8 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
 
   const entryPrice = Number(strategy.weightedEntryPrice);
   const price = (strategy.stablecoinAddress).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
-
+  // console.log(strategy.priceData)
+  console.log(strategy.updateData)
   return (
     <div>
         <Card className="w-full max-w-[1100px] grid grid-cols-[45%_55%] gap-4 p-6 bg-white rounded-xl relative">
@@ -69,8 +70,8 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
             </div>
           </div>
           <div className="pr-5 pt-5">
-            {/* <PriceChart priceData={strategy.priceData} /> */}
-            <PriceChart priceData={strategy.updateData} />
+            <PriceChart priceData={strategy.priceData} updateData={strategy.updateData} />
+            {/* <PriceChart priceData={strategy.updateData} /> */}
           </div>
           <div className="col-span-2 flex justify-end gap-2 pr-4">
             <Button variant="outline" className="rounded-xl" onClick={() => window.open(`https://optimistic.etherscan.io//address/${strategy.contractAddress}`, '_blank')}>Info</Button>
