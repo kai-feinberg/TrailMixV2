@@ -31,7 +31,8 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
   const entryPrice = Number(strategy.weightedEntryPrice);
   const price = (strategy.stablecoinAddress).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
   // console.log(strategy.priceData)
-  console.log(strategy.updateData)
+
+  // console.log(strategy.updateData)
   return (
     <div>
         <Card className="w-full max-w-[1100px] grid grid-cols-[45%_55%] gap-4 p-6 bg-white rounded-xl relative">
@@ -59,7 +60,7 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
             
             <div className="mt-4 flex flex-wrap gap-2">
               <Badge variant="outline" className="text-base" >
-                Entry: ${(Number(strategy.weightedEntryPrice) * price / 10 ** 18).toFixed(3)}
+                Entry: ${(Number(strategy.weightedEntryPrice)).toFixed(3)}
               </Badge>
               <Badge variant="outline" className="text-base" >
                 Strategy: {strategy.trailAmount === "10" ? "basic" : strategy.trailAmount === "5" ? "aggressive" : "conservative"}

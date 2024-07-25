@@ -16,7 +16,7 @@ const useFetchTokenPriceData = (strategy: Strategy, onDataFetched: any) => {
   useEffect(() => {
     const fetchTokenData = async () => {
       if (tokenId !==''){
-
+      
       setLoading(true);
       try {
         const options = {
@@ -28,9 +28,10 @@ const useFetchTokenPriceData = (strategy: Strategy, onDataFetched: any) => {
           }
         };
         const response = await axios.request(options)
-        console.log("requesting api. Data: ", response.data.prices)
+        // console.log("requesting api. Data: ", response.data.prices)
         setTokenData(response.data.prices);
       } catch (err) {
+        console.log(err)
         setError('Failed to fetch token data');
       } finally {
         setLoading(false);

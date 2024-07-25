@@ -55,7 +55,7 @@ const StrategyPriceUpdater: React.FC = () => {
   }, [strategies]);
 
   const updateStrategyData = useCallback((tokenData: [number, number][], index: number) => {
-    console.log("updateStrategyData called for index", index, tokenData);
+    // console.log("updateStrategyData called for index", index, tokenData);
     setUpdatedStrategies(prevStrategies => 
       prevStrategies.map((s, i) =>
         i === index ? { ...s, priceData: tokenData } : s
@@ -64,13 +64,14 @@ const StrategyPriceUpdater: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Updated strategies:", updatedStrategies);
+    // console.log("Updated strategies:", updatedStrategies);
     if (updatedStrategies.length > 0) {
       setStrategies(updatedStrategies);
+      // console.log(updatedStrategies)
     }
   }, [updatedStrategies, setStrategies]);
 
-  console.log("Rendering StrategyPriceUpdater, strategies count:", strategies.length);
+  // console.log("Rendering StrategyPriceUpdater, strategies count:", strategies.length);
 
   return (
     <>

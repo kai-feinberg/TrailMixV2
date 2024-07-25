@@ -99,9 +99,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Sell Threshold",
     cell: ({ row }: { row: any }) => {
       const tslThreshold = Number(row.original.tslThreshold);
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
       return (
-        <p className="">${(tslThreshold * price / (10 ** 18 * 10 ** (18 - row.original.asset.decimals))).toFixed(5)} USD</p>
+        <p className="">${tslThreshold.toFixed(5)} USD</p>
       );
     },
   },
@@ -204,7 +203,8 @@ export default function ManagePage({ }: Props) {
       const active = strategies.filter(
         (strategy) =>
           strategy.contractState === "Uninitialized" ||
-          strategy.contractState === "Active"
+          strategy.contractState === "Active" 
+          // ||strategy.contractState === "Claimable"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
 

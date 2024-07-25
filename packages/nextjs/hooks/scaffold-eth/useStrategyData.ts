@@ -133,7 +133,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&&
         !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
         && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold &&!isLoadingDeployEvent
-        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited && fundsDeposited
+        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited && fundsDeposited && tslThreshold && weightedEntryPrice
       ) {
       try {
         
@@ -150,17 +150,21 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         const usdValue = (Number(erc20Balance) * (price) * Number(twapPrice)) / ((assetDecimals ** 2)* ((10**(18-tokenData.decimals))**2 ) );
         const profitInUsd = Number(profit)*price / (assetDecimals * 10**(18-tokenData.decimals)**2)
 
-        const stableBalUsd = (Number(stablecoinBalance) * price)/ assetDecimals
+        const stableBalUsd = (Number(stablecoinBalance) * price)/ (assetDecimals* 10 ** (18 - tokenData.decimals))
 
         let thresholdUpdateData: [number, number][] = [];
         if (thresholdUpdates.length >0 && fundsDeposited.length >0){
-          thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)/price]);
+          thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))]);
         }
-        thresholdUpdateData.push([Number(Date.now()/1000), Number(tslThreshold)/price])
+        thresholdUpdateData.push([Math.floor(Date.now()/1000 - 86400), Number(tslThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))])
         // thresholdUpdateData.push([Number(fundsDeposited[0].args.timestamp), Number(fundsDeposited[0].args.depositPrice)*(100-Number(trailAmount)/100)/10**12])
 
         thresholdUpdateData.sort((a, b) => a[0] - b[0]);
-        console.log(thresholdUpdateData)
+
+        const adjustedThreshold= (Number(tslThreshold) * price / (10 ** 18 * 10 ** (18 - tokenData.decimals)));
+
+        const entPrice = (Number(weightedEntryPrice)*price/ (10 ** 18 * 10 ** (18 - tokenData.decimals)));
+        
         const examplePriceData = [[
           1711930196348,
           71229.87655843626
@@ -466,10 +470,10 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
             uniswapPool: uniswapPool?.toString() ?? '',
             granularity: granularity?.toString() ?? '',
             manager: manager?.toString() ?? '',
-            tslThreshold: tslThreshold?.toString() ?? '',
+            tslThreshold: adjustedThreshold?.toString() ?? '',
             stablecoinAddress: stablecoinAddress?.toString() ?? '',
             profit: profit?.toString() ?? '',
-            weightedEntryPrice: weightedEntryPrice?.toString() ?? '',
+            weightedEntryPrice: entPrice?.toString() ?? '',
             exitPrice: exitPrice?.toString() ?? '',
             percentProfit: percentProfit.toString(),
             profitInUsd: profitInUsd.toString() ?? '',
