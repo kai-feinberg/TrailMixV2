@@ -69,7 +69,7 @@ const StrategyPriceUpdater: React.FC = () => {
       setStrategies(updatedStrategies);
       // console.log(updatedStrategies)
     }
-  }, [updatedStrategies, setStrategies]);
+  }, [updatedStrategies]);
 
   // console.log("Rendering StrategyPriceUpdater, strategies count:", strategies.length);
 

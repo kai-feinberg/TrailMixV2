@@ -56,10 +56,9 @@ const StrategyPriceData: React.FC<StrategyPriceDataProps> = ({ strategy, index, 
     }
   }, [tokenData, loading, index, onDataFetched]);
 
-  if (error) {
-    console.log(error)
-    return <div>Error fetching price data: {error}</div>;
-  }
+  // if (error) {
+  //   return <div>Error fetching price data: {error}</div>;
+  // }
 
   if (loading) {
     return <div>Loading price data...</div>;

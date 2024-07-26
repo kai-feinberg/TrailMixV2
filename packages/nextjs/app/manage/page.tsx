@@ -204,7 +204,7 @@ export default function ManagePage({ }: Props) {
         (strategy) =>
           strategy.contractState === "Uninitialized" ||
           strategy.contractState === "Active" 
-          // ||strategy.contractState === "Claimable"
+          ||strategy.contractState === "Claimable"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
 

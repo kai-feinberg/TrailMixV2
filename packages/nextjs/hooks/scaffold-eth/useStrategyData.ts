@@ -488,7 +488,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
           
           }
         
-        console.log("strategy: ", strategy);
+        // console.log("strategy: ", strategy);
         // console.log("profit", profit)
         // console.log("price data", priceData)
         onDataFetched(strategy);
