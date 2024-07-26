@@ -19,8 +19,8 @@ const useFetchTokenPriceData = (strategy: Strategy, onDataFetched: any) => {
   const currentTimestamp = roundToNearestHour(Math.floor(Date.now()/1000));
   // Round starting timestamp to the nearest hour
   const startingTimestamp = roundToNearestHour(Number(strategy.dateCreated));
-  console.log("date created", strategy.dateCreated, "rounded number", startingTimestamp);
-  console.log("current", currentTimestamp);
+  // console.log("date created", strategy.dateCreated, "rounded number", startingTimestamp);
+  // console.log("current", currentTimestamp);
 
   // const currentTimestamp = Date.now()
   // const startingTimestamp = strategy.dateCreated
@@ -43,9 +43,9 @@ const useFetchTokenPriceData = (strategy: Strategy, onDataFetched: any) => {
         };
         const response = await axios.request(options)
         // console.log("requesting api. Data: ", response.data)
-        console.log(`Requesting API data from ${new Date(Number(startingTimestamp))} to ${new Date(currentTimestamp*1000)}`);
+        // console.log(`Requesting API data from ${new Date(Number(startingTimestamp))} to ${new Date(currentTimestamp*1000)}`);
         // console.log(`Requesting API data from ${Number(startingTimestamp)} to ${(currentTimestamp)}`);
-        // console.log("requesting api for token", tokenId)
+        console.log("requesting api for token", tokenId)
         setTokenData(response.data.prices);
       } catch (err) {
         console.log(err)

@@ -1,39 +1,38 @@
 // "use client"
-// import React from 'react';
-// import { useEffect } from 'react';
+// import React, { useEffect, useCallback, useMemo } from 'react';
 // import { useGlobalState } from "~~/services/store/store";
 // import StrategyPriceData from "~~/components/StrategyPriceData";
 // import { Strategy } from "~~/types/customTypes";
-// import { useScaffoldContractRead } from "~~/hooks/scaffold-eth";
-// import { useAccount } from "wagmi";
 
 // const StrategyPriceUpdater: React.FC = () => {
 //   const { strategies, setStrategies } = useGlobalState();
-//   const updateStrategyData = (tokenData: [number, number][], i: number) => {
-//     console.log("setting token data", tokenData)
-//     setStrategies((prevStrategies: Strategy[] | undefined) => {
-//       // Ensure prevStrategies is an array
 
-//       const currentStrategies = Array.isArray(prevStrategies) ? prevStrategies : [];
+//   // Filter strategies with "Active" or "Claimable" contractState
+//   const filteredStrategies = useMemo(() => {
+//     return strategies.filter(strategy => 
+//       strategy.contractState === "Active" || strategy.contractState === "Claimable"
+//     );
+//   }, [strategies]);
 
-//         // Update existing strategy
-//         return currentStrategies.map((s, index) =>
-//           index ===  i ? { ...s, priceData: tokenData } : s
-//         );
-      
-//     });
-//   };
+//   const updateStrategyData = useCallback((tokenData: [number, number][], contractAddress: string) => {
+//     setStrategies(prevStrategies =>
+//       prevStrategies.map(strategy =>
+//         strategy.contractAddress === contractAddress
+//           ? { ...strategy, priceData: tokenData }
+//           : strategy
+//       )
+//     );
+//   }, [setStrategies]);
 
 //   return (
 //     <>
-//       {strategies?.map((strategy, index) => (
+//       {filteredStrategies.map((strategy, index) => (
 //         <StrategyPriceData
 //           key={strategy.contractAddress}
 //           strategy={strategy}
-//           onDataFetched={(tokenData) => updateStrategyData(tokenData, index)}
+//           index={index}
+//           onDataFetched={(tokenData) => updateStrategyData(tokenData, strategy.contractAddress)}
 //         />
-      
-
 //       ))}
 //     </>
 //   );
@@ -56,7 +55,7 @@ const StrategyPriceUpdater: React.FC = () => {
 
   const updateStrategyData = useCallback((tokenData: [number, number][], index: number) => {
     // console.log("updateStrategyData called for index", index, tokenData);
-    setUpdatedStrategies(prevStrategies => 
+    setUpdatedStrategies(prevStrategies =>
       prevStrategies.map((s, i) =>
         i === index ? { ...s, priceData: tokenData } : s
       )
@@ -73,9 +72,12 @@ const StrategyPriceUpdater: React.FC = () => {
 
   // console.log("Rendering StrategyPriceUpdater, strategies count:", strategies.length);
 
+  const filteredStrategies = updatedStrategies.filter(strategy => 
+          strategy.contractState === "Active" || strategy.contractState === "Claimable")
+
   return (
     <>
-      {updatedStrategies.map((strategy, index) => (
+      {filteredStrategies.map((strategy, index) => (
         <StrategyPriceData
           key={`${strategy.contractAddress}-${index}`}
           strategy={strategy}

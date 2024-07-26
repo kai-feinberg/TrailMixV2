@@ -156,7 +156,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         if (thresholdUpdates.length >0 && fundsDeposited.length >0){
           thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))]);
         }
-        thresholdUpdateData.push([Math.floor(Date.now()/1000 - 86400), Number(tslThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))])
+        thresholdUpdateData.push([Math.floor(Date.now()/1000), Number(tslThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))])
         // thresholdUpdateData.push([Number(fundsDeposited[0].args.timestamp), Number(fundsDeposited[0].args.depositPrice)*(100-Number(trailAmount)/100)/10**12])
 
         thresholdUpdateData.sort((a, b) => a[0] - b[0]);
