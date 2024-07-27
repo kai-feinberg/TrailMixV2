@@ -11,9 +11,7 @@ type Props = {};
 import {
   ClipboardPenLine,
   LayoutDashboard,
-  UsersRound,
-  Settings,
-  ChevronRight,
+  History,
   Github
 } from "lucide-react";
 import { Button } from "./ui/button";
@@ -64,6 +62,12 @@ export default function SideNavbar({ }: Props) {
               title: "Manage",
               href: "/manage",
               icon: ClipboardPenLine,
+              variant: "ghost",
+            },
+            {
+              title: "History",
+              href: "/history",
+              icon: History,
               variant: "ghost",
             },
           ]}
