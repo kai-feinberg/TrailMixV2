@@ -37,6 +37,7 @@ import { useGlobalState } from "~~/services/store/store";
 import useTokenData from "~~/hooks/scaffold-eth/useTokenData";
 import { StrategyCard } from "~~/components/StrategyCard";
 import { CreateNew } from "~~/components/CreateNew";
+import { ClaimableCard } from "~~/components/ClaimableCard";
 
 
 const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
@@ -203,8 +204,8 @@ export default function ManagePage({ }: Props) {
       const active = strategies.filter(
         (strategy) =>
           strategy.contractState === "Uninitialized" ||
-          strategy.contractState === "Active" 
-          ||strategy.contractState === "Claimable"
+          strategy.contractState === "Active"
+        // ||strategy.contractState === "Claimable"
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
 
@@ -235,8 +236,14 @@ export default function ManagePage({ }: Props) {
           </div>
         </div>
       </div>
+
       {cardView && (
         <div className="flex flex-wrap justify-start gap-6">
+          {claimableStrats.map((strategy, index) => (
+            <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+              <ClaimableCard strategy={strategy} />
+            </div>
+          ))}
           {activeStrats.map((strategy, index) => (
             <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
               <StrategyCard strategy={strategy} />
@@ -245,7 +252,7 @@ export default function ManagePage({ }: Props) {
         </div>
       )}
 
-      {isLoading &&!cardView ? (
+      {isLoading && !cardView ? (
         <p>Loading strategies...</p>
       ) : (
         <>
