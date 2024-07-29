@@ -129,6 +129,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
   
 
   useEffect(() => {
+    console.log("trying for ", erc20TokenAddress)
     
     if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&&
         !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
