@@ -195,7 +195,7 @@ export default function ManagePage({ }: Props) {
     args: [connectedAccount],
   });
 
-  console.log(userContracts)
+  // console.log(userContracts)
 
   useEffect(() => {
     if (!connectedAccount) {
@@ -211,6 +211,7 @@ export default function ManagePage({ }: Props) {
       );
       const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
       // console.log(strategies)
+      console.log("active", active)
 
       setActiveStrats(active);
       setClaimableStrats(claimable);

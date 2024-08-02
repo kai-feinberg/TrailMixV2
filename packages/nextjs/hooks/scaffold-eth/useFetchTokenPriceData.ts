@@ -28,7 +28,7 @@ const useFetchTokenPriceData = (strategy: Strategy, onDataFetched: any) => {
 
   useEffect(() => {
     const fetchTokenData = async () => {
-      if (tokenId !==''){
+      if (tokenId !=='' && strategy.contractState === 'Active' || strategy.contractState === 'Claimable'){
       
       setLoading(true);
       try {
