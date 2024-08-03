@@ -159,7 +159,7 @@ const Events = () => {
                         <EventCard
                             title="Deposit Made"
                             detail={`Deposited to $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with ${event.log.args.trailAmount}% trail`}
-                            amount={`+${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)))} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
+                            amount={`+${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals))).toFixed(5)} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
                             icon={ArrowDown}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="green"
