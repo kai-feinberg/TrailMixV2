@@ -1,71 +1,41 @@
-import { useState, useEffect } from 'react';
+// hooks/useStrategyPriceData.ts
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Strategy } from '~~/types/customTypes';
-import { start } from 'nprogress';
 
+const fetchTokenData = async (strategy: Strategy) => {
+  const cg_api_key = process.env.COIN_GECKO_API_KEY;
+  const tokenId = strategy.asset.coinGeckoId;
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+  const startingTimestamp = Number(strategy.dateCreated);
 
-const useFetchTokenPriceData = (strategy: Strategy, onDataFetched: any) => {
-  const [tokenData, setTokenData] = useState<[number,number][] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-
-   // Function to round timestamp to the nearest hour (always rounding down)
-   const roundToNearestHour = (timestamp: number): number => {
-    return Math.floor(timestamp / 3600) * 3600;
+  const options = {
+    method: 'GET',
+    url: `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range`,
+    params: {
+      vs_currency: 'usd',
+      from: startingTimestamp,
+      to: currentTimestamp,
+      precision: 3
+    },
+    headers: {
+      accept: 'application/json',
+      'x-cg-demo-api-key': cg_api_key
+    }
   };
 
-  // Round current timestamp to the nearest hour
-  const currentTimestamp = roundToNearestHour(Math.floor(Date.now()/1000));
-  // Round starting timestamp to the nearest hour
-  const startingTimestamp = roundToNearestHour(Number(strategy.dateCreated));
-  // console.log("date created", strategy.dateCreated, "rounded number", startingTimestamp);
-  // console.log("current", currentTimestamp);
-
-  // const currentTimestamp = Date.now()
-  // const startingTimestamp = strategy.dateCreated
-  const tokenId = strategy.asset.coinGeckoId
-
-  useEffect(() => {
-    const fetchTokenData = async () => {
-      if (tokenId !=='' && strategy.contractState === 'Active' || strategy.contractState === 'Claimable'){
-      
-      setLoading(true);
-      try {
-        const options = {
-          method: 'GET',
-          // url: `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&from=${1721188800}&to=${1721955600}&precision=3`,
-          url: `https://api.coingecko.com/api/v3/coins/${tokenId}/market_chart/range?vs_currency=usd&from=${startingTimestamp}&to=${currentTimestamp}&precision=3`,
-          headers: {
-            accept: 'application/json',
-            'x-cg-demo-api-key': 'CG-Twq7dgGwXiwYSRSXwkXcV6uD	'
-          }
-        };
-        const response = await axios.request(options)
-        // console.log("requesting api. Data: ", response.data)
-        // console.log(`Requesting API data from ${new Date(Number(startingTimestamp))} to ${new Date(currentTimestamp*1000)}`);
-        // console.log(`Requesting API data from ${Number(startingTimestamp)} to ${(currentTimestamp)}`);
-        console.log("requesting api for token", tokenId)
-        setTokenData(response.data.prices);
-      } catch (err) {
-        console.log(err)
-        setError('Failed to fetch token data');
-      } finally {
-        setLoading(false);
-      }
-    }
-    };
-
-
-    fetchTokenData();
-
-    if (!loading){   
-       onDataFetched(tokenData)
-    }
-  }, [tokenId]);
-
-  // console.log(tokenData)
-  return { tokenData, loading, error };
+  const response = await axios.request(options);
+  return response.data.prices;
 };
 
-export default useFetchTokenPriceData;
+export const useFetchTokenPriceData = (strategy: Strategy) => {
+
+  return useQuery({
+    queryKey: ['strategyPrice', strategy.contractAddress],
+    queryFn: () => fetchTokenData(strategy),
+    enabled: strategy.contractState === 'Active' || strategy.contractState === 'Claimable',
+    refetchInterval: 600000, // Refetch every hour
+    staleTime: 550000, // Consider data stale after 55 mins
+  });
+};
+

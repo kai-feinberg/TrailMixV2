@@ -28,7 +28,7 @@
     "next:lint": "yarn workspace @se-2/nextjs lint --format eslint-formatter-friendly --quiet",
     "precommit": "lint-staged",
     "prepare": "install-self-peers -- --ignore-scripts",
-    "start": "yarn workspace @se-2/nextjs dev",
+    "start": "yarn workspace @se-2/nextjs dev --turbo",
     "test": "yarn hardhat:test",
     "vercel": "vercel",
     "vercel:yolo": "vercel --build-env NEXT_PUBLIC_IGNORE_BUILD_ERROR=true",

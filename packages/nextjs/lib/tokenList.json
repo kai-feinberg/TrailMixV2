@@ -25,7 +25,7 @@
             "name": "Wrapped Eth",
             "symbol": "WETH",
             "decimals": 18,
-            "logoURI": "https://github.com/ethereum-optimism/ethereum-optimism.github.io/blob/master/data/WETH/logo.png",
+            "logoURI": "https://assets.coingecko.com/coins/images/279/standard/ethereum.png?1696501628",
             "pool":"0x1fb3cf6e48F1E7B10213E7b6d87D4c073C7Fdb7b",
             "poolFee": "500",
             "pooledAgainst": "0x0b2c639c533813f4aa9d7837caf62653d097ff85",

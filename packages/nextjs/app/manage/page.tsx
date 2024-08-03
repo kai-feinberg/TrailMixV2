@@ -26,9 +26,7 @@ import strategyABI from "~~/contracts/strategyABI.json";
 import ClaimsTable from "~~/components/ClaimsTable";
 import exampleActiveStrategies from "~~/components/assets/exampleActiveStrategies.json";
 import exampleClaimableStrategies from "~~/components/assets/exampleClaimableStrategies.json";
-import useFetchTokenPrice from "~~/hooks/scaffold-eth/useFetchTokenPriceData";
 import { LayoutGrid, Sheet } from "lucide-react";
-
 const stratABI = strategyABI.abi;
 
 type Props = {};
@@ -39,6 +37,8 @@ import { StrategyCard } from "~~/components/StrategyCard";
 import { CreateNew } from "~~/components/CreateNew";
 import { ClaimableCard } from "~~/components/ClaimableCard";
 
+import shallow from "zustand/shallow";
+import { useMemo } from "react";
 
 const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
   {
@@ -175,9 +175,27 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
 
 export default function ManagePage({ }: Props) {
-  const { strategies, setStrategies } = useGlobalState();
-  const [activeStrats, setActiveStrats] = useState<Strategy[]>([]);
-  const [claimableStrats, setClaimableStrats] = useState<Strategy[]>([]);
+  // const { strategies, setStrategies } = useGlobalState();
+  // const [activeStrats, setActiveStrats] = useState<Strategy[]>([]);
+  // const [claimableStrats, setClaimableStrats] = useState<Strategy[]>([]);
+  const { strategies, setStrategies } = useGlobalState(
+    (state) => ({
+      strategies: state.strategies,
+      setStrategies: state.setStrategies
+    }),
+    shallow
+  );
+
+  const [activeStrats, claimableStrats] = useMemo(() => {
+    const active = strategies.filter(
+      (strategy) =>
+        strategy.contractState === "Uninitialized" ||
+        strategy.contractState === "Active"
+    );
+    const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
+    return [active, claimable];
+  }, [strategies]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [cardView, setCardView] = useState(true);
 
@@ -197,73 +215,71 @@ export default function ManagePage({ }: Props) {
 
   // console.log(userContracts)
 
-  useEffect(() => {
-    if (!connectedAccount) {
-      setActiveStrats(exampleActiveStrategies);
-      setClaimableStrats(exampleClaimableStrategies);
-      setIsLoading(false);
-    } else {
-      const active = strategies.filter(
-        (strategy) =>
-          strategy.contractState === "Uninitialized" ||
-          strategy.contractState === "Active"
-        // ||strategy.contractState === "Claimable"
-      );
-      const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
-      // console.log(strategies)
-      console.log("active", active)
+  // useEffect(() => {
+  //   if (!connectedAccount) {
+  //     setActiveStrats(exampleActiveStrategies);
+  //     setClaimableStrats(exampleClaimableStrategies);
+  //     setIsLoading(false);
+  //   } else {
+  //     const active = strategies.filter(
+  //       (strategy) =>
+  //         strategy.contractState === "Uninitialized" ||
+  //         strategy.contractState === "Active"
+  //       // ||strategy.contractState === "Claimable"
+  //     );
+  //     const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
+  //     // console.log(strategies)
+  //     // console.log("active", active)
 
-      setActiveStrats(active);
-      setClaimableStrats(claimable);
-      setIsLoading(false);
-    }
-  }, [connectedAccount, strategies]);
+  //     setActiveStrats(active);
+  //     setClaimableStrats(claimable);
+  //     setIsLoading(false);
+  //   }
+  // }, [connectedAccount, strategies]);
 
 
   return (
-    <div className="flex flex-col gap-4 w-full px-4 ">
-      <div className="flex gap-4 items-center">
-        <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
-        <div className="bg-white rounded-xl"><CreateNew /></div>
-        <div className="flex flex-row space-x-2">
-          <div className="bg-white rounded-xl justify-center">
-            <Button onClick={() => setCardView(true)}>
-              <div className={`p-2 ${cardView === true ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
-                <LayoutGrid className="h-6 w-6" />
-              </div>
-            </Button>
-            <Button onClick={() => setCardView(false)}>
-              <div className={`p-2 ${cardView === false ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
-                <Sheet className="h-6 w-6" />
-              </div>
-            </Button>
+      <div className="flex flex-col gap-4 w-full px-4 ">
+        <div className="flex gap-4 items-center">
+          <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
+          <div className="bg-white rounded-xl"><CreateNew /></div>
+          <div className="flex flex-row space-x-2">
+            <div className="bg-white rounded-xl justify-center">
+              <Button onClick={() => setCardView(true)}>
+                <div className={`p-2 ${cardView === true ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
+                  <LayoutGrid className="h-6 w-6" />
+                </div>
+              </Button>
+              <Button onClick={() => setCardView(false)}>
+                <div className={`p-2 ${cardView === false ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
+                  <Sheet className="h-6 w-6" />
+                </div>
+              </Button>
+            </div>
           </div>
         </div>
+        {cardView && (
+          <div className="flex flex-wrap justify-start gap-6">
+            {claimableStrats.map((strategy, index) => (
+              <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+                <ClaimableCard strategy={strategy} />
+              </div>
+            ))}
+            {activeStrats.map((strategy, index) => (
+              <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+                <StrategyCard strategy={strategy} />
+              </div>
+            ))}
+          </div>
+        )}
+        {isLoading && !cardView ? (
+          <p>Loading strategies...</p>
+        ) : (
+          <>
+            <DataTable columns={columns} data={activeStrats} />
+            <ClaimsTable claimableStrategies={claimableStrats} />
+          </>
+        )}
       </div>
-
-      {cardView && (
-        <div className="flex flex-wrap justify-start gap-6">
-          {claimableStrats.map((strategy, index) => (
-            <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-              <ClaimableCard strategy={strategy} />
-            </div>
-          ))}
-          {activeStrats.map((strategy, index) => (
-            <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-              <StrategyCard strategy={strategy} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {isLoading && !cardView ? (
-        <p>Loading strategies...</p>
-      ) : (
-        <>
-          <DataTable columns={columns} data={activeStrats} />
-          <ClaimsTable claimableStrategies={claimableStrats} />
-        </>
-      )}
-    </div>
   );
 }
