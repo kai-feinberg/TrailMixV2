@@ -97,6 +97,18 @@ export function CreateNew() {
     twapOracle = ""
   }
 
+  const resetState = () => {
+    setTokenAddress('');
+    setStrategy("20");
+    setDepositAmount("");
+    setPoolAddress("");
+    setPoolFee("");
+    setNewestContract("");
+    setLoadingNewStrategy(false);
+    setPairAddress("");
+    setPhase("deploy");
+  };
+
   const { writeAsync: deploy, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
     functionName: "deployTrailMix",
@@ -143,6 +155,7 @@ export function CreateNew() {
 
 
   const handleSuccess = () => {
+    resetState();
     setOpen(false);
   };
   return (

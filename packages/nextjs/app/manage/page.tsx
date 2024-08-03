@@ -11,7 +11,7 @@
 import { DataTable } from "@/components/DataTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import PageTitle from "@/components/PageTitle";
 import { TokenData } from "~~/types/customTypes"; // token data type defined in customTypes.ts
 import { Strategy } from "~~/types/customTypes"; // strategy type defined in customTypes.ts
@@ -26,7 +26,7 @@ import strategyABI from "~~/contracts/strategyABI.json";
 import ClaimsTable from "~~/components/ClaimsTable";
 import exampleActiveStrategies from "~~/components/assets/exampleActiveStrategies.json";
 import exampleClaimableStrategies from "~~/components/assets/exampleClaimableStrategies.json";
-import { LayoutGrid, Sheet } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
 const stratABI = strategyABI.abi;
 
 type Props = {};
@@ -232,7 +232,7 @@ export default function ManagePage({ }: Props) {
     functionName: "getUserContracts",
     args: [connectedAccount],
   });
-
+  
 
 
   return (
@@ -240,7 +240,7 @@ export default function ManagePage({ }: Props) {
       <div className="flex gap-4 items-center">
         <PageTitle title={connectedAccount ? "Your Strategies" : "Example Strategies"} />
         <div className="bg-white rounded-xl"><CreateNew /></div>
-        <div className="flex flex-row space-x-2">
+        <div className="flex flex-row space-x-1">
           <div className="bg-white rounded-xl justify-center">
             <Button onClick={() => setCardView(true)}>
               <div className={`p-2 ${cardView === true ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
@@ -249,7 +249,7 @@ export default function ManagePage({ }: Props) {
             </Button>
             <Button onClick={() => setCardView(false)}>
               <div className={`p-2 ${cardView === false ? "bg-gray-200" : ""} rounded-xl mx-[-8px] mt-2`}>
-                <Sheet className="h-6 w-6" />
+                <List className="h-6 w-6" />
               </div>
             </Button>
           </div>
