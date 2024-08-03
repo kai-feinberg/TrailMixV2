@@ -46,7 +46,13 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Asset",
     cell: ({ row }: { row: any }) => {
       const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
-
+      let assetPrice = (row.original.twapPrice * price / (10 ** 18 * 10 ** (18 - row.original.asset.decimals)))
+      //round assetPrice to 2 decimal places if it is >1 and 4 decimal places if it is <1
+      if (assetPrice < 1) {
+        assetPrice = Number(assetPrice.toFixed(4))
+      } else {
+        assetPrice = Number(assetPrice.toFixed(2))
+      }
       return (
         <div>
           <div className="flex gap-2 items-center">
@@ -58,7 +64,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${(row.original.twapPrice * price / (10 ** 18 * 10 ** (18 - row.original.asset.decimals))).toFixed(5)} USD</p>
+              <p className="">${assetPrice} USD</p>
             </div>
           </div>
           {/* divide by decimals of paired asset on the network */}
@@ -73,9 +79,16 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
       const usdValue = row.original.balanceInUsd
       // console.log("usdValue", usdValue)
+      let roundedBal= row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)
+      //round balance to 2 decimal places if it is >1 and 4 decimal places if it is <1
+      if (roundedBal < 1) {
+        roundedBal = Number(roundedBal.toFixed(4))
+      } else {
+        roundedBal = Number(roundedBal.toFixed(2))
+      }
       return (
         <div className="space-y-2" >
-          <p className="text-base leading-none m-[-1%]">{row.getValue("erc20Balance") as number / (10 ** row.original.asset.decimals)} {row.original.asset.symbol}</p>
+          <p className="text-base leading-none m-[-1%]">{roundedBal} {row.original.asset.symbol}</p>
           <p className="text-sm text-gray-500">
             {/* {(((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))) < 0.01 ? "<$0.01" : (((row.getValue("erc20Balance") as number)*ethPrice) / ((10 ** row.original.asset.decimals) * (Number(row.original.twapPrice) as number))).toFixed(2)} */}
             {usdValue < 0.01 ? "<$0.01" : Number(usdValue).toFixed(2)} USD
@@ -100,8 +113,14 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Sell Threshold",
     cell: ({ row }: { row: any }) => {
       const tslThreshold = Number(row.original.tslThreshold);
+      let roundedThreshold;
+      if (tslThreshold > 1) {
+        roundedThreshold = Number(tslThreshold).toFixed(2);
+      } else {
+        roundedThreshold = Number(tslThreshold).toFixed(4);
+      }
       return (
-        <p className="">${tslThreshold.toFixed(5)} USD</p>
+        <p className="">${roundedThreshold} USD</p>
       );
     },
   },
@@ -196,15 +215,12 @@ export default function ManagePage({ }: Props) {
     return [active, claimable];
   }, [strategies]);
 
-  const [isLoading, setIsLoading] = useState(true);
   const [cardView, setCardView] = useState(true);
 
 
   const ethPrice = useNativeCurrencyPrice();
-  // const ethPrice = ();
   let columns = getColumns(ethPrice);
 
-  // const { tokenData: td, loading: ld, error: er } = useFetchTokenPrice("optimistic-ethereum", "1711929600", "1721225041")
 
   const { address: connectedAccount } = useAccount();
   const { data: userContracts } = useScaffoldContractRead({
@@ -213,29 +229,6 @@ export default function ManagePage({ }: Props) {
     args: [connectedAccount],
   });
 
-  // console.log(userContracts)
-
-  // useEffect(() => {
-  //   if (!connectedAccount) {
-  //     setActiveStrats(exampleActiveStrategies);
-  //     setClaimableStrats(exampleClaimableStrategies);
-  //     setIsLoading(false);
-  //   } else {
-  //     const active = strategies.filter(
-  //       (strategy) =>
-  //         strategy.contractState === "Uninitialized" ||
-  //         strategy.contractState === "Active"
-  //       // ||strategy.contractState === "Claimable"
-  //     );
-  //     const claimable = strategies.filter(strategy => strategy.contractState === 'Claimable');
-  //     // console.log(strategies)
-  //     // console.log("active", active)
-
-  //     setActiveStrats(active);
-  //     setClaimableStrats(claimable);
-  //     setIsLoading(false);
-  //   }
-  // }, [connectedAccount, strategies]);
 
 
   return (
@@ -272,9 +265,7 @@ export default function ManagePage({ }: Props) {
             ))}
           </div>
         )}
-        {isLoading && !cardView ? (
-          <p>Loading strategies...</p>
-        ) : (
+        {!cardView && (
           <>
             <DataTable columns={columns} data={activeStrats} />
             <ClaimsTable claimableStrategies={claimableStrats} />

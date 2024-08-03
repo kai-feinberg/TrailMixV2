@@ -28,11 +28,13 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
     displayProfit = Number(adjustedProfit).toFixed(2); // Format to 2 decimal places
   }
 
-  const entryPrice = Number(strategy.weightedEntryPrice);
-  const price = (strategy.stablecoinAddress).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
-  // console.log(strategy.priceData)
+  let bal = Number(strategy.erc20Balance) / 10 ** assetData.decimals
+  if (bal > 1) {
+    bal = Number(bal.toFixed(2)); // Convert back to number
+  } else {
+    bal = Number(bal.toFixed(4)); // Convert back to number
+  }
 
-  // console.log(strategy.updateData)
   return (
     <div>
         <Card className="w-full max-w-[1100px] grid grid-cols-[45%_55%] gap-4 p-6 bg-white rounded-xl relative">
@@ -47,7 +49,7 @@ export function StrategyCard({ strategy }: { strategy: Strategy }) {
                 alt="token-image"
               />
               <div className="flex flex-col mt-3">
-                <h1 className="font-medium text-xl">{Number(strategy.erc20Balance) / 10 ** assetData.decimals} {assetData.symbol}</h1> {/*amount and asset*/}
+                <h1 className="font-medium text-xl">{bal} {assetData.symbol}</h1> {/*amount and asset*/}
                 <p className="mt-[-5%] text-gray-500">${Number(strategy.balanceInUsd).toFixed(2)} USD</p>
               </div>
 

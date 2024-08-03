@@ -6,7 +6,6 @@ import { useTargetNetwork } from "./useTargetNetwork";
 import strategyABI from '~~/contracts/strategyABI.json';
 import tokenList from '~~/lib/tokenList.json';
 import { useNativeCurrencyPrice } from "./useNativeCurrencyPrice";
-import useFetchTokenPriceData from "./useFetchTokenPriceData";
 
 const useStrategyData = (contractAddress: string, onDataFetched: any) => {
 
@@ -89,12 +88,6 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
   const ethPrice = useNativeCurrencyPrice();
 
   
-  // useEffect(()=>{
-  //   if (erc20TokenAddress){
-  //     setCoinGeckoId((tokenList as TokenList)[targetNetwork.id][erc20TokenAddress?.toString().toLowerCase() ?? ''].coinGeckoId)
-  //   }
-  // }, [erc20TokenAddress])
-
   const { data: deployEvent, isLoading: isLoadingDeployEvent } = useScaffoldEventHistory({
     contractName: 'TrailMixManager',
     eventName: 'ContractDeployed',
@@ -134,7 +127,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&&
         !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
         && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold &&!isLoadingDeployEvent
-        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited && fundsDeposited && tslThreshold && weightedEntryPrice
+        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited && tslThreshold && weightedEntryPrice
       ) {
       try {
         
@@ -148,13 +141,13 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
         const assetDecimals = 10**tokenData.decimals;
         const price = (stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? (10**12) : ethPrice;
         
-        const usdValue = (Number(erc20Balance) * (price) * Number(twapPrice)) / ((assetDecimals ** 2)* ((10**(18-tokenData.decimals))**2 ) );
+        const usdValue = (Number(erc20Balance) * (price) * Number(twapPrice)) / ((assetDecimals ** 2)* ((10**(18-tokenData.decimals))**2 ));
         const profitInUsd = Number(profit)*price / (assetDecimals * 10**(18-tokenData.decimals)**2)
 
         const stableBalUsd = (Number(stablecoinBalance) * price)/ (assetDecimals* 10 ** (18 - tokenData.decimals))
 
         let thresholdUpdateData: [number, number][] = [];
-        if (thresholdUpdates.length >0 && fundsDeposited.length >0){
+        if (thresholdUpdates.length >0){
           thresholdUpdateData= thresholdUpdates.map(update => [Number(update.args.timestamp), Number(update.args.newThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))]);
         }
         thresholdUpdateData.push([Math.floor(Date.now()/1000), Number(tslThreshold)*price/(10 ** 18 * 10 ** (18 - tokenData.decimals))])
@@ -458,6 +451,8 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
           1712189472392,
           66103.92369277785
         ]]
+
+
 
         const strategy: Strategy = {
             asset: tokenData as TokenData,

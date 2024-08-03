@@ -34,8 +34,9 @@ export const useFetchTokenPriceData = (strategy: Strategy) => {
     queryKey: ['strategyPrice', strategy.contractAddress],
     queryFn: () => fetchTokenData(strategy),
     enabled: strategy.contractState === 'Active' || strategy.contractState === 'Claimable',
-    refetchInterval: 600000, // Refetch every hour
+    refetchInterval: Infinity, // Refetch every hour
     staleTime: 550000, // Consider data stale after 55 mins
+    
   });
 };
 
