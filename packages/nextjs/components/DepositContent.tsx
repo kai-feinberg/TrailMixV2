@@ -27,6 +27,13 @@ const DepositContent = ({ contractAddress, onSuccess }: { contractAddress: strin
         abi: stratABI.abi,
         functionName: "getERC20TokenAddress",
     });
+    const resetState = () => {
+        setDepositAmount("0");
+        setAssetPrice("0");
+        setScaledDepositAmount(BigInt(0));
+        setSufficientAllowance(false);
+        setStoredErc20Address("");
+    };
 
     useEffect(() => {
         if (errorErc20Address) console.error("Error fetching ERC20 address:", errorErc20Address);
@@ -94,6 +101,7 @@ const DepositContent = ({ contractAddress, onSuccess }: { contractAddress: strin
         args: [contractAddress, scaledDepositAmount, assetPrice as bigint],
         onSuccess: () => {
             notification.success("Deposit success");
+            resetState();
             onSuccess();
         },
     });
