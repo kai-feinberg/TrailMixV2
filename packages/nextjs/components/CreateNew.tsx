@@ -67,7 +67,7 @@ export function CreateNew() {
 
 
   React.useEffect(() => {
-    console.log(tokenAddress);
+    // console.log(tokenAddress);
     if (tokenAddress ==="0x68f180fcce6836688e9084f035309e29bf0a2095"){
       setPoolAddress(tokens["0x68f180fcCe6836688e9084f035309E29Bf0A2095"].pool);
       setPoolFee(tokens["0x68f180fcCe6836688e9084f035309E29Bf0A2095"].poolFee);
@@ -96,6 +96,18 @@ export function CreateNew() {
     uniswapRouterAddress = ""
     twapOracle = ""
   }
+
+  const resetState = () => {
+    setTokenAddress('');
+    setStrategy("20");
+    setDepositAmount("");
+    setPoolAddress("");
+    setPoolFee("");
+    setNewestContract("");
+    setLoadingNewStrategy(false);
+    setPairAddress("");
+    setPhase("deploy");
+  };
 
   const { writeAsync: deploy, isMining: isPending } = useScaffoldContractWrite({
     contractName: "TrailMixManager",
@@ -143,6 +155,7 @@ export function CreateNew() {
 
 
   const handleSuccess = () => {
+    resetState();
     setOpen(false);
   };
   return (

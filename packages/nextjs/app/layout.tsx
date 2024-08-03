@@ -6,6 +6,7 @@ import "~~/styles/globals.css";
 import { cn } from "@/lib/utils";
 import SideNavbar from "~~/components/SideNavbar";
 import StrategyUpdater from "~~/components/StrategyUpdater";
+import StrategyPriceUpdater from "~~/components/StrategyPriceUpdater";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -45,7 +46,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning lang="en">
@@ -60,6 +60,8 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
               " w-full flex flex-col",
             )}>
             <StrategyUpdater/>
+            
+            <StrategyPriceUpdater/>
               <div className="p-8 w-full" >{children}</div>
             </div>
           </body>

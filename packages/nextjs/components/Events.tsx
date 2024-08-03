@@ -136,7 +136,7 @@ const Events = () => {
                         <EventCard
                             title="Funds Withdrawn"
                             detail={`Withdrew from $${tokenData[event.log.args.token.toLowerCase()].symbol} strategy with ${event.log.args.trailAmount}% trail `}
-                            amount={`-${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals))).toFixed(7)} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
+                            amount={`-${(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals))).toFixed(Number(event.log.args.amount) / (10 ** Number(tokenData[event.log.args.token.toLowerCase()].decimals)) > 1 ? 3 : 7)} ${tokenData[event.log.args.token.toLowerCase()].symbol}`}
                             icon={ArrowUp}
                             date={new Date(Number(event.block.timestamp) * 1000).toLocaleDateString("en-US")}
                             color="red"

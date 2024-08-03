@@ -26,7 +26,7 @@ const erc20ABI = ercABI.abi;
 const managerABI = manager.abi;
 
 
-const WithdrawButton = ({ contractAddress, buttonContent }: { contractAddress: string, buttonContent? : React.ReactNode }) => {
+const WithdrawButton = ({ contractAddress, text }: { contractAddress: string, text?: string }) => {
     const { address: userAddress } = useAccount(); // Get the user's address
 
     const [assetToWithdraw, setAssetToWithdraw] = useState<string>("");
@@ -97,8 +97,8 @@ const WithdrawButton = ({ contractAddress, buttonContent }: { contractAddress: s
     });
 
     return (
-        <Button variant="outline" size="icon" className="rounded-xl" onClick={() => withdraw()}>
-            {buttonContent ? buttonContent : <Upload className="h-4 w-4" />}
+        <Button variant="outline" size={text ? "default" : "icon"} className="rounded-xl" onClick={() => withdraw()}>
+            {text ? text : <Upload className="h-4 w-4" />}
         </Button>
     );
 };

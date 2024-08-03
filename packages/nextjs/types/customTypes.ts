@@ -6,12 +6,14 @@ export interface TokenData {
     pool: string;
     poolFee: string;
     pooledAgainst: string;
+    coinGeckoId: string;
   }
   
   
 export type Strategy = {
     asset: TokenData;
     contractAddress: string;
+    dateCreated: string;
     erc20Asset: string;
     erc20Balance: string;
     balanceInUsd: string; 
@@ -31,6 +33,8 @@ export type Strategy = {
     percentProfit: string;
     contractState: string;
     stableAsset: TokenData;
+    updateData: [number, number][];
+    priceData: [number, number][];
     
   };  
 

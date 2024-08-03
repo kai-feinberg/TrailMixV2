@@ -19,7 +19,7 @@ const StrategyUpdater: React.FC = () => {
 
       if (existingStrategyIndex !== -1) {
         // Update existing strategy
-        console.log(strategy)
+        // console.log(strategy)
         return currentStrategies.map((s, index) =>
           index === existingStrategyIndex ? strategy : s
         );

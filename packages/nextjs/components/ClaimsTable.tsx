@@ -29,6 +29,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "asset",
     header: "Asset",
     cell: ({ row }: { row: any }) => {
+      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1 * 10 ** 12 : ethPrice;
+
       return (
         <div>
           <div className="flex gap-2 items-center">
@@ -40,7 +42,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
 
             <div className="space-y-1">
               <p className="font-semibold text-lg leading-none m-[-1px]">{(row.getValue("asset") as TokenData).name} </p>
-              <p className="">${(row.original.twapPrice * ethPrice / (10 ** 18)).toFixed(5)} USD</p>
+              <p className="">${(row.original.twapPrice * price / (10 ** 18 * 10 ** (18 - row.original.asset.decimals))).toFixed(5)} USD</p>
             </div>
           </div>
           {/* divide by decimals of paired asset on the network */}
@@ -61,9 +63,9 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
       // console.log("usdValue", usdValue, ercBalance, twapPrice, assetDecimals, ethPrice)
       return (
         <div className="space-y-2" >
-          <p className="text-base leading-none m-[-1%]">{(row.getValue("stablecoinBalance") as number / (10 ** row.original.stableAsset.decimals)).toFixed(10)} {row.original.stableAsset.symbol}</p>
+          <p className="text-base leading-none m-[-1%]">{(row.getValue("stablecoinBalance") as number / (10 ** row.original.stableAsset.decimals)).toFixed(3)} {row.original.stableAsset.symbol}</p>
           <p className="text-sm text-gray-500">
-            {usdValue < 0.01 ? "<$0.01" : usdValue.toFixed(2)} USD
+            {Number((row.getValue("stablecoinBalance") as number / (10 ** row.original.stableAsset.decimals)).toFixed(3)) < 0.01 ? "<$0.01" : (row.getValue("stablecoinBalance") as number / (10 ** row.original.stableAsset.decimals)).toFixed(3)} USD
           </p>
         </div>
       );
@@ -85,9 +87,8 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     header: "Entry Price",
     cell: ({ row }) => {
       const entryPrice = Number(row.original.weightedEntryPrice);
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
       return (
-          <p className="">${(entryPrice * price / (10 ** 18)).toFixed(4)} USD</p>
+          <p className="">${(entryPrice).toFixed(4)} USD</p>
       );
     },
   },
@@ -95,10 +96,11 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     accessorKey: "Exit Price",
     header: "Exit Price",
     cell: ({ row }) => {
-      const exitPrice = Number(row.original.exitPrice);
-      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? 1*10**12 : ethPrice;
+      const price = (row.original.stablecoinAddress as string).toLowerCase() === "0x0b2c639c533813f4aa9d7837caf62653d097ff85" ? (10**12) : ethPrice;
+      const exitPrice= (Number(row.original.exitPrice)*price/ (10 ** 18 * 10 ** (18 - row.original.asset.decimals)));
+
       return (
-          <p className="">${(exitPrice * price / (10 ** 18)).toFixed(4)} USD</p>
+          <p className="">${(exitPrice).toFixed(4)} USD</p>
       );
     },
   },
@@ -161,7 +163,7 @@ const getColumns = (ethPrice: number): ColumnDef<Strategy>[] => [
     cell: ({ row }) => {
       return (
         <div className="flex gap-2">
-          <WithdrawButton contractAddress={row.original.contractAddress} buttonContent={"claim!"}/>
+          <WithdrawButton contractAddress={row.original.contractAddress} text="claim!"/>
         </div>
       );
     },
