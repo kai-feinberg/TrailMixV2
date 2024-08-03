@@ -127,7 +127,7 @@ const useStrategyData = (contractAddress: string, onDataFetched: any) => {
     if (!isLoadingWeightedEntryPrice && ethPrice && !isLoadingExitPrice && !isLoadingProfit && !isLoadingContractState && !isLoadingStablecoinBalance&&
         !isLoadingErc20TokenAddress && !isLoadingTwapPrice && !isLoadingErc20Balance && !isLoadingStablecoinAddress && !isLoadingTrailAmount
         && !isLoadingUniswapPool && !isLoadingGranularity && !isLoadingManager && !isLoadingTslThreshold &&!isLoadingDeployEvent
-        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited && tslThreshold && weightedEntryPrice
+        &&deployEvent && !isLoadingThresholdUpdates && thresholdUpdates && !isLoadingFundsDeposited 
       ) {
       try {
         
