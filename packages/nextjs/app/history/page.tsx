@@ -26,7 +26,6 @@ import strategyABI from "~~/contracts/strategyABI.json";
 import ClaimsTable from "~~/components/ClaimsTable";
 import exampleActiveStrategies from "~~/components/assets/exampleActiveStrategies.json";
 import exampleClaimableStrategies from "~~/components/assets/exampleClaimableStrategies.json";
-import useFetchTokenPrice from "~~/hooks/scaffold-eth/useFetchTokenPriceData";
 import { LayoutGrid, Sheet } from "lucide-react";
 
 const stratABI = strategyABI.abi;

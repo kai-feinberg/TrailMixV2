@@ -70,6 +70,12 @@ export default function SideNavbar({ }: Props) {
               icon: History,
               variant: "ghost",
             },
+            {
+              title: "Backtesting",
+              href: "/backtesting",
+              icon: History,
+              variant: "ghost",
+            }
           ]}
         />
         <RainbowKitCustomConnectButton />

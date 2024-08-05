@@ -232,7 +232,7 @@ export default function ManagePage({ }: Props) {
     functionName: "getUserContracts",
     args: [connectedAccount],
   });
-  
+
 
 
   return (
@@ -258,12 +258,12 @@ export default function ManagePage({ }: Props) {
       {cardView && (
         <div className="flex flex-wrap justify-start gap-6">
           {claimableStrats.map((strategy, index) => (
-            <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+            <div key={index} className="w-full sm:w-[calc(100%-12px)] lg:w-[calc(100%-16px)] xl:w-[calc(50%-18px)]">
               <ClaimableCard strategy={strategy} />
             </div>
           ))}
           {activeStrats.map((strategy, index) => (
-            <div key={index} className={`flex-1 min-w-[49%] max-w-[50%] ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+            <div key={index} className="w-full sm:w-[calc(100%-12px)] lg:w-[calc(100%-16px)] xl:w-[calc(50%-18px)]">
               <StrategyCard strategy={strategy} />
             </div>
           ))}
@@ -272,11 +272,11 @@ export default function ManagePage({ }: Props) {
       {!cardView && (
         <>
           <DataTable columns={columns} data={activeStrats} />
-          {uninitialized.length > 0 && 
-          <div className="flex flex-col gap-4">
-            <PageTitle title="Uninitialized Strategies"/>
-            <DataTable columns={columns} data={uninitialized} />
-          </div>
+          {uninitialized.length > 0 &&
+            <div className="flex flex-col gap-4">
+              <PageTitle title="Uninitialized Strategies" />
+              <DataTable columns={columns} data={uninitialized} />
+            </div>
           }
           {claimableStrats.length > 0 && <ClaimsTable claimableStrategies={claimableStrats} />}
 
